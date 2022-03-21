@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function makePower(power) {
+        return function (number) {
+          return Math.pow(number, power)
+        }
+      }
+      let power2 = makePower(2)
+      let power3 = makePower(3)
+      console.log(power2(4))
+      console.log(power3(4))
+    </script>
+  </body>
+</html>
