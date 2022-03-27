@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      /* const promise = new Promise((resolve, reject) => {
+        resolve(100)
+      })
+      const p1 = promise.then(value => {
+        console.log(value)
+        return p1
+      })
+      p1.then(
+        () => {},
+        reason => {
+          console.log(reason) // Uncaught (in promise) TypeError: Chaining cycle detected for promise #<Promise>
+        }
+      ) */
+      /* const promise = new Promise((resolve, reject) => {
+        resolve(100)
+      })
+      promise
+        .then(value => value)
+        .then(value => value)
+        .then(value => console.log(value)) */
+      function p1() {
+        return new MyPromise((resolve, reject) => {
+            resolve('p1')
+        })
+      }
+      Promise.resolve(10).then(value => console.log(value))
+      Promise.resolve(10).then(value => console.log(value))
+    </script>
+  </body>
+</html>
