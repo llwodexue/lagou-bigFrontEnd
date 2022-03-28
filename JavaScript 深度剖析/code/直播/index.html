@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body></body>
+</html>
+
+<script src="./3.js"></script>
+<script>
+  /* const toRMB = s =>
+    Functor.of(s)
+      .map(v => v.replace('$', ''))
+      .map(parseFloat)
+      .map(v => v * 7)
+      .map(v => v.toFixed(2))
+      .value(v => '￥' + v)
+  console.log(toRMB('$29.9')) */
+  function fn(a, b) {
+    function inner() {
+      console.log(a, b)
+    }
+    console.dir(inner)
+  }
+  console.dir(fn)
+  const f = fn(1, 2)
+</script>
