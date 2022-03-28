@@ -18,8 +18,8 @@
 | 阶段一   | 函数式编程范式      | [函数式编程范式.md](JavaScript 深度剖析\1.1函数式编程范式.md) | 2022-3-24 |
 | 阶段二   | JavaScript 异步编程 | [JavaScript 异步编程.md](JavaScript 深度剖析\1.2JavaScript 异步编程.md) | 2022-3-25 |
 | 阶段三   | 手写 Promie 源码    | [手写 Promie 源码.md](JavaScript 深度剖析\1.3手写 Promie 源码) | 2022-3-27 |
-| 阶段四   | 模块一作业          | [模块一作业.md](JavaScript 深度剖析\1.4模块一作业)           |           |
-| 阶段五   | 直播                | [模块一直播.md](JavaScript 深度剖析\1.5模块一直播.md)        |           |
+| 阶段四   | 模块一作业          | [模块一作业.md](JavaScript 深度剖析\1.4模块一作业)           | 2022-3-28 |
+| 阶段五   | 直播                | [模块一直播.md](JavaScript 深度剖析\1.5模块一直播.md)        | 2022-3-28 |
 
 ## 前端工程化实战
 
