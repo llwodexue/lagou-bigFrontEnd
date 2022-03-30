@@ -15,11 +15,11 @@
 
 | 阶段模块 | 名称                | 链接                                                         | 完成时间  |
 | -------- | ------------------- | ------------------------------------------------------------ | --------- |
-| 阶段一   | 函数式编程范式      | [函数式编程范式.md](JavaScript深度剖析/1.1函数式编程范式.md) | 2022-3-24 |
-| 阶段二   | JavaScript 异步编程 | [JavaScript 异步编程.md](JavaScript深度剖析/1.2JavaScript异步编程.md) | 2022-3-25 |
-| 阶段三   | 手写 Promie 源码    | [手写 Promie 源码.md](JavaScript深度剖析/1.3手写Promie源码.md) | 2022-3-27 |
-| 阶段四   | 模块一作业          | [模块一作业.md](JavaScript深度剖析/1.4模块一作业.md)         | 2022-3-28 |
-| 阶段五   | 模块一直播          | [模块一直播.md](JavaScript深度剖析/1.5模块一直播.md)         | 2022-3-28 |
+| 1        | 函数式编程范式      | [1.1函数式编程范式.md](JavaScriptDeep/1.1函数式编程范式.md)  | 2022-3-24 |
+| 2        | JavaScript 异步编程 | [1.2JavaScript异步编程.md](JavaScriptDeep/1.2JavaScript异步编程.md) | 2022-3-25 |
+| 3        | 手写 Promie 源码    | [1.3手写Promie源码.md](JavaScriptDeep/1.3手写Promie源码.md)  | 2022-3-27 |
+| 4        | 模块一作业          | [1.4模块一作业.md](JavaScriptDeep/1.4模块一作业.md)          | 2022-3-28 |
+| 5        | 模块一直播          | [1.5模块一直播.md](JavaScriptDeep/1.5模块一直播.md)          | 2022-3-28 |
 
 ### 模块二
 
@@ -27,8 +27,8 @@
 
 | 阶段模块 | 名称              | 链接                                                         | 完成时间  |
 | -------- | ----------------- | ------------------------------------------------------------ | --------- |
-| 阶段一   | ECMAScript 新特性 | [ECMAScript 新特性.md](JavaScript深度剖析/2.1ECMAScript新特性.md) | 2022-3-29 |
-|          |                   |                                                              |           |
+| 1        | ECMAScript 新特性 | [2.1ECMAScript新特性.md](JavaScriptDeep/2.1ECMAScript新特性.md) | 2022-3-29 |
+| 2        | TypeScript语言    | [2.2TypeScript语言](JavaScriptDeep/2.2TypeScript语言)        |           |
 |          |                   |                                                              |           |
 |          |                   |                                                              |           |
 |          |                   |                                                              |           |

@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "flow-bin": "^0.174.1",
     "folktale": "^2.3.2",
     "html-webpack-plugin": "^4.5.2",
     "lodash": "^4.17.21",
