@@ -25,13 +25,13 @@
 
 - 2022-3-29 开始
 
-| 阶段模块 | 名称              | 链接                                                         | 完成时间  |
-| -------- | ----------------- | ------------------------------------------------------------ | --------- |
-| 1        | ECMAScript 新特性 | [2.1ECMAScript新特性.md](JavaScriptDeep/2.1ECMAScript新特性.md) | 2022-3-29 |
-| 2        | TypeScript语言    | [2.2TypeScript语言](JavaScriptDeep/2.2TypeScript语言)        |           |
-|          |                   |                                                              |           |
-|          |                   |                                                              |           |
-|          |                   |                                                              |           |
+| 阶段模块 | 名称                | 链接                                                         | 完成时间  |
+| -------- | ------------------- | ------------------------------------------------------------ | --------- |
+| 1        | ECMAScript 新特性   | [2.1ECMAScript新特性.md](JavaScriptDeep/2.1ECMAScript新特性.md) | 2022-3-29 |
+| 2        | TypeScript 语言入门 | [2.2TypeScript语言.md](JavaScriptDeep/2.2TypeScript语言.md)  | 2022-3-30 |
+| 3        | JavaScript 性能优化 |                                                              |           |
+|          |                     |                                                              |           |
+|          |                     |                                                              |           |
 
 ## 前端工程化实战
 
