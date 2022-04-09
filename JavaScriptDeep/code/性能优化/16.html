@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="btn">点击</button>
+  </body>
+</html>
+<script>
+  var btn = document.getElementById('btn')
+  function btnClick(ev) {
+    console.log('点击了', this, ev)
+  }
+
+  /**
+   * handle 最终需要执行的事件监听
+   * wait 事件触发之后多久开始执行
+   * immediate 控制执行第一次还是最后一次
+   */
+  function myDebounce(handle, wait, immediate) {
+    // 参数类型判断及默认值处理
+    if (typeof handle !== 'function') throw new Error('handle must be a function')
+    if (typeof wait === 'undefined') wait = 300
+    if (typeof wait === 'boolean') {
+      immediate = wait
+      wait = 1000
+    }
+    if (typeof immediate !== 'boolean') immediate = false
+
+    // 如果我们想要执行最后一次，那么就意味着无论我们点击了多少次，前面N-1次都无用
+    let timer = null
+    return function proxy(...args) {
+      // 如果要向实现第一次执行，那么可以添加 timer 为 null 的判断
+      let init = immediate && !timer
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        timer = null
+        !immediate ? handle.apply(this, args) : null
+      }, wait)
+      // 如果当前传递进行的是 true（立即执行）
+      init ? handle.apply(this, args) : null
+    }
+  }
+  // 当我们执行了按钮点击就会执行...返回的proxy
+  btn.onclick = myDebounce(btnClick, 1000, true)
+</script>

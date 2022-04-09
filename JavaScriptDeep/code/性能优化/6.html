@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Heap</title>
+  </head>
+  <body>
+    <button id="id">Add</button>
+    <script>
+      var temEle
+      var btn = document.getElementById('id')
+      btn.addEventListener('click', function () {
+        var ul = document.createElement('ul')
+        console.log(ul)
+        for (let i = 0; i < 10; i++) {
+          var li = document.createElement('li')
+          ul.appendChild(li)
+        }
+        console.log(ul) //console.log也被引用记得注释
+        temEle = ul
+      })
+    </script>
+  </body>
+</html>

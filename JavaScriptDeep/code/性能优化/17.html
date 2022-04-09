@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+<style>
+  body {
+    height: 5000px;
+  }
+</style>
+  </head>
+  <body></body>
+</html>
+<script>
+  function scrollFn() {
+    console.log('滚动了')
+  }
+  function myThrottle(handle, wait) {
+    if (typeof handle !== 'function') throw new Error('handle must be a function')
+    if (typeof wait === 'undefined') wait = 300
+
+    let previous = 0 // 上一次执行的时间
+    let timer = null // 用它来管理定时器
+    return function proxy(...args) {
+      // 此时说明是一个非高频操作，可以执行 handle
+      let now = new Date() // 当前执行的时刻时间点
+      let interval = wait - (now - previous)
+      if (interval <= 0) {
+        clearTimeout(timer)
+        timer = null
+        handle.apply(this, args)
+        previous = +new Date()
+      }
+      // 当我们发现当前系统有一个定时器，就意味着我们不需要再开启定时器
+      if (!timer) {
+        // 此时说明这次操作发生在我们定义的频次时间范围内，那就不执行 handle
+        // 这时候我们可以定义一个定时器，让 handle 在 interval 之后去执行
+        timer = setTimeout(() => {
+          clearTimeout(timer) // 这个操作只是将系统中的定时器清除了，但是 timer 中的值还在
+          timer = null
+          handle.apply(this, args)
+          previous = +new Date()
+        }, interval)
+      }
+    }
+  }
+  window.onscroll = myThrottle(scrollFn, 1000)
+</script>

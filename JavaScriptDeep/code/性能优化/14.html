@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="skip" class="skip"></div>
+  </body>
+</html>
+<script>
+  // 缓存数据：对于需要多次使用的数据进行提前保存，后续进行使用
+  var oBox = document.getElementById('skip')
+
+  function hasClassName1(ele, cls) {
+    console.log(ele.className)
+    return ele.className === cls
+  }
+  hasClassName1(oBox, 'skip')
+
+  function hasClassName2(ele, cls) {
+    var clsName = ele.className
+    console.log(clsName)
+    return clsName === cls
+  }
+  hasClassName2(oBox, 'skip')
+</script>

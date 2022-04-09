@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button>按钮1</button>
+    <button>按钮2</button>
+    <button>按钮3</button>
+  </body>
+</html>
+<script>
+  var aButtons = document.querySelectorAll('button')
+  console.dir(aButtons)
+  for (var i = 0; i < aButtons.length; i++) {
+    aButtons[i].onclick = function () {
+      console.log(`当前索引值为${i}`)
+    }
+  }
+
+  // 闭包
+  for (var i = 0; i < aButtons.length; i++) {
+    aButtons[i].onclick = (function (i) {
+      return function () {
+        console.log(`当前索引值为${i}`)
+      }
+    })(i)
+  }
+  for (let i = 0; i < aButtons.length; i++) {
+    aButtons[i].onclick = function () {
+      console.log(`当前索引值为${i}`)
+    }
+  }
+  for (let i = 0; i < aButtons.length; i++) {
+    aButtons[i].myIndex = i
+    aButtons[i].onclick = function () {
+      console.log(`当前索引值为${this.myIndex}`)
+    }
+  }
+</script>
