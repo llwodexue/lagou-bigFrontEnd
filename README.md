@@ -29,9 +29,9 @@
 | -------- | ------------------- | ------------------------------------------------------------ | --------- |
 | 1        | ECMAScript 新特性   | [2.1ECMAScript新特性.md](JavaScriptDeep/2.1ECMAScript新特性.md) | 2022-3-29 |
 | 2        | TypeScript 语言入门 | [2.2TypeScript语言.md](JavaScriptDeep/2.2TypeScript语言.md)  | 2022-3-30 |
-| 3        | JavaScript 性能优化 | [2.3JavaScript性能优化.md](JavaScriptDeep/2.3JavaScript性能优化.md) |           |
-|          |                     |                                                              |           |
-|          |                     |                                                              |           |
+| 3        | JavaScript 性能优化 | [2.3JavaScript性能优化.md](JavaScriptDeep/2.3JavaScript性能优化.md) | 2022-4-9  |
+| 4        | 模块二作业          | [2.4模块二作业.md](JavaScriptDeep/2.4模块二作业.md)          |           |
+| 5        | 模块二直播          | [2.5模块二直播.md](JavaScriptDeep/2.5模块二直播.md)          |           |
 
 ## 前端工程化实战
 
