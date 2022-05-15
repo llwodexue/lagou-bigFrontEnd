@@ -58,9 +58,9 @@
 | 3        | 其他打包工具 | [2.3-4其他打包工具+Eslint.md](Engineering/2.3-4其他打包工具+Eslint.md) | 2022-5-6 |
 |4|规范化标准|[2.3-4其他打包工具+Eslint.md](Engineering/2.3-4其他打包工具+Eslint.md)|2022-5-7|
 | 5        | webpack源码  | [2.5webpack源码.md](Engineering/2.5webpack源码.md)           |           |
-|          |              |                                                              |           |
-|          |              |                                                              |           |
-|          |              |                                                              |           |
+| 6 | 模块二作业 | [2.6模块二作业](Engineering/2.6模块二作业) |           |
+| 7 | 模块二直播 | [2.7模块二直播.md](Engineering/2.7模块二直播.md) |           |
+| 8 | webpack性能优化 | [webpack性能优化.md](Engineering/webpack性能优化.md) |           |
 ## Vue.js 框架源码与进阶
 
 ## React 框架原理与实战
