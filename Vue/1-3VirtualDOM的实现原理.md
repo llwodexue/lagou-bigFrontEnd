@@ -397,6 +397,22 @@ export function vnode (sel: string | undefined,
 
 ### init
 
+调用 init 时返回了 patch，所以需要先了解 init
+
+![init函数](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/init%E5%87%BD%E6%95%B0.jpg)
+
+DOMAPI 里都是 DOM 操作，通过指定 DOMAPI 来决定如何转换虚拟 DOM，默认情况是把虚拟 DOM 转换成浏览器环境下的 DOM 对象
+
+![init函数2](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/init%E5%87%BD%E6%95%B02.jpg)
+
+![image-20220526154035738](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220526154035738.png)
+
+最后返回了 patch 函数（函数返回函数属于高阶函数）
+
+- 使用高阶函数好处：init 的时候传入的参数可以进行缓存 `modules` 和 `domApi`，调用 patch 函数时就不需要传入那两个参数，只需要传入 `oldVnode` 和 `vnode`
+
+![image-20220526154600542](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220526154600542.png)
+
 ### patch（打补丁）
 
 - `patch(oldVnode, newVnode)`
@@ -405,3 +421,16 @@ export function vnode (sel: string | undefined,
 - 如果不是相同节点，删除之前的内容，重新渲染
 - 如果是相同节点，再判断新的 VNode 是否有 text，如果有并且和 oldVnode 的 text 不同，直接更新文本内容
 - 如果新的 VNode 有 children，判断子节点是否有变化
+
+首次渲染需要真实 DOM
+
+![image-20220526173647797](img/image-20220526173647797.png)
+
+把真实 DOM 转换为 vnode 对象
+
+- `api.tagName(elm).toLowerCase() + id + c` 标签名字 + id 选择器 + 类样式拼接起来作为 sel
+- data 是 `{}`
+- children 是 `[]`
+- text 是 `undefined` 与 children 互斥
+
+![image-20220526173205521](img/image-20220526173205521.png)
