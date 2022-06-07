@@ -58,10 +58,22 @@
 | 3        | 其他打包工具 | [2.3-4其他打包工具+Eslint.md](Engineering/2.3-4其他打包工具+Eslint.md) | 2022-5-6 |
 |4|规范化标准|[2.3-4其他打包工具+Eslint.md](Engineering/2.3-4其他打包工具+Eslint.md)|2022-5-7|
 | 5        | webpack源码  | [2.5webpack源码.md](Engineering/2.5webpack源码.md)           |           |
-|          |              |                                                              |           |
-|          |              |                                                              |           |
-|          |              |                                                              |           |
+| 6 | 模块二作业 | [2.6模块二作业.md](Engineering/2.6模块二作业.md) |           |
+| 7 | 模块二直播 | [2.7模块二直播.md](Engineering/2.7模块二直播.md) | 2022-5-16 |
+| 8 | webpack性能优化 | [webpack性能优化.md](Engineering/webpack性能优化.md) |           |
 ## Vue.js 框架源码与进阶
+
+### 模块一
+
+- 2022-5-16 开始
+
+| 阶段模块 | 名称                   | 链接                                                         | 完成时间  |
+| -------- | ---------------------- | ------------------------------------------------------------ | --------- |
+| 1        | Vue.js 基础回顾        | 无文档                                                       | 2022-5-16 |
+| 2        | Vue-Router 原理实现    | [1-1Vue-Router原理实现.md](Vue/1-1Vue-Router原理实现.md)     | 2022-5-17 |
+| 3        | 模拟 Vue.js 响应式原理 | [1-2模拟Vue.js响应式原理.md](Vue/1-2模拟Vue.js响应式原理.md) | 2022-5-23 |
+| 4        | Virtual DOM 的实现原理 | [1-3VirtualDOM的实现原理.md](Vue/1-3VirtualDOM的实现原理.md) |           |
+| 5        |                        |                                                              |           |
 
 ## React 框架原理与实战
 
