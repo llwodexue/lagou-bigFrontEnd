@@ -1,4 +1,22 @@
-## 缩小文件范围 Loader
+## 优化 module 配置
+
+### noParse 不解析
+
+- 直接通知 webpack 忽略较大的库
+
+  通常是第三方的一些类库，一般是比较大的库，且没用模块化的方式去编写，那么它本身也不会有外部的依赖，所以我们就可以不对它进行解析
+
+- 被忽略的库不能有 import、require、define 的引入方式
+
+```js
+module.exports = {
+  module: {
+    noParse: /^(vue|vue-router|vuex|vuex-router-sync)$/,
+  }
+}
+```
+
+### 缩小文件范围 Loader
 
 loader 是一个消耗性能大户，使用 `test`、`exclude`、`include` 确认文件范围，推荐使用 `include`
 
@@ -116,7 +134,9 @@ module.exports = {
 }
 ```
 
-## CSS 文件处理
+## 压缩处理
+
+### CSS 文件处理
 
 ```bash
 npm i less less-loader -D
@@ -211,7 +231,7 @@ module.exports = {
 }
 ```
 
-## HTML 文件处理
+### HTML 文件处理
 
 ```js
 module.exports = {
@@ -229,6 +249,38 @@ module.exports = {
       },
     })
   ]
+}
+```
+
+### JS 文件处理
+
+- `uglifyjs-webpack-plugin`：不支持 ES6 压缩 (Webpack4 以前)
+
+```js
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+
+module.exports = {
+  optimization: {
+    minimizer: [
+      new UglifyJsPlugin()
+    ],
+  },
+}
+```
+
+- `terser-webpack-plugin`：支持压缩 ES6 (Webpack4)
+
+  terser 无论从销量还是效果上都比 uglifyjs 好，所以 terser 后面座位生产模式下默认的压缩插件
+
+```js
+const TerserPlugin = require('terser-webpack-plugin')
+
+module.exports = {
+  optimization: {
+    minimizer: [
+      new TerserPlugin()
+    ],
+  },
 }
 ```
 
@@ -300,7 +352,9 @@ const proConfig = { /* ... */ }
 module.exports = merge(baseConfig, proConfig)
 ```
 
-## tree shaking
+## tree shaking 摇树
+
+> [webpack官方文档 tree-shaking](https://www.webpackjs.com/guides/tree-shaking/)
 
 webpack2.x 开始支持 tree shaking 的概念，顾名思义：“摇树”，清除无用 css、js（Dead Code）
 
@@ -310,6 +364,8 @@ Dead Code 一般具有以下几个特征：
 - 代码执行的结果不会被用到
 - 代码只会影响死变量（只写不读）
 - JS tree shaking 只支持 ES Module 的引用方式
+
+tree shaking 原理：从 index.js 开始，去看引用了哪些东西，进一步分析所有引入的包或模块里又引用了哪些模块或其他一些包，最后会把需要的东西都留下
 
 **CSS tree shaking**
 
@@ -351,33 +407,49 @@ module.exports = {
 }
 ```
 
-### 副作用
+### sideEffects 副作用
 
 副作用：模块执行时除了导出成员之外所作的事情
 
-- `sideEffects` 一般用于 npm 包标记是否有副作用
 - 副作用需要配合 `usedExports` 使用
 
 开启 `sideEffects` 后，webpack 在打包时就会先检查 `package.json` 中有没有 `sideEffects` 标识，以此判断这个模块是否有副作用，如果这个模块没有副作用，没有用到的模块就不会打包
+
+- 注意：`package.json` 中配置的 `sideEffects`
+
+  因为它的实现是基于一定的规则，不过在 JS 里，可能会涉及到修改全局作用域（window 对象），如果把这个 shake 掉，代码就会出现问题，这时就需要使用 `sideEffects` 来告诉 webpack 哪些文件不需要 shake
 
 ```json
 // webpack.config.js
 module.exports = {
   optimization: {
-    sideEffects: true,
+    usedExports: true
   }
 }
 
 // package.json
 {
-  "sideEffects": [
-    "./src/extend.js",
-    "*.css"
-  ]
+  "sideEffects": ["./src/extend.js", "*.css"]
 }
 ```
 
-## code splitting
+### Scope Hoisting 作用域提升
+
+作用域提升是指 webpack 通过 ES6 语法的静态分析，分析出魔抗之间的依赖关系，尽可能地把模块放到同一个函数中，让 webpack 打包出来的代码更小、运行的更快
+
+```js
+module.exports = {
+  optimization: {
+    concatenateModules: true,
+  }
+}
+```
+
+## code spitting 代码分离
+
+> [webpack官方文档 代码分离](https://www.webpackjs.com/guides/code-splitting/)
+
+代码分离可以用于获取更小的 `bundle`，以及控制资源加载优先级
 
 常用的代码分离方法：
 
@@ -457,3 +529,92 @@ module.exports = {
 
 1. 使用 `import()` 语法实现动态导入，可以使用魔法注释对模块进行命名
 2. 使用 webpack 的遗留功能，使用 webpack 特定的 `require.ensure`
+
+## 使用工具量化
+
+- `speed-measure-webpack-plugin`：可以测量各个插件和 `loader` 所花费的时间
+
+```bash
+npm i speed-measure-webpack-plugin -D
+```
+
+```js
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
+const smp = new SpeedMeasurePlugin()
+
+const config = {
+  //...webpack配置
+}
+module.exports = smp.wrap(config)
+```
+
+- `webpack-bundle-analyzer`：分析 webpack 打包后的模块依赖关系
+
+```bash
+npm install webpack-bundle-analyzer -D
+```
+
+```js
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+
+module.exports = {
+  plugins: [
+    new BundleAnalyzerPlugin()
+  ]
+}
+```
+
+## DllPlugin 插件打包第三方库
+
+Dll 动态链接库，其实就是做缓存，只会提升 webpack 打包的速度，并不能减少最后生成的代码体积
+
+项目中引入了很多第三方库，这些库在很长的一段时间内，基本不会更新，打包的时候分开打包来提升速度，而 DllPlugin 动态链接库插件
+
+- 原理：**把网页依赖的基础模块抽离出来打包到 dll 文件中，当需要导入的模块存在某个 dll 中时，这个模块不再被打包，而是去 dll 中获取**
+- 动态链接库只需要被编译一次，项目中用到的第三方模块，很稳定，例如：`react`、`react-dom`，只要没有升级需求
+
+webpack 已经内置了对动态链接库的支持
+
+- DllPlugin：用于打包出一个个单独的动态链接库文件
+- DllReferencePlugin：用于在主要的配置文件中引入 DllPlugin 插件打包好的动态链接库文件
+
+注意：`DllPlugin` 中的 `name` 一定要与 `output` 中的 `library` 一致（文件对外暴露的函数名）
+
+```js
+/* package.json */
+{
+  "scripts": {
+    "dll-build": "cross-env NODE_ENV=production webpack --config webpack.dll.config.js"
+  }
+}
+
+/* webpack.dll.config.js */
+const path = require('path')
+const { DllPlugin } = require('webpack')
+
+module.exports = {
+  mode: 'production',
+  entry: {
+    react: ['react', 'react-dom']
+  },
+  output: {
+    path: path.resolve(__dirname, './dist/dll/'),
+    filename: '[name].dll.js',
+    library: 'react'
+  },
+  plugins: [
+    new DllPlugin({
+      // manifest.json文件的输出位置
+      path: path.join(__dirname, './dist/dll/', '[name]-manifest.json'),
+      // 定义打包的公共vendor文件对外暴露的函数名
+      name: 'react'
+    })
+  ]
+}
+
+```
+
+构建出 dll 文件夹后，我们就可以把 React 这些文件单独打包了
+
+- dll 文件包含了大量模块的代码，这些模块被存放在一个数组里。用数组的索引号为 ID，通过变量将自己暴露在全局，就可以在 `window.xxx` 访问到其中的模块
+- `Manifest.json` 描述了与其对应的 `dll.js` 包含了哪些模块，以及 ID 和路径

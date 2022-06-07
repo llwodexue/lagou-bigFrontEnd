@@ -118,35 +118,36 @@ module.exports = {
     //     }
     //   }
     // },
-  splitChunks: {
-    chunks: 'async', // 对同步 initial，异步 async，所有的模块有效 all
-    minSize: 30000, // 最⼩尺⼨，当模块⼤于30kb
-    maxSize: 0, // 对模块进⾏⼆次分割时使⽤，不推荐使⽤
-    minChunks: 1, // 打包⽣成的chunk⽂件最少有⼏个chunk引⽤了这个模块
-    maxAsyncRequests: 5, // 最⼤异步请求数，默认5
-    maxInitialRequests: 3, // 最⼤初始化请求书，⼊⼝⽂件同步请求，默认3
-    automaticNameDelimiter: '-', // 打包分割符号
-    name: true, // 打包后的名称，除了布尔值，还可以接收⼀个函数function
-    cacheGroups: { // 缓存组
-      vendors: {
-        test: /[\\/]node_modules[\\/]/,
-        name: 'vendor', // 要缓存的 分隔出来的 chunk 名称
-        priority: -10 // 缓存组优先级 数字越⼤，优先级越⾼
-      },
-      other: {
-        chunks: 'initial', // 必须三选⼀： "initial" | "all" | "async"(默认就是async)
-        test: /react|lodash/, // 正则规则验证，如果符合就提取 chunk,
-        name: 'other',
-        minSize: 30000,
-        minChunks: 1
-      },
-      default: {
-        minChunks: 2,
-        priority: -20,
-        reuseExistingChunk: true //可设置是否重⽤该chunk
+    splitChunks: {
+      chunks: 'async', // 对同步 initial，异步 async，所有的模块有效 all
+      minSize: 30000, // 最⼩尺⼨，当模块⼤于30kb
+      maxSize: 0, // 对模块进⾏⼆次分割时使⽤，不推荐使⽤
+      minChunks: 1, // 打包⽣成的chunk⽂件最少有⼏个chunk引⽤了这个模块
+      maxAsyncRequests: 5, // 最⼤异步请求数，默认5
+      maxInitialRequests: 3, // 最⼤初始化请求书，⼊⼝⽂件同步请求，默认3
+      automaticNameDelimiter: '-', // 打包分割符号
+      name: true, // 打包后的名称，除了布尔值，还可以接收⼀个函数function
+      cacheGroups: {
+        // 缓存组
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendor', // 要缓存的 分隔出来的 chunk 名称
+          priority: -10 // 缓存组优先级 数字越⼤，优先级越⾼
+        },
+        other: {
+          chunks: 'initial', // 必须三选⼀： "initial" | "all" | "async"(默认就是async)
+          test: /react|lodash/, // 正则规则验证，如果符合就提取 chunk,
+          name: 'other',
+          minSize: 30000,
+          minChunks: 1
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true //可设置是否重⽤该chunk
+        }
       }
-    }
-  },
+    },
     concatenateModules: true
   },
   plugins: [
@@ -199,3 +200,5 @@ module.exports = {
     // new webpack.HotModuleReplacementPlugin(),
   ]
 }
+
+
