@@ -57,7 +57,7 @@
 | 2        | Webpack打包  | [2.2Webpack打包.md](Engineering/2.2Webpack打包.md)   | 2022-4-29 |
 | 3        | 其他打包工具 | [2.3-4其他打包工具+Eslint.md](Engineering/2.3-4其他打包工具+Eslint.md) | 2022-5-6 |
 |4|规范化标准|[2.3-4其他打包工具+Eslint.md](Engineering/2.3-4其他打包工具+Eslint.md)|2022-5-7|
-| 5        | webpack源码  | [2.5webpack源码.md](Engineering/2.5webpack源码.md)           |           |
+| 5        | webpack源码  | [2.5webpack源码.md](Engineering/2.5webpack源码.md)           | 2022-6-21 |
 | 6 | 模块二作业 | [2.6模块二作业.md](Engineering/2.6模块二作业.md) |           |
 | 7 | 模块二直播 | [2.7模块二直播.md](Engineering/2.7模块二直播.md) | 2022-5-16 |
 | 8 | webpack性能优化 | [webpack性能优化.md](Engineering/webpack性能优化.md) |           |
