@@ -426,6 +426,19 @@ DOMAPI 里都是 DOM 操作，通过指定 DOMAPI 来决定如何转换虚拟 DO
 
 ![image-20220526173647797](img/image-20220526173647797.png)
 
+在 `init` 内部初始化了 cbs 对象，并且把所有模块钩子函数存储到 cbs 对应的属性中
+
+```js
+const cbs: ModuleHooks = {
+    create: [], // [fn1, fn2...]
+    update: [],
+    remove: [],
+    destroy: [],
+    pre: [],
+    post: []
+  }
+```
+
 把真实 DOM 转换为 vnode 对象
 
 - `api.tagName(elm).toLowerCase() + id + c` 标签名字 + id 选择器 + 类样式拼接起来作为 sel
@@ -434,3 +447,7 @@ DOMAPI 里都是 DOM 操作，通过指定 DOMAPI 来决定如何转换虚拟 DO
 - text 是 `undefined` 与 children 互斥
 
 ![image-20220526173205521](img/image-20220526173205521.png)
+
+判断 vnode 的 key 和 sel 是否相同
+
+![image-20220621165235773](E:\learn\lagouBigFront\md\Vue\img\image-20220621165235773.png)
