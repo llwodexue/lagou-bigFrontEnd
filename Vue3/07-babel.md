@@ -73,11 +73,11 @@ babel 是如何做到将我们的一段代码（ES6、TypeScript、React）转�
 
 **Babel 的执行阶段**
 
-![image-20220630145244723](E:\learn\lagouBigFront\md\Vue3\img\image-20220630145244723.png)
+![image-20220630145244723](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220630145244723.png)
 
 这只是一个简化版的编译器工具流程，在每个阶段又会有自己具体的工作：
 
-![image-20220630145708717](E:\learn\lagouBigFront\md\Vue3\img\image-20220630145708717.png)
+![image-20220630145708717](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220630145708717.png)
 
 - 词法分析会使用分词器把源代码切割成一个个叫标记（tokens）的东西
 - 语法分析会把标记（tokens）重新组合，用来描述语法的每个部分，并建立起它们之间的联系，这个一般称作抽象语法树（AST）
@@ -212,7 +212,7 @@ createApp({
 
 - 查看运行的控制台，会发现如下警告信息
 
-![image-20220630155906816](E:\learn\lagouBigFront\md\Vue3\img\image-20220630155906816.png)
+![image-20220630155906816](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220630155906816.png)
 
 - 需要解析模板 template，需要手动指定 vue.esm-bundler
 
@@ -298,7 +298,7 @@ h2 {
 
 对代码进行打包会报错，我们需要合适的 Loader 来处理文件
 
-![image-20220630165422029](E:\learn\lagouBigFront\md\Vue3\img\image-20220630165422029.png)
+![image-20220630165422029](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220630165422029.png)
 
 ```bash
 npm install vue-loader -D
@@ -317,7 +317,7 @@ npm install vue-loader -D
 npm install @vue/compiler-sfc -D
 ```
 
-![image-20220630165629614](E:\learn\lagouBigFront\md\Vue3\img\image-20220630165629614.png)
+![image-20220630165629614](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220630165629614.png)
 
 ```js
 const { VueLoaderPlugin } = require('vue-loader/dist/index')
@@ -329,7 +329,7 @@ const { VueLoaderPlugin } = require('vue-loader/dist/index')
 
 打包后没有报错了，但有一个警告
 
-![image-20220630170133508](E:\learn\lagouBigFront\md\Vue3\img\image-20220630170133508.png)
+![image-20220630170133508](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220630170133508.png)
 
 > [GitHub](https://github.com/vuejs/core/tree/main/packages/vue#bundler-build-feature-flags)
 
@@ -338,7 +338,7 @@ const { VueLoaderPlugin } = require('vue-loader/dist/index')
 - 这个是两个特性的标识，一个是使用 Vue 的 Options，一个是 Production 模式下是否支持 devtools 工具
 - 虽然它们都有默认值，但是强烈建议我们手动对它们进行配置
 
-![image-20220630170305054](E:\learn\lagouBigFront\md\Vue3\img\image-20220630170305054.png)
+![image-20220630170305054](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220630170305054.png)
 
 ```js
 {
