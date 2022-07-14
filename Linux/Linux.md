@@ -82,6 +82,11 @@ Host *
   Compression yes
 ```
 
+场景题：你在你的服务器里部署前端，不过部署的时候出了问题，你想找别人请求帮助，但是你的服务器做得特别好（密码什么都给禁掉了）。其他人想要登录你的服务器，应该怎么办
+
+- 把本地的公钥放到与远程服务器的 `~/.ssh/authorized_keys` 里，再配置 `.ssh/config` 的 Host即可
+- 远程完了就可以把公钥删除
+
 ### Day2 ssh隧道
 
 > [使用用chrom浏览器访问6000端口提示 ERR_UNSAFE_PORT](https://blog.csdn.net/qq_28817739/article/details/84501454)
@@ -331,6 +336,8 @@ $ yum install tree
 # -L：指定层级
 $ tree react -aF -L 2
 ```
+
+> 在 Node.js 或其它语言中如何获得 `ls` 子文件列表。参考 [fsp.readdir](https://nodejs.org/api/fs.html#fspromisesreaddirpath-options) 及 [readdir](https://man7.org/linux/man-pages/man3/readdir.3.html)
 
 ### Day5 用户相关
 
