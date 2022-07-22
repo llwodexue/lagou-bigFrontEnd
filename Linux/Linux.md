@@ -1,3 +1,5 @@
+> [飞书链接](https://umiinn9jie.feishu.cn/wiki/wikcne14hIwRg0p96kErX494Omg)
+
 ## 远程连接
 
 ### Day1 免密登陆
@@ -209,7 +211,12 @@ $ rsync -lahzv ./package.json lyn:/home/train/Documents/test
 
 **如果出现终端编码显示问题**
 
-- 可以配置环境变量：`export LANG=en_US.UTF-8`
+- 可以配置环境变量
+
+```bash
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+```
 
 **rsync** 归档模式最大的好处是可以拷贝元属性，如 ctime/mtime/mode 等等，这对于静态资源服务器相当有用！！！
 
@@ -339,6 +346,18 @@ $ tree react -aF -L 2
 
 > 在 Node.js 或其它语言中如何获得 `ls` 子文件列表。参考 [fsp.readdir](https://nodejs.org/api/fs.html#fspromisesreaddirpath-options) 及 [readdir](https://man7.org/linux/man-pages/man3/readdir.3.html)
 
+1. 在 Node.js 或其它语言中如何获得 pwd 
+
+   Node：`__dirname`、`process.cwd()`
+
+   Python：`os.getcwd()`
+
+2. 在 Node.js 或其它语言中如何获得 ls 子文件列表
+
+   Node：`fs.readdirSync('xxx')`
+
+   Python：`os.listdir('xxx')`
+
 ### Day5 用户相关
 
 Linux 为多用户系统，允许多个用户同时登录
@@ -407,3 +426,567 @@ train    pts/2        222.133.239.250  Wed Jul 13 16:47   still logged in
 train    pts/15       115.171.198.227  Wed Jul 13 16:40 - 16:42  (00:01)
 ```
 
+- 查某天服务器上有多少个登录用户
+
+```bash
+$ last -s 2022-7-14 -t 2022-7-15
+```
+
+### Day6 stat
+
+尽量不要在 MacOS 中学习 Linux 命令
+
+- 在 MacOS 中，实际上为 BSD Unix 的衍生版本
+- 在 Linux 中，实际上是 GNU/Linux 系统
+
+如果想在 MacOS 中使用 GNU 命令，可以参考：[macOS 使用 GNU 命令](https://cotes.page/posts/use-gnu-utilities-in-mac/)
+
+**stat：** 查看文件系统信息
+
+> [stat](https://www.man7.org/linux/man-pages/man2/stat.2.html#DESCRIPTION)
+
+- Size：文件大小
+- Inode：每个文件的 Inode 编号，唯一标识
+- Links：文件硬链接个数
+- Access：mode，文件访问模式
+- Access：atime，文件访问时间
+- Modify：mtime，文件修改时间（在 HTTP 服务器中，常以此作为 last-modified 响应头）
+- Change：ctime，文件修改时间（包括属性，比如 mode 和 owner，也包括 mtime，因此 ctime 总比 mtime 大）
+- Birth：某些操作系统其值为 -
+
+![image-20220719164659807](E:\learn\lagouBigFront\md\Linux\img\image-20220719164659807.png)
+
+**stat -c：** 指定文件某个属性进行输出
+
+- `%a`：access rights in octal
+
+- `%A`：access rights in human readable form
+
+- `%f`：raw mode in hex
+
+- `%F`：file type
+
+- `%g`：group ID of owner
+
+- `%G`：group name of owner
+
+- `%h`：number of hard links
+
+- `%i`：inode number
+
+- `%n`：file name
+
+- `%s`：total size, in bytes
+
+**文件类型**
+
+可以通过 `stat -c %F` 查看文件类型
+
+```bash
+$ stat -c %F README.md
+regular file
+
+$ stat -c %F node_modules/
+directory
+
+$ stat -c %F /usr/local/bin/npm
+symbolic link
+
+$ stat -c %F /dev/null
+character special file
+
+$ stat -c %F /dev/pts/0
+character special file
+
+$ stat -c %F /dev/vda
+block special file
+
+$ stat -c %F /var/run/docker.sock
+socket
+```
+
+同时，还可以使用 `ls -lah` 查看文件类型，第一个字符表示文件类型
+
+- `-`，regular file：普通文件
+- `d`，directory：目录文件
+- `l`，symbolic link：符号链接
+- `s`，socket：套接字文件，一般以 .sock 作为后缀（可把 `.sock` 理解为 API，我们可以像 HTTP 一样对它请求数据）
+- `b`，block special file：块设备文件
+- `c`，character special file：字符设备文件
+
+![image-20220722100345278](E:\learn\lagouBigFront\md\Linux\img\image-20220722100345278.png)
+
+**问题**
+
+1. 我们修改了文件的 mode，在 git 中是否有更改操作
+
+   使用 chmod 更改文件的 mode，git 中时没有更改才做的
+
+2. 我们仅仅修改了文件的 mtime，在 git 中是否有更改操作
+
+   在文件最后添加一个空格，随后删除，git 中是没有更改操作的
+
+3. 在 Node.js 或其它语言中如何获取 stat 信息
+
+   Node：`fs.stat()`
+
+   Python：`os.stat()`
+
+### Day7 chmod/chown
+
+**chown：** change owner，更改文件的所属用户及组
+
+- 第三列是用户，第四列是用户组
+
+![image-20220720090836537](E:\learn\lagouBigFront\md\Linux\img\image-20220720090836537.png)
+
+将 `.` 文件夹下当前目录的用户及用户组设为 root
+
+```bash
+# -R：遍历子文件修改
+$ chown -R root:root .
+```
+
+**EACCES**
+
+- 前端使用 `yarn` 去装包的时候，经常会遇到问题 `EACCES: permission denied, unlink ...`
+
+  ![image-20220720103058918](E:\learn\lagouBigFront\md\Linux\img\image-20220720103058918.png)
+
+- 该问题有可能的原因是：非该文件的所属用户去修改文件内容。比如其中一种可能是，`node_modules` 所属用户应该为 `train` 这个普通用户，但实际上为 `root`，从而导致没有权限
+
+  ```bash
+  # 此时发现 node_modules 为 root:root，因此导致的问题
+  $ ls -lah .
+  drwxr-xr-x  3 root  root  4.0K Jun 27 22:19 node_modules
+  drwxr-xr-x  2 train train 4.0K Jun 10 15:45 npm
+  -rw-r--r--  1 train train 1.1K Jun 10 15:45 package.json
+  drwxr-xr-x  5 train train 4.0K Jun 10 15:45 src
+  
+  # 此时通过 chown 即可解决问题
+  $ chown -R train:train node_modules
+  ```
+
+**chmod：**change mode，更改文件的读写权限
+
+- `mode` 指 linux 中对某个文件的访问权限
+- 通过 `stat` 可获取某个文件的 mode
+
+```bash
+# -c：--format
+# %a：获得数字的 mode
+$ stat -c %a README.md
+644
+
+# %A：获得可读化的 mode
+$ stat -c %A README.md 
+-rw-r--r--
+```
+
+**文件的权限**
+
+- r：可读，二进制为 100，也就是 4
+- w：可写，二进制为 010，也就是 2
+- x：可执行，二进制为 001，也就是 1
+- -：无权限，二进制为 000，也就是 0
+
+Linux 为多用户系统，我们可以对用户进行以下分类：
+
+- user：文件当前用户
+- group：文件当前用户所属组
+- other：其它用户
+
+```bash
+# rw-：当前用户可写可读，110，即十进制 6
+# r--：当前用户组可读，100，即十进制 4
+# r--：其它用户可读，100，即十进制 4
+# 所以加起来就是 644
+-rw-r--r--
+```
+
+通过 `chmod` 与数字所代表的权限，即可修改某个文件的权限
+
+```bash
+# 777，即 rwx、rwx、rwx，代表所有用户可读可写可执行
+$ chmod 777 yarn.lock
+```
+
+也可以通过可读化形式添加权限
+
+```bash
+# u: user
+# g: group
+# o: other
+# a: all
+# +-=: 增加减少复制
+# perms: 权限
+$ chmod [ugoa...][[+-=][perms...]...]
+
+# 为 yarn.lock 文件的用户所有者添加可读权限
+$ chmod u+r yarn.lock
+
+# 为所有用户添加 yarn.lock 的可读权限
+$ chmod a+r yarn.lock
+
+# 为所有用户删除 yarn.lock 的可读权限
+$ chmod a-r yarn.lock
+```
+
+1. 给某一个文件的所有用户（ugo）都移除 Read 权限 
+
+   chmod a-r xxx
+
+2. 给某一个文件的所有用户（ugo）都添加 Read 权限 
+
+   chmod a+r xxx
+
+3. 在 Node.js 或其它语言中如何修改 user 及 mod
+
+   示例：当前用户具有读权限
+
+   Node：`fs.chmod('xxx', 0o400)`
+
+   Python：`os.chmod('xxx', stat.S_IRUSR)`
+
+### Day8 ln
+
+`ln`：两个文件间创建链接，默认为硬链接
+
+**ln:hard link**
+
+```bash
+$ ln package.json a.json
+```
+
+![image-20220720114504676](E:\learn\lagouBigFront\md\Linux\img\image-20220720114504676.png)
+
+在 stat 命令中，可发现硬链接文件与源文件
+
+1. 其 `Links` 变成了 2，`Links` 代表硬链接的个数
+2. 具有相同的 Inode：688492
+3. 具有相同的 Size 及属性
+
+**ln -s:symbol link**
+
+硬链接删除源文件可以继续访问，软链接删除源文件不能访问
+
+```bash
+$ ln -s package.json b.json
+```
+
+![image-20220720141806542](E:\learn\lagouBigFront\md\Linux\img\image-20220720141806542.png)
+
+在 stat 命令中，可发现软链接文件与源文件
+
+1. 完全不同的 Inode，证明是两个独立的文件
+2. 完全不同的 Size 及属性
+3. 在软链接文件中拥有 symbolic link 标志
+
+在前端使用了 pnpm 作为包管理工具的项目中，软链接到处存在，可以使用 `find / -inum Inode` 去找到其源头
+
+1. 在 pnpm 中，为什么不全部使用软链接
+
+   [Why have hard links at all? Why not symlink directly to the global store](https://pnpm.io/faq#why-have-hard-links-at-all-why-not-symlink-directly-to-the-global-store)
+
+   主要还是和 module resolve 算法有关
+
+2. 在 Node.js 或其它语言中如何执行 `ln`
+
+   Node：硬链接：`fs.link(src, dst)`、软链接：`fs.symlink(src, dst)`
+
+   Python：硬链接：`os.link(src, dst)`、软链接：`os.symlink(src, dst)`
+
+### Day9 cat/less/head/tail
+
+**cat**
+
+- `concatenate` 缩写，`concatenate and print files` 连接文件并打印至标准输出（stdout）
+
+```bash
+# 一般都是单文件打印
+$ cat README.md
+# 可以连接多文件进行打印
+$ cat package.json yarn.lock
+```
+
+**library: open/read**
+
+我们在打开一个文件，读取内容时，在操作系统底层实际上做了两个操作：
+
+- [open](https://www.man7.org/linux/man-pages/man2/open.2.html)：`open('package.json')`，并返回文件描述符，即 `file descriptor`，简写 `fd`，一个非负整数，通过文件描述符可用来读取文件
+- [read](https://www.man7.org/linux/man-pages/man2/read.2.html):`read(3)`，通过 `fd` 读取文件内容，其中的 3 为文件描述符
+
+> 在 Node.js 中，有一个 API 为 `fs.readFile`，它实际上是 `fs.oepn` 与 `fs.read` 的结合体
+
+**less**
+
+- 更高级更强大的查看文件内容工具，可使用 vim 命令控制上下移动以及关键词搜索
+
+```bash
+$ less README.md
+
+# 通过 —N 可显示行号
+$ less -N README.md
+```
+
+**head**
+
+- 读取文件或者标准输入的前 N 行或前 N 个字节
+
+```bash
+# 输出文件前 10 行内容
+$ head -10 README.md
+
+# 与以上命令同义
+$ head --lines 10 READEME.md
+
+# 输出文件前 10 个字节
+$ head -c 10 READEME.md
+```
+
+**tail**
+
+- 读取文件或者标准输入的最后 N 行或最后 N 个字节
+
+```bash
+# 输出文件后 10 行内容
+$ tail -10 README.md
+```
+
+它与 `head` 最大不同的一点是：`--follow`，简写 `-f`，它可以实时打印文件中最新内容。
+
+- **在调试日志时非常有用：** 日志会一行一行追加到文件中
+
+```bash
+$ tail -f log.json
+```
+
+### Day10 pipe/redirection
+
+**pipe**
+
+- `|` 构成了管道，它将前边的标准输出（stdout）作为下一个命令的标准输入（stdin）
+
+```bash
+# 读取 package.json 内容，读取前十行，再读取最后三行
+$ cat package.json | head -10 | tail -3
+```
+
+**stdin/stdout**
+
+标准输入（stdin）与标准输出（stdout），其实就是特殊的文件描述符
+
+- `stdin`：fd = 0，直接从键盘中读取数据
+- `stdout`：fd = 1，直接将数据打印至终端
+- `stderr`：fd = 2，标准错误，直接将异常信息打印至终端
+
+**redirection**
+
+- `>`：将文件描述符或标准输出中内容写入文件
+- `>>`：将文件描述符或标准输出中内容追加文件
+
+```bash
+# READEME.md 内容为 hello，这里的文件描述符就是标准输出
+$ echo hello > README.md
+
+# READEME.md 内容最后一行为 hello
+$ echo hello >> README.md
+```
+
+**heredoc**
+
+```bash
+$ cat <<EOF > READEME.md
+```
+
+- 其意思是将标准输入时的内容，写入到 README.md 中
+- 其中 `<<EOF`，称作 `Here Document`，当最终写入 EOF（End Of Line）时，则 heardoc 会停止输入
+
+```bash
+# 一般使用 EOF，作为结束符
+<<EOF
+  here-document
+EOF
+```
+
+**日志重定向**
+
+- `/dev/null` 是一个空文件，对于所有输入都会统统吃下，化为乌有。有时为了不显示日志，可将所有标准输出重定向至 `/dev/null`
+- 但此时 `stderr` 仍然会打印至屏幕，如果后边跟一个 `2>&1`，表示将 stderr（fd = 2）重定向至&1（fd = 1 的文件，及 stdout），同标准输出一同重定向至 `/dev/null`，也就是 **标准输出日志与标准错误日志都不显示**
+
+```bash
+# 不显示 stdout 内容
+$ echo hello > /dev/null
+
+# 既不显示 stdout，也不显示 stderr
+# 此时 hello 文件不存在，如果没有后边的 2>&1，仍然会有日志打印至屏幕，如果加上 2>&1，则 stderr 也不显示
+$ cat hello > /dev/null 2>&1
+```
+
+### Day11 glob
+
+**global：** global 的简写，使用通配符来匹配大量文件。比如：`rm * .js` 就可以删除当前目录所有 js 文件
+
+- 在 Node.js/Python 各个语言中，也有对 glob 的支持，比如：[node-glob](https://github.com/isaacs/node-glob)、[python-glob](https://docs.python.org/3/library/glob.html)，详见 [glob](https://man7.org/linux/man-pages/man7/glob.7.html) 文档
+
+**glob**
+
+`glob` 拥有以下基本语法
+
+- `*`：匹配 0 个及以上字符
+- `?`：匹配 1 个字符
+- `[...]`：range，匹配方括号内所有字符
+- `**`：匹配 0 个及多个子目录
+
+```bash
+# 列出当前目录下所有的 js 文件
+$ ls -lah *.js
+
+# 列出当前目录及所有子目录的 js 文件
+$ ls -lah **/*.js
+
+# 列出当前目录及所有子目录的后缀名为两个字母的文件
+$ ls -lah **/*.??
+
+# 列出当前目录中，以 2 或者 5 或者 8 开头的文件
+$ ls -lah [258]*
+```
+
+**extglob**
+
+还有一些扩展的 glob 模式：
+
+- `?(pattern-list)`：重复 0 次或 1 次
+- `*(pattern-list)`：重复 0 次或多次
+- `+(pattern-list)`：重复 1 次货多次
+- `@(pattern-list)`：重复 1 次
+- `!(pattern-list)`：非匹配
+
+```bash
+# 列出所有以 js/json/md 结尾的文件
+$ ls -lah *.*(js|json|md)
+```
+
+在 `bash` 中，`extglob` 需要通过 `shopt` 命令手动开启
+
+```bash
+$ shopt | grep glob
+dotglob         off
+extglob         on
+failglob        off
+globasciiranges off
+globstar        off
+nocaseglob      off
+nullglob        off
+
+$ shopt -s extglob
+```
+
+在 `zsh` 中，`extglob` 需要通过 `setopt` 命令手动开启
+
+```bash
+$ setopt extendedglob
+$ setopt kshglob
+```
+
+判断当前终端是哪个 shell
+
+```bash
+$ echo $0
+$ echo $SHELL
+/usr/bin/bash
+```
+
+### Day12 brace
+
+> [Brace-Expansion](https://www.gnu.org/software/bash/manual/bash.html#Brace-Expansion)
+
+**brace：**用以扩展集合、数组等，有以下语法
+
+- `set`：`{a,b,c}`
+- `range`：`{1..10}`、`{01..10}`
+- `step`：`{1..10..2}`
+
+```bash
+$ echo {a,b,c}
+a b c
+
+# range: 输出 01 到 10
+$ echo {01..10}
+01 02 03 04 05 06 07 08 09 10
+
+# step: 输出 1 到 10，但是每一步需要自增 2
+$ echo {1..10..2}
+1 3 5 7 9
+
+# step: 输出 10 到 1，但是每一步需要自减 2
+$ echo {10..1..2}
+10 8 6 4 2
+
+$ echo {a..z}
+a b c d e f g h i j k l m n o p q r s t u v w x y z
+```
+
+就可以根据这个进行批量操作
+
+```bash
+# 列出当前目录下所有的 json 与 md 文件
+$ ls -lah {*.json,*.md}
+
+# 创建 a.js 到 z.js 26个文件
+$ touch {a..z}.js
+
+# 删除创建 a.js 到 z.js 26个文件
+$ rm {a..z}.js
+```
+
+1. 如何列出当前目录下所有的 json 与 md 文件 
+
+   `ls -lah *.(json|md)`
+
+   `ls -lah {*.json,*.md}`
+
+### Day13 find/ag
+
+**find**
+
+- 在某个目录及所有子目录中的文件进行 **递归搜索**，可根据文件的属性（stat）进行查找
+
+```bash
+$ find . -name '*.json'
+
+# 在当前目录递归查找包含 hello 的文件
+$ find . -name '*hello*
+
+# 当前目录递归查找权限为 777 的文件
+$ find . -perm 777
+
+# 在当前目录查找类型为 f/d/s 的文件
+$ find . -type f
+$ find . -type d
+$ find . -type s
+
+# 在当前目录查找 inode 为 10086 的文件
+# 一般用以寻找硬链接的个数，比如 pnpm 中某一个 package 的全局路径在哪里
+$ find . -inum 10086
+
+# 寻找相同的文件（硬链接），与以上命令相似
+$ find . -samefile package.json
+```
+
+**ag**
+
+- 可根据 [the silver searcher](https://github.com/ggreer/the_silver_searcher) 进行文件内容搜索
+- Windows 下载：[the_silver_searcher-win32/releases](https://github.com/k-takata/the_silver_searcher-win32/releases)
+
+![image-20220722103137024](E:\learn\lagouBigFront\md\Linux\img\image-20220722103137024.png)
+
+**git grep**
+
+- 根据文件内容搜索
+
+```bash
+$ git grep hello
+```
+
+### Day14 environment variables
