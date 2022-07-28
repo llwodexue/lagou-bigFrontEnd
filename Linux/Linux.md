@@ -2,6 +2,16 @@
 
 ## 远程连接
 
+### 包管理工具
+
+- 在 windows 中推荐 cygwin 作为终端工具
+
+  安装步骤：[Cygwin系列（四）：一步一步搭建Cygwin最小系统](https://zhuanlan.zhihu.com/p/58480246)
+
+- 推荐使用 apt-cyg 作为包管理工具
+
+  使用教程：[Cygwin系列（八）：命令行软件包管理器apt-cyg](https://zhuanlan.zhihu.com/p/66930502)
+
 ### Day1 免密登陆
 
 **登陆服务器：ssh**
@@ -88,6 +98,27 @@ Host *
 
 - 把本地的公钥放到与远程服务器的 `~/.ssh/authorized_keys` 里，再配置 `.ssh/config` 的 Host即可
 - 远程完了就可以把公钥删除
+
+如果无法免密登陆，排查思路如下：（最重要是看日志）
+
+1. `ssh -vvv lyn`，通过 `-vvv` 参数可查看详细的调试日志
+
+2. `ssh -v -E ssh_lyn_root.log lyn` 通过 -E 参数可将调式日志保存至某个文件中
+
+   将两者日志通过 diff 进行对比，发现在公钥认证阶段失败
+
+   ![image-20220728164205565](E:\learn\lagouBigFront\md\Linux\img\image-20220728164205565.png)
+
+3. `cat /var/log/secure` 在服务器里查找用户登录日志。发现日志写到 `authorized_keys`，且发现它没有权限（ownership、mode） 
+
+   ![image-20220728164541243](E:\learn\lagouBigFront\md\Linux\img\image-20220728164541243.png)
+
+    `~/.ssh/authorized_keys` 不能拥有其它用户（group、other）的写权限，通过 chmod 解决
+
+   ```bash
+   # 对于 go，删除其 w 权限
+   $ chmod go-w ~/.ssh/authorized_keys
+   ```
 
 ### Day2 ssh隧道
 
@@ -990,3 +1021,85 @@ $ git grep hello
 ```
 
 ### Day14 environment variables
+
+环境变量：`environment variables`，在操作系统及用户应用件都有极大的作用
+
+**printenv**
+
+- 环境变量名一般为全部大写
+
+```bash
+$ printenv
+USER=train
+LOGNAME=train
+HOME=/home/train
+PATH=/home/train/.autojump/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/train/bin
+SHELL=/usr/bin/zsh
+TERM=xterm
+XDG_SESSION_ID=2874
+XDG_RUNTIME_DIR=/run/user/1001
+DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1001/bus
+SSH_CLIENT=61.237.228.3 48815 22
+SSH_CONNECTION=61.237.228.3 48815 192.168.0.18 22
+SSH_TTY=/dev/pts/0
+SHLVL=1
+PWD=/home/train/Documents/student/lyn
+OLDPWD=/home/train
+HISTCONTROL=ignoredups
+MAIL=/var/spool/mail/train
+HOSTNAME=train
+HISTSIZE=50000
+LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=01;05;37;41:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.wim=01;31:*.swm=01;31:*.dwm=01;31:*.esd=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=01;36:*.au=01;36:*.flac=01;36:*.m4a=01;36:*.mid=01;36:*.midi=01;36:*.mka=01;36:*.mp3=01;36:*.mpc=01;36:*.ogg=01;36:*.ra=01;36:*.wav=01;36:*.oga=01;36:*.opus=01;36:*.spx=01;36:*.xspf=01;36:
+HISTTIMEFORMAT=%F %T train
+LANG=en_US.UTF-8
+LESSOPEN=||/usr/bin/lesspipe.sh %s
+which_declare=typeset -f
+ZSH=/home/train/.oh-my-zsh
+PAGER=less
+LESS=-R
+LSCOLORS=Gxfxcxdxbxegedabagacad
+AUTOJUMP_SOURCED=1
+AUTOJUMP_ERROR_PATH=/home/train/.local/share/autojump/errors.log
+_=/usr/bin/printenv
+
+$ printenv HOME
+/home/train
+```
+
+**$HOME**
+
+- 当前用户目录，也就是 `~` 目录
+
+```bash
+$ echo $HOME
+/home/train
+```
+
+**$USER**
+
+- 当前用户名
+
+```bash
+$ echo $USER
+train
+
+$ id --user --name
+train
+```
+
+**$SHELL**
+
+在 linux 中，有许多 shell 工具，比如：
+
+- bash
+- zsh
+- sh
+
+```bash
+echo $SHELL
+/usr/bin/zsh
+
+$ echo $SHELL
+/usr/bin/bash
+```
+
