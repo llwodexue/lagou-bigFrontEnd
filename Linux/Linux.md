@@ -12,7 +12,7 @@
 
   使用教程：[Cygwin系列（八）：命令行软件包管理器apt-cyg](https://zhuanlan.zhihu.com/p/66930502)
 
-### Day1 免密登陆
+### 1 免密登陆
 
 **登陆服务器：ssh**
 
@@ -120,7 +120,7 @@ Host *
    $ chmod go-w ~/.ssh/authorized_keys
    ```
 
-### Day2 ssh隧道
+### 2 ssh隧道
 
 > [使用用chrom浏览器访问6000端口提示 ERR_UNSAFE_PORT](https://blog.csdn.net/qq_28817739/article/details/84501454)
 >
@@ -180,7 +180,7 @@ local$ ssh -NR 10010:localhost:10010 lyn
 serve$ export HTTP_PROXY=http://127.0.0.1:10010/
 ```
 
-### Day3 rsync
+### 3 rsync
 
 > [rsync](https://www.ruanyifeng.com/blog/2020/08/rsync.html)
 
@@ -299,7 +299,7 @@ pause
 
 ## 文件操作
 
-### Day4 目录与切换操作
+### 4 目录与切换操作
 
 **cd**
 
@@ -389,7 +389,7 @@ $ tree react -aF -L 2
 
    Python：`os.listdir('xxx')`
 
-### Day5 用户相关
+### 5 用户相关
 
 Linux 为多用户系统，允许多个用户同时登录
 
@@ -463,7 +463,7 @@ train    pts/15       115.171.198.227  Wed Jul 13 16:40 - 16:42  (00:01)
 $ last -s 2022-7-14 -t 2022-7-15
 ```
 
-### Day6 stat
+### 6 stat
 
 尽量不要在 MacOS 中学习 Linux 命令
 
@@ -563,7 +563,7 @@ socket
 
    Python：`os.stat()`
 
-### Day7 chmod/chown
+### 7 chmod/chown
 
 **chown：** change owner，更改文件的所属用户及组
 
@@ -671,7 +671,13 @@ $ chmod a-r yarn.lock
 
    chmod a+r xxx
 
-3. 在 Node.js 或其它语言中如何修改 user 及 mod
+3. 当我们新建了一个文件时，它默认的 mode 是多少
+
+   普通用户：664
+
+   root 用户：644
+
+4. 在 Node.js 或其它语言中如何修改 user 及 mod
 
    示例：当前用户具有读权限
 
@@ -679,7 +685,7 @@ $ chmod a-r yarn.lock
 
    Python：`os.chmod('xxx', stat.S_IRUSR)`
 
-### Day8 ln
+### 8 ln
 
 `ln`：两个文件间创建链接，默认为硬链接
 
@@ -727,7 +733,7 @@ $ ln -s package.json b.json
 
    Python：硬链接：`os.link(src, dst)`、软链接：`os.symlink(src, dst)`
 
-### Day9 cat/less/head/tail
+### 9 cat/less/head/tail
 
 **cat**
 
@@ -792,7 +798,7 @@ $ tail -10 README.md
 $ tail -f log.json
 ```
 
-### Day10 pipe/redirection
+### 10 pipe/redirection
 
 **pipe**
 
@@ -854,7 +860,7 @@ $ echo hello > /dev/null
 $ cat hello > /dev/null 2>&1
 ```
 
-### Day11 glob
+### 11 glob
 
 **global：** global 的简写，使用通配符来匹配大量文件。比如：`rm * .js` 就可以删除当前目录所有 js 文件
 
@@ -928,7 +934,7 @@ $ echo $SHELL
 /usr/bin/bash
 ```
 
-### Day12 brace
+### 12 brace
 
 > [Brace-Expansion](https://www.gnu.org/software/bash/manual/bash.html#Brace-Expansion)
 
@@ -977,7 +983,7 @@ $ rm {a..z}.js
 
    `ls -lah {*.json,*.md}`
 
-### Day13 find/ag
+### 13 find/ag
 
 **find**
 
@@ -1005,6 +1011,20 @@ $ find . -inum 10086
 $ find . -samefile package.json
 ```
 
+如果需要找到所有文件，并对查询的文件进行一系列操作，可以使用 `--exec`，而文件名可以使用 `{{}}` 进行代替，最后需要使用 `\` 结尾
+
+- 如果用以删除，则可以直接使用 `--delete` 命令
+
+```bash
+# 在当前目录递归查找所有以 test 开头的文件，并打印完整路径
+# realpath: 打印文件的完整路径
+# {}: 查找到文件名的占位符
+$ find . -name 'test*' -exec realpath {} \;
+
+# 在当前目录递归查找所有以 test 开头的文件，并删除
+$ find . -name 'test*' -delete
+```
+
 **ag**
 
 - 可根据 [the silver searcher](https://github.com/ggreer/the_silver_searcher) 进行文件内容搜索
@@ -1020,7 +1040,11 @@ $ find . -samefile package.json
 $ git grep hello
 ```
 
-### Day14 environment variables
+1. 如何删掉当前目录中最近修改时间大于一年的全部文件
+
+   `find . -maxdepth 1 -mtime +365 -type f -delete`
+
+### 14 environment variables
 
 环境变量：`environment variables`，在操作系统及用户应用件都有极大的作用
 
@@ -1102,4 +1126,248 @@ echo $SHELL
 $ echo $SHELL
 /usr/bin/bash
 ```
+
+### 15 export
+
+**默认环境变量**
+
+可以使用 `$var` 或 `${var}` 来引用环节变量，且环境变量还有一些扩展值
+
+- `${var:-word}`：如果 `var` 不存在，则使用默认值 `word`
+- `${var:=word}`：如果 `var` 不存在，则使用默认值 `word`。并且赋值 `$var=word`
+- `${var:+word}`：如果 `var` 存在，则使用默认值 `word`
+
+```bash
+$ echo ${HELLO:-word}
+word
+$ echo $HELLO
+
+$ echo ${HELLO:=word}
+word
+$ echo ${HELLO}
+word
+$ echo ${HELLO:+lyn}
+lyn
+```
+
+在 `Dockerfile` 与 `CI` 中，常用到环境变量的扩展：
+
+```bash
+# 如果不配置环境变量，则其值为 production，并赋值给 NODE_ENV
+${NODE_ENV:=production}
+```
+
+**export**
+
+通过 `export` 可配置环境变量
+
+- 注意：`=` 前后不能有空格
+
+```bash
+$ export NODE_ENV=production
+$ echo $NODE_ENV
+production
+```
+
+通过 `export` 配置的环境变量仅在当前 `shell(tty)` 窗口有效，如果再开一个 shell，则无法读取变量
+
+- 如果需要配置的环境变量永久有效，需要写入 `~/.bashrc` 或 `~/.zshrc`
+
+```bash
+# 判断当前是哪个 shell
+# 如果是 zsh，写入 ~/.zshrc
+# 如果是 bash，写入 ~/.bashrc
+$ echo $SHELL
+/bin/zsh
+
+# 写入 ~/.zshrc，如果不存在该文件，请新建
+$ vim ~/.zshrc
+
+# 写入 ~/.zshrc 后记得使它生效，或者重开一个 shell 窗口
+$ source ~/.zshrc
+```
+
+**前置环境变量**
+
+在执行命令之前置入环境变量，可以用以指定仅在该命令中有效的环境变量
+
+```bash
+# 该环境变量仅在当前命令中有效
+$ NODE_ENV=production printenv NODE_ENV
+production
+
+# 没有输出
+$ printenv NODE_ENV
+```
+
+在前端中大量使用，如：
+
+```bash
+$ NODE_ENV=production npm run build
+```
+
+### 16 $PATH
+
+`$PATH` 有可能是写命令行工具最重要的环境变量
+
+- 打印的环境变量，输出以 `:` 分割的路径列表
+
+```bash
+$ echo $PATH
+/home/train/.autojump/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/train/bin
+```
+
+在 linux 操作系统中，有许多全局可执行的命令行工具，就是通过 `$PATH` 环境变量作为我们的全局命令执行目录
+
+**如何写一个命令行工具**
+
+1. 将自己的命令所在的目录纳入 `$PATH` 中
+2. 将自己的命令复制到 `$PATH` 的某个路径中（一般为软链接）
+
+> `npm install -g pkg` 全局安装的命令为什么可以直接使用？
+>
+> - 通过 `-g` 会将 pkg 安装到全局目录下的 noode_modules，如果该 pkg 拥有可执行文件，比如：webpack/vite/eslint 均有可执行文件，则在 package.json 中有一个字段是 bin，node 将 bin 中字段指向的文件软链接至 `$PATH` 的某个目录，则改命令可以全局执行
+
+![image-20220801142113275](E:\learn\lagouBigFront\md\Linux\img\image-20220801142113275.png)
+
+**which**
+
+- 列出全局命令的完整路径
+
+```bash
+# 当我们执行 ps 时，实际上执行的是 /usr/bin/ps
+$ which ps
+/usr/bin/ps
+```
+
+**command -v**
+
+- `command` 用以执行命令，及列出全局命令路径
+
+```bash
+# 直接执行 node
+$ command node
+
+# 打印出 node 的真实执行路径
+$ command -v node
+/usr/local/bin/node
+```
+
+`command -v` 与 `which` 区别：
+
+- 当某个命令不存在时，`command -v` 不会输出任何字符
+
+```bash
+$ which hello
+/usr/bin/which: no hello in (/home/train/.autojump/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/train/bin)
+
+# 无任何输出
+$ command -v hello
+```
+
+1. 如何设计一个可以切换 node 版本的命令行工具，比如 n 与 nvm
+
+   假设 `18.0.0` 为当前环境的 node 版本号，首先需要找到一个全局目录安装所有版本，假设为 `/lib/n`。则需要先安装 node 至 `lib/n/18.0.0` 目录中，最终将该目录下 node 执行命令 `lib/n/18.0.0/bin/node`
+
+   1. 软链接到 `$PATH` 下某个路径，比如：`/usr/bin`，可全局执行
+   2. 复制到 `$PATH` 下某个路径
+   3. 将 `lib/n/18.0.0/bin` 即当前版本 node 所在目录置于 `$PATH` 下，即 `$PATH="/lib/n/18.0.0/bin/:$PATH"`
+
+   总结：先找到一个能存储全局所有 node 安装版本的文件夹，需要切换哪个版本就将 $PATH 软链接（或复制）到对应版本的安装目录下即可
+
+### 17 zsh/ohmyzsh
+
+在 linux 中，拥有各种各样的 shell，比如：dash、bash、zsh 等
+
+**zsh**
+
+- 是一种更优丰富的交互效果，功能更加强大，界面更加华丽的 shell 工具
+- 通过 `chsh` 即 `change shell`，可切换终端默认 shell，但此时不会生效，下次登录时生效
+
+```bash
+# 安装 zsh（注意，不同的发行版，zsh 的安装命令不同）
+$ yum install zsh
+
+# 默认的 shell 是 bash
+$ echo $SHELL
+/bin/bash
+
+# 找到 zsh 的默认安装位置
+$ which zsh
+/usr/bin/zsh
+
+# 打印 shell 列表
+$ chsh -l
+/bin/sh
+/bin/bash
+/usr/bin/sh
+/usr/bin/bash
+/usr/bin/zsh
+/bin/zsh
+
+# 更改服务器默认登录的 shell，但此刻不会生效
+# -s: --shell，切换为指定的 shell
+$ chsh -s /usr/bin/zsh
+
+# 如过想要尽快体验 zsh，可直接输入zsh命令
+$ zsh
+```
+
+**ohmyzsh**
+
+- [ohmyzsh](https://github.com/ohmyzsh/ohmyzsh) 是一个管理 zsh 插件的轻量框架，使用其可配置大量有用的好看主题及插件
+
+```bash
+# 远程下载 install.sh 安装程序并直接执行
+$ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+![image-20220801163715847](E:\learn\lagouBigFront\md\Linux\img\image-20220801163715847.png)
+
+**zshrc**
+
+- `bash` 默认配置文件为 `~/.bashrc`
+- `zsh` 默认配置文件为 `~/.zshrc`
+
+**plugin**
+
+- 在 zsh 中可拓展多个插件，可见 [插件列表](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins)
+- 编辑 `~/.zshrc` 文件中的 `plugins` 配置，可启用插件
+- [zsh-autosuggestions](https://github.com/zsh-users/zsh-autosuggestions)
+- [zsh-syntax-highlighting](https://github.com/zsh-users/zsh-syntax-highlighting)
+
+```bash
+plugins=(git dotenv vi-mode)
+plugins=(git vi-mode zsh-syntax-highlighting zsh-autosuggestions dotenv)
+
+git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
+source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
+echo "source ${(q-)PWD}/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" >> ${ZDOTDIR:-$HOME}/.zshrc
+source ./zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+```
+
+- 如 [dotenv](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/dotenv) 可使 `.env` 文件中环境变量可在终端直接访问
+- 如 [vi-mode](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/vi-mode) 可在命令行下输出命令时使用 `vim`
+
+![image-20220801170523924](E:\learn\lagouBigFront\md\Linux\img\image-20220801170523924.png)
+
+**thme**
+
+- 在 ohmyzsh 中维护了多个主题，可见 [主题列表](https://github.com/ohmyzsh/ohmyzsh/wiki/Themes)
+
+```bash
+ZSH_THEME="robbyrussell"
+```
+
+### 18 快捷键
+
+
+
+
+
+
+
+
 
