@@ -1131,7 +1131,7 @@ $ echo $SHELL
 
 **默认环境变量**
 
-可以使用 `$var` 或 `${var}` 来引用环节变量，且环境变量还有一些扩展值
+可以使用 `$var` 或 `${var}` 来引用环境变量，且环境变量还有一些扩展值
 
 - `${var:-word}`：如果 `var` 不存在，则使用默认值 `word`
 - `${var:=word}`：如果 `var` 不存在，则使用默认值 `word`。并且赋值 `$var=word`
@@ -1351,23 +1351,335 @@ source ./zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 - 如 [dotenv](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/dotenv) 可使 `.env` 文件中环境变量可在终端直接访问
 - 如 [vi-mode](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/vi-mode) 可在命令行下输出命令时使用 `vim`
 
-![image-20220801170523924](E:\learn\lagouBigFront\md\Linux\img\image-20220801170523924.png)
-
 **thme**
 
 - 在 ohmyzsh 中维护了多个主题，可见 [主题列表](https://github.com/ohmyzsh/ohmyzsh/wiki/Themes)
 
 ```bash
 ZSH_THEME="robbyrussell"
+ZSH_THEME="random"
 ```
+
+1. sh 和 bash 的区别：
+
+   ![image-20220801170523924](E:\learn\lagouBigFront\md\Linux\img\image-20220801170523924.png)
 
 ### 18 快捷键
 
+快捷键模式默认为 Emacs Mode，以下都是高频快捷键，不仅可在命令行下使用，**还可以在 Python/Node.js REPL 设置浏览器控制台中直接使用**
+
+> 在 Mac 下可配置终端将 `Option` 作为 `Meta` 键，在 windows 下使用 `Alt` 键
+>
+> ![image-20220802091442639](E:\learn\lagouBigFront\md\Linux\img\image-20220802091442639.png)
+
+- `ctrl + a`：移至行首
+- `ctrl + e`：移至行尾
+- `meta + b`：移至上一个单词
+- `meta + f`：移至下一个单词
+- `ctrl + u`：删除光标之前内容
+- `ctrl + k`：删除光标之后内容
+- `ctrl + l`：清屏
+- `ctrl + p`：上一个历史记录
+- `ctrl + n`：下一个历史记录
+- 更多快捷键，可查看 [Readline 手册](https://www.man7.org/linux/man-pages/man3/readline.3.html#EDITING_COMMANDS)
+
+**Vim Mode**
+
+- 在 bash 下，通过 `set -o vi`，可以将快捷键改为 vi 风格
+- 在 Emacs Mode 下的清屏快捷键还挺好用，可在 vi mode 下通过 bind 命令绑定 `ctrl + l` 清屏命令
+
+```bash
+# 将这两行命令放置在 shell 配置文件下
+# bash: ~/.bashrc
+# zsh:  ~/.zshrc
+
+# 切换为 vi mode
+set -o vi
+# 绑定清屏的快捷键为 <ctrl-l>
+bind -m vi-insert "\C-l":clear-screen
+```
+
+**zsh 下的 Vim Mode**
+
+- 在 zsh 下，如果需要配置 `vi-mode`，你的操作就不需要如此麻烦，仅仅开启 `vi-mode` 插件即可
+
+```bash
+plugins=(... vi-mode)
+```
+
+### 19 引号与括号
+
+**引号**
+
+- 反引号：对命令直接执行
+- 双引号：对命令直接输出，对变量名进行替换
+- 单引号：全部原样输出
+
+```bash
+# 直接执行变量
+$ echo `pwd`
+/home/train/Documents/student/lyn
+
+# 对变量名进行替换输出
+$ echo "$USER"
+train
+
+# 对变量名不做替换进行输出
+$ echo '$USER'
+$USER
+```
+
+**小括号**
+
+- `$()` 与反引号拥有相同的功能，被称为 `Command substitution`
+
+```bash
+$ echo $(pwd)
+/home/train/Documents/student/lyn
+```
+
+- `$(())` 则有数字计算的功能
+
+```bash
+$ echo $((1+1))
+2
+```
+
+**中括号**
+
+- `[[  ]]` 可理解为布尔运算符，返回 true 或 false
+
+  注意：操作符前后均为空格
+
+```bash
+# 如果用户为 train，则输出 ok
+$ [[ $USER == 'train'  ]] && echo ok
+ok
+
+# 如果用户不为 train，则输出 ok
+$ [[ $USER != 'train'  ]] && echo ok
+```
+
+对于字符串而言，有一个高频的比较：是否为空
+
+- `[[ -z STRING ]]`：判断为空
+- `[[ -n STRING ]]`：判断非空
+
+```bash
+$ [[ -z "hi" ]] && echo ok
+
+$ [[ -n "hi" ]] && echo ok
+ok
+```
+
+对于数字的比较，则需要使用以下字符操作符：
+
+- `[[ NUM -eq NUM ]]`：Equal 等于
+- `[[ NUM -ne NUM ]]`：Not equal 不等于
+- `[[ NUM -lt NUM ]]`：Less than 小鱼
+- `[[ NUM -le NUM ]]`：Less than or equal 小于等于
+- `[[ NUM -gt NUM ]]`：Greater than 大于
+- `[[ NUM -ge NUM ]]`：Greater than or equal 小于等于
+
+如果更想使用 `>/</=` 等操作符，则需要使用 `(())` 括起来
+
+```bash
+$ [[ 5 -gt 3 ]]  && echo ok
+ok
+
+$ (( 5 > 3 )) && echo ok
+ok
+```
+
+有关布尔运算，则更多为对文件的操作：
+
+- `[[ -e FILE ]]`：Exists
+- `[[ -r FILE ]]`：Readable
+- `[[ -w FILE ]]`：Writable
+- `[[ -x FILE ]]`：Executable
+- `[[ -h FILE ]]`：Symlink
+- `[[ -d FILE ]]`：Directory
+- `[[ -f FILE ]]`：File
+- `[[ -s FILE ]]`：文件内容不为空
+
+```bash
+# 判断是否存在该路径
+[[ -e /usr/local/bin/npm ]] && echo ok
+
+# 如果不存在该路径，则输出 ok
+[[ ! -e /usr/local/bin/npm ]] && echo ok
+```
+
+1. shell 中 `${}` 与 `$()` 有什么区别
+
+   `${}`：括号中添加变量名，代表获取对应的环境变量
+
+   `$()`：与反引号作用一致，对命令直接执行，获取输出结果
+
+2. shell 中 `'` 与 `"` 有什么区别
+
+   `'`：直接对内容输出
+
+   `"`：代表使用命令直接输出，并使用变量名进行替换
+
+3. shell 中 `[[]]` 与 `(())` 有什么区别
+
+   `[[]]`：代表布尔运算符
+
+   `(())`：代表数值表达式。
+
+### 20 数组与字典
+
+在 shell 中，我们可以通过 `export` 来配置环境变量，而如果只需要配置 shell 脚本中的变量，可不带 `export` 参数
+
+- 关于 Array，也是通过 `=` 赋值即可完成
+
+  注意：`=` 前后不能有空格
+
+```bash
+$ export NODE_ENV=production
+$ echo $NODE_ENV
+production
+
+$ NODE_ENV=production
+$ echo $NODE_ENV
+production
+```
+
+**Array**
+
+- 在 shell 中通过 **括号及空格分割符** 来定义数组
+
+数组可通过下标进行访问，如果需要访问全部数组，则使用 `${ARRAY[@]}` 变量
+
+> zsh 中可直接使用 `$var`，在 bash 中使用 `${var}` 会报错，因此最好使用 `${var}`
+>
+> bash 中下标以 0 开始，zsh 中下标以 1 开始
+
+```bash
+$ list=('a' 'b' 'c' 'd' 'e')
+
+# 打印全部数组
+$ echo ${list[@]}
+a b c d e
+
+# 打印 index 为0的变量
+# 注意：在 zsh 中为打印所有值
+$ echo $lists
+a
+
+# 打印index为1的变量
+$ echo ${list[1]}
+b
+
+# 打印最后一个变量
+$ echo ${list[-1]}
+e
+
+# 打印数组长度
+$ echo ${#list[@]}
+5
+
+# 从index为2的变量开始打印，打印三个
+$ echo ${list[@]:2:3}
+c d e
+
+# 注意：在 zsh 中可通过 [2,3] 作为切片
+$ echo ${list[2,3]}
+b c
+
+# 增
+$ list+=('f' 'g')
+$ echo ${list[@]}
+a b c d e f g
+
+# 删
+$ unset list[3]
+$ echo ${list[@]}
+a b c e f g
+# 注意：在 zsh 中通过赋值空数组进行删除某一项
+$ list[3]=()
+
+# 改
+# 注意：在 zsh 中索引是从 1 开始的
+$ list[0]=x
+$ echo ${list[@]}
+x b c e f g
+```
+
+**Associative Array**
+
+> 在 JavaScript，可理解为对象，在 Python 中，可理解为字典
+
+通过 `declare -A` 或 `typeset -A` 定义字典，或者在 shell 叫 `Associative Array`
+
+```bash
+# 定义 object，两种方式都行
+$ typeset -A object
+$ declare -A object
 
 
+$ object[a]=3
+$ object[b]=4
+$ object[c]=5
 
+$ echo ${object[a]}
+3
 
+# 打印所有的 values
+$ echo ${object[@]}
+3 4 5
 
+# 打印所有的 keys
+$ echo ${!object[@]}
+a b c
+```
 
+在 zsh 中，关于 `Associative Array` 值得读取语法稍微不一样
 
+```bash
+# 打印所有的 keys
+$ echo ${(k)object[@]}
+
+# 打印所有的 values
+$ echo ${(v)object[@]}
+
+# 打印所有的 keys/values
+$ echo ${(kv)object[@]}
+```
+
+### 21 for/if
+
+**for**
+
+- 使用 `for in`，可遍历数组。对其中的分号，可使用换行替代
+- 除了 `for in`，也可以使用常见的 for 循环样式
+
+```bash
+for name [ [ in [ word ... ] ] ; ] do list ; done
+
+# 方式1
+for i in {1..100}; do echo $i; done
+# 方式2
+for i in {1..100}
+  do echo $i
+done
+# 方式3
+for (( i = 0; i < 100; i++ )); do echo $i; done
+```
+
+**if**
+
+- `if` 常与 `[[  ]]` 进行搭配
+- [How can I check if a program exists from a Bash script?](https://stackoverflow.com/questions/592620/how-can-i-check-if-a-program-exists-from-a-bash-script)
+
+```bash
+if [[ -z $USER ]]; then echo ok; fi
+
+# 如果 $USER 环境变量存在输出 ok，不存在则输出 not ok
+if [[ -z $USER ]]; then echo ok; else echo not ok; fi
+
+# 如果 npm 命令存在输出 ok，不存在则输出 not ok
+if [[ -n $(command -v npm) ]]; then echo ok; else echo not ok; fi
+```
 
