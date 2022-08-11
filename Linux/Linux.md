@@ -26,7 +26,7 @@ $ ssh train@121.37.177.179
 xunlianying10086
 ```
 
-![image-20220711112141578](E:\learn\lagouBigFront\md\Linux\img\image-20220711112141578.png)
+![image-20220711112141578](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220711112141578.png)
 
 **免密登陆步骤**
 
@@ -73,7 +73,7 @@ xunlianying10086
 1. 两个文件：本地环境的 `~/.ssh/id_rsa.pub` 与远程服务器的 `~/.ssh/authorized_keys`
 2. 一个动作：把本地文件 `~/.ssh/id_rsa.pub` 中内容复制粘贴到远程服务器远程服务器 `~/.ssh/authorized_keys`
 
-![image-20220711141350038](E:\learn\lagouBigFront\md\Linux\img\image-20220711141350038.png)
+![image-20220711141350038](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220711141350038.png)
 
 **安全性：禁用密码登陆**
 
@@ -107,11 +107,11 @@ Host *
 
    将两者日志通过 diff 进行对比，发现在公钥认证阶段失败
 
-   ![image-20220728164205565](E:\learn\lagouBigFront\md\Linux\img\image-20220728164205565.png)
+   ![image-20220728164205565](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220728164205565.png)
 
 3. `cat /var/log/secure` 在服务器里查找用户登录日志。发现日志写到 `authorized_keys`，且发现它没有权限（ownership、mode） 
 
-   ![image-20220728164541243](E:\learn\lagouBigFront\md\Linux\img\image-20220728164541243.png)
+   ![image-20220728164541243](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220728164541243.png)
 
     `~/.ssh/authorized_keys` 不能拥有其它用户（group、other）的写权限，通过 chmod 解决
 
@@ -134,7 +134,7 @@ Host *
 serve$ npx serve . -p 9090
 ```
 
-![image-20220711141654742](E:\learn\lagouBigFront\md\Linux\img\image-20220711141654742.png)
+![image-20220711141654742](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220711141654742.png)
 
 - 可以借助 `ssh 隧道`，将服务器端口号映射到宿主机本地
 
@@ -152,7 +152,7 @@ local$ ssh -NL 9040:localhost:9090 lyn
 
 之后在浏览器中可直接输入 `localhost:9040` 即可
 
-![image-20220711150222751](E:\learn\lagouBigFront\md\Linux\img\image-20220711150222751.png)
+![image-20220711150222751](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220711150222751.png)
 
 > 在服务器中安装了 mysql 数据库，我们如何更安全地连接数据库？
 >
@@ -171,7 +171,7 @@ local$ ssh -NR 9920:localhost:9930 lyn
 serve$ curl localhost:9920
 ```
 
-![image-20220712093626815](E:\learn\lagouBigFront\md\Linux\img\image-20220712093626815.png)
+![image-20220712093626815](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220712093626815.png)
 
 使用场景：环境变量 `HTTP_PROXY`，用以代理 HTTP 服务
 
@@ -201,11 +201,11 @@ serve$ export HTTP_PROXY=http://127.0.0.1:10010/
 
    方法一：下载 [7zip-zstd 安装包](https://github.com/mcmilk/7-Zip-zstd/releases) 进行解压
 
-   ![image-20220713102715030](E:\learn\lagouBigFront\md\Linux\img\image-20220713102715030.png)
+   ![image-20220713102715030](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220713102715030.png)
 
    之后会生成 `rsync-3.2.3-2-x86_64.pkg.tar` 文件夹，里面有 `rsync-3.2.3-2-x86_64.pkg.tar` 压缩包再对它进行如上操作即可解压完成
 
-   ![image-20220713101923880](E:\learn\lagouBigFront\md\Linux\img\image-20220713101923880.png)
+   ![image-20220713101923880](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220713101923880.png)
 
    方法二：使用 [zstd-v1.4.4-win64.zip 文件 ](https://github.com/facebook/zstd/releases/download/v1.4.4/zstd-v1.4.4-win64.zip) 进行如下操作，会直接生成 `usr` 文件夹
 
@@ -215,19 +215,19 @@ serve$ export HTTP_PROXY=http://127.0.0.1:10010/
 
    **注意：** `libxxhash-0.8.0-1-x86_64.pkg.tar.zst` 解压后需要把解压后的 `usr/bin` 目录下的 `msys-xxhash-0.8.0.dll` 文件名改为 `msys-xxhash-0.dll`
 
-   ![image-20220713102137672](E:\learn\lagouBigFront\md\Linux\img\image-20220713102137672.png)
+   ![image-20220713102137672](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220713102137672.png)
 
 3. 解压后生成一个 `usr`（文件夹里面可能包含 `bin`、`lib`、`share` ），将 `usr` 文件拷贝到 Git 安装目录下即可
 
-   ![image-20220713102500660](E:\learn\lagouBigFront\md\Linux\img\image-20220713102500660.png)
+   ![image-20220713102500660](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220713102500660.png)
 
 4. 在命令行即可使用 rsync
 
-   ![image-20220713103258258](E:\learn\lagouBigFront\md\Linux\img\image-20220713103258258.png)
+   ![image-20220713103258258](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220713103258258.png)
 
 **远程复制**
 
-![image-20220713105303223](E:\learn\lagouBigFront\md\Linux\img\image-20220713105303223.png)
+![image-20220713105303223](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220713105303223.png)
 
 将本地的 `package.json` 拷贝到服务器的 `~/Documents/test` 目录
 
@@ -485,7 +485,7 @@ $ last -s 2022-7-14 -t 2022-7-15
 - Change：ctime，文件修改时间（包括属性，比如 mode 和 owner，也包括 mtime，因此 ctime 总比 mtime 大）
 - Birth：某些操作系统其值为 -
 
-![image-20220719164659807](E:\learn\lagouBigFront\md\Linux\img\image-20220719164659807.png)
+![image-20220719164659807](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220719164659807.png)
 
 **stat -c：** 指定文件某个属性进行输出
 
@@ -545,7 +545,7 @@ socket
 - `b`，block special file：块设备文件
 - `c`，character special file：字符设备文件
 
-![image-20220722100345278](E:\learn\lagouBigFront\md\Linux\img\image-20220722100345278.png)
+![image-20220722100345278](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220722100345278.png)
 
 **问题**
 
@@ -569,7 +569,7 @@ socket
 
 - 第三列是用户，第四列是用户组
 
-![image-20220720090836537](E:\learn\lagouBigFront\md\Linux\img\image-20220720090836537.png)
+![image-20220720090836537](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220720090836537.png)
 
 将 `.` 文件夹下当前目录的用户及用户组设为 root
 
@@ -582,7 +582,7 @@ $ chown -R root:root .
 
 - 前端使用 `yarn` 去装包的时候，经常会遇到问题 `EACCES: permission denied, unlink ...`
 
-  ![image-20220720103058918](E:\learn\lagouBigFront\md\Linux\img\image-20220720103058918.png)
+  ![image-20220720103058918](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220720103058918.png)
 
 - 该问题有可能的原因是：非该文件的所属用户去修改文件内容。比如其中一种可能是，`node_modules` 所属用户应该为 `train` 这个普通用户，但实际上为 `root`，从而导致没有权限
 
@@ -695,7 +695,7 @@ $ chmod a-r yarn.lock
 $ ln package.json a.json
 ```
 
-![image-20220720114504676](E:\learn\lagouBigFront\md\Linux\img\image-20220720114504676.png)
+![image-20220720114504676](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220720114504676.png)
 
 在 stat 命令中，可发现硬链接文件与源文件
 
@@ -711,7 +711,7 @@ $ ln package.json a.json
 $ ln -s package.json b.json
 ```
 
-![image-20220720141806542](E:\learn\lagouBigFront\md\Linux\img\image-20220720141806542.png)
+![image-20220720141806542](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220720141806542.png)
 
 在 stat 命令中，可发现软链接文件与源文件
 
@@ -1030,7 +1030,7 @@ $ find . -name 'test*' -delete
 - 可根据 [the silver searcher](https://github.com/ggreer/the_silver_searcher) 进行文件内容搜索
 - Windows 下载：[the_silver_searcher-win32/releases](https://github.com/k-takata/the_silver_searcher-win32/releases)
 
-![image-20220722103137024](E:\learn\lagouBigFront\md\Linux\img\image-20220722103137024.png)
+![image-20220722103137024](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220722103137024.png)
 
 **git grep**
 
@@ -1228,7 +1228,7 @@ $ echo $PATH
 >
 > - 通过 `-g` 会将 pkg 安装到全局目录下的 noode_modules，如果该 pkg 拥有可执行文件，比如：webpack/vite/eslint 均有可执行文件，则在 package.json 中有一个字段是 bin，node 将 bin 中字段指向的文件软链接至 `$PATH` 的某个目录，则改命令可以全局执行
 
-![image-20220801142113275](E:\learn\lagouBigFront\md\Linux\img\image-20220801142113275.png)
+![image-20220801142113275](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220801142113275.png)
 
 **which**
 
@@ -1322,7 +1322,7 @@ $ zsh
 $ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 
-![image-20220801163715847](E:\learn\lagouBigFront\md\Linux\img\image-20220801163715847.png)
+![image-20220801163715847](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220801163715847.png)
 
 **zshrc**
 
@@ -1362,7 +1362,7 @@ ZSH_THEME="random"
 
 1. sh 和 bash 的区别：
 
-   ![image-20220801170523924](E:\learn\lagouBigFront\md\Linux\img\image-20220801170523924.png)
+   ![image-20220801170523924](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220801170523924.png)
 
 ### 18 快捷键
 
@@ -1370,7 +1370,7 @@ ZSH_THEME="random"
 
 > 在 Mac 下可配置终端将 `Option` 作为 `Meta` 键，在 windows 下使用 `Alt` 键
 >
-> ![image-20220802091442639](E:\learn\lagouBigFront\md\Linux\img\image-20220802091442639.png)
+> ![image-20220802091442639](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220802091442639.png)
 
 - `ctrl + a`：移至行首
 - `ctrl + e`：移至行尾
@@ -1683,3 +1683,308 @@ if [[ -z $USER ]]; then echo ok; else echo not ok; fi
 if [[ -n $(command -v npm) ]]; then echo ok; else echo not ok; fi
 ```
 
+### 22 function
+
+将文件保存为 `hello.sh`，并通过 `bash hello.sh` 进行执行
+
+```bash
+hello () {
+  echo hello
+}
+
+hello
+```
+
+**传递参数**
+
+- `$0` 在 zsh 中指函数名，在 bash 中指脚本名
+
+```bash
+hello () {
+  echo $0 $1 $2 $3 $4
+}
+
+# bash index.sh => hello.sh a b c d
+# zsh index.sh  => hello a b c d
+# source index.sh => bash a c c d  (bash 环境下)
+# source index.sh => hello a c c d (zsh 环境下)
+hello a b c 
+```
+
+**特殊变量**
+
+在函数中还有以下特殊的变量：
+
+- `$#`：参数数量
+
+- `$*`：所有参数
+
+- `$@`：所有参数
+
+  [$* 和 $@ 的差异](https://wiki.bash-hackers.org/scripting/posparams#handling_positional_parameters)
+
+可以联想数组，`@` 代表所有数组，`#` 代表数组个数
+
+```bash
+hello () {
+  echo '$#' ${#}
+  echo '$*' ${*}
+  echo '$@' ${@}
+}
+
+# $# 4
+# $* a b c d
+# $@ a b c d
+hello a b c d
+```
+
+**命令行即函数**
+
+实际上，可把命令行视为函数，如果 `$0`、`$1`、`$@` 出现在全局，则表示它们是命令行的参数
+
+> [nodejs 官方镜像的 docker-entrypoint](https://github.com/nodejs/docker-node/blob/main/16/alpine3.16/docker-entrypoint.sh) 是何意思？
+>
+> ```bash
+> #!/bin/sh
+> set -e
+> 
+> if [ "${1#-}" != "${1}" ] || [ -z "$(command -v "${1}")" ] || { [ -f "${1}" ] && ! [ -x "${1}" ]; }; then
+>   set -- node "$@"
+> fi
+> 
+> exec "$@"
+> ```
+>
+> 是否满足如下几个条件：
+>
+> - `"${1#-}" != "${1}"`：判断 `$1` 是否以 `-` 开头
+>
+> - `-z "$(command -v "${1}")"` 判断 `$1` 是否是一个全局可执行的命令
+>
+> - `-f "${1}"`：判断 `$1` 是否是一个文件
+>
+>   `-x "${1}"`：判断 `$1` 是否是一个可执行文件
+>
+>   结合起来就是判断 `$1` 是否是当前目录一个文件且不可执行
+>
+> `set -- node "$@"`：最前边添加一个 node 参数
+
+**shebang**
+
+- `#!` 组成了 `shebang`，指定脚本执行的解释器的绝对路径
+
+```bash
+# 使用 sh 执行脚本
+#!/bin/sh
+
+# 使用 python 执行脚本
+#!/usr/bin/python
+```
+
+**set -e**
+
+- 当命令发生异常时立即退出
+
+```bash
+# 当有该行时，直接报错退出
+# 当无该行时，最终会输出 done
+set -e
+cat notexistfile
+echo done
+```
+
+**if**
+
+- `[ ]`：布尔判断（也可以使用 `[[ ]]`）
+- `$1`、`$2`、`$@`：`$1` 代表命令行第一个参数，`$@` 代表命令行所有参数
+
+**${1#-}**
+
+- 这种属于比较不常见的 `Parameter Expansion`，常见的也就 `${NODE_ENV:=development}` 这种
+- `${var#word}`：如果变量 `$var` 以 `word` 开头，则 `${var#word}` 的值为 `$var` 删掉 `word`，否则为 `$var`（Remove prefix）
+
+```bash
+$ var=helloworld
+$ echo ${var#hello}
+world
+$ echo ${var#world}
+helloworld
+
+$ var=--version
+$ [[ ${var:0:1} == "-" ]] && echo ok
+ok
+```
+
+**command -v**
+
+- `command -v <command>`：输出某个命令的真实绝对路径，`which` 也可以干这件事情
+
+  两者最重要的不同点是：当某个命令不存在时，`command -v` 不会输出任何字符，用此常来判断某个命令是否存在
+
+```bash
+$ command -v node
+/usr/local/bin/node
+
+$ which hello
+/usr/bin/which: no hello in (/home/train/.autojump/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/home/train/bin)
+```
+
+而 `[[ -z STRING ]]`，判断 STRING 是否为空字符
+
+```bash
+{ [ -f "${1}" ] && ! [ -x "${1}" ]; }
+```
+
+注意两点：
+
+1. 该命令使用 `{}` 包裹
+
+2. 该命令最后又一个分号
+
+   [how to nest conditional script operators -a -o in an if statement in bash](https://unix.stackexchange.com/questions/670519/how-to-nest-conditional-script-operators-a-o-in-an-if-statement-in-bash)
+
+**set --**
+
+- `set` 用以重置命令行 `$1`、`$2`、`$3` 等参数
+
+```bash
+$ set -- a b c d
+$ echo $1 $2 $3 $4
+a b c d
+$ echo "$@"
+a b c d
+
+$ set -- node "$@"
+$ echo "$@"
+node a b c d
+```
+
+**exec**
+
+- 执行某条命令，但会退出当前 shell
+
+```bash
+$ exec echo hello
+hello
+```
+
+总结：
+
+```bash
+#!/bin/sh
+set -e
+
+# 如果 $1 以 - 开头
+if [ "${1#-}" != "${1}" ] ||
+  # 或者不是一个可执行命令
+  [ -z "$(command -v "${1}")" ] ||
+  # 或者是当前目录的一个文件，但不可执行
+  { [ -f "${1}" ] && ! [ -x "${1}" ]; };
+then
+  # 则在前边附一个 node 
+  set -- node "$@"
+fi
+
+# 执行执行代码
+exec "$@"
+```
+
+1. 如果以 `-` 开头，则作为 `node` 的参数执行
+2. 如果判断 `$1` 是文件且不可执行，则使用 `node` 运行该问及那
+3. 如果判断 `$1` 是系统命令，则直接执行该命令
+
+### 23 vim mode
+
+**打开文件**
+
+```bash
+# 新建一个文件 Readme.md，输入字符
+$ vim Readme.md
+```
+
+1. `vim Readme.md`，新建并打开一个文件 Readme.md，此时处于 `normal mode`
+2. `i`。进入 `insert mode`，此时可正常编辑文字
+3. `<esc>`。退出 `insert mode`，此时处于 `normal mode`
+4. `:`。进入 `command mode`
+5. `:wq`。在 `command mode` 下继续输入 `:wq`，保存退出
+
+**模式**
+
+在新建文件后，已经接触了三种模式：
+
+- normal：普通模式，刚进入 vim 的默认模式，也是最重要的模式。确保大部分操作在普通模式下完成，而不是插入模式
+- insert：插入模式，在普通模式下通过 `i` 进入插入模式，在插入模式下进行文字编辑
+- command：命令模式，在普通模式下通过 `:` 进入命名模式，在命令模式下执行命令
+
+**insert mode commands**
+
+一般来说，通过 `i` 进入 `insert mode`，但除此之外，还有一些更好用的进入插入模式的命令：
+
+- `i`：进入插入模式，并定位光标至当前 **字符之前**
+- `I`：进入插入模式，并定位光标至当前 **行首**
+- `a`：进入插入模式，并定位光标至当前 **字符之后**
+- `A`：进入插入模式，并定位光标至当前 **行尾**
+- `o`：进入插入模式，当前光标之后新建一行，并定位光标之后一行
+- `O`：进入插入模式，当前光标之前新建一行，并定位光标之前一行
+
+**normal mode commands**
+
+一般来说，通过 `<esc>` 可退出 `insert mode`，但是基于两方面考虑，一般不使用该键：
+
+1. `<esc>` 过于偏远，按键不方便
+2. 在 VSCode/Codepen/Codesandbox 及命令行的 vi 模式下，`<esc>` 可能与其它快捷键发生冲突
+
+可使用 `ctrl + c` 或 `ctrl + [` 进行替代
+
+### 24 vim move
+
+在 vim 中，`j` 代表向下一行，那么 `3j` 代表向下三行
+
+**逐字逐行**
+
+在 vim 中严禁使用方向键进行移动，请使用以下快捷键：
+
+- `j`：向下一行
+- `k`：向上一行
+- `h`：向左一个字符
+- `l`：向右一个字符
+- `$`：移至行尾，如果想移动至行尾最后一个非空字符，请用 `g_`，但行尾最后严禁多余的空格
+- `0`：移至行首，如果想移动至行首第一个非空字符，请用 `^`
+
+在 vim 中通过命令 `:set list`，可显示非空字符特殊字符。如果取消现实，可使用 `:set nolist`
+
+**逐词移动**
+
+再开始逐词移动之前，需要先明白 vim　关于词的两个概念：
+
+-	`word`：数字字符下划线构成的词。比如 `yarn.lock` 是三个 word
+-	`WORD`：非空字符构成的词，比如 `yarn.lock` 是一个 WORD
+
+在以下快捷键中：
+
+- `w`：移动至下一个 word 首部
+- `W`：移动至下一个 WORD 首部
+- `b`：移动至上一个 word 首部
+- `B`：移动至上一个 WORD 首部
+- `e`：移动至下一个 word 尾部
+- `E`：移动至下一个 WORD 尾部
+
+**查词移动**
+
+有时，直接定位到某个字符更加方便
+
+- `f<char>`：移动至下个字母位置。如：`fa`，则是移动至下一个字母 `a` 的位置
+- `F<char>`：移动至上个字母位置，如：`Fa`，则是移动至上一个字母 `A` 的位置
+- `t<char>`：移动至下个字母位置前一个字符
+- `T<char>`：移动至上个字母位置后一个字符
+
+除此之外，还有一个 `;`，可重复上次查词动作。比如：想查找字符 `a` 第三次出现位置，除了使用 `3fa`，还可以使用 `;;`
+
+**高频移动**
+
+- `G`：移至最后一行
+- `gg`：移至首行
+- `<n>G`：移至第 n 行
+- `:n<enter>`：移至第 n 行
+- `ctrl + o`：移至上次光标出现位置
+- `ctrl + i`：移至下次光标出现位置
