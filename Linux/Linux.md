@@ -1275,6 +1275,8 @@ $ command -v hello
 
    总结：先找到一个能存储全局所有 node 安装版本的文件夹，需要切换哪个版本就将 $PATH 软链接（或复制）到对应版本的安装目录下即可
 
+## shell 操作
+
 ### 17 zsh/ohmyzsh
 
 在 linux 中，拥有各种各样的 shell，比如：dash、bash、zsh 等
@@ -1893,6 +1895,8 @@ exec "$@"
 2. 如果判断 `$1` 是文件且不可执行，则使用 `node` 运行该问及那
 3. 如果判断 `$1` 是系统命令，则直接执行该命令
 
+## 文件编辑
+
 ### 23 vim mode
 
 **打开文件**
@@ -2003,3 +2007,238 @@ $ vim Readme.md
 - `zt`：将当前行移至屏幕最上方
 - `zb`：将当前行移至屏幕最下方
 - `zz`：将当前行移至屏幕最中央
+
+### 26 vim operator
+
+**yank（copy）**
+
+- `yy`：复制整行内容
+- ~~`Y`：复制当前字符至行尾，需要配置 `:map Y y$`~~
+- `p`：光标之后进行粘贴
+- `P`：光标之前进行粘贴
+
+**delete**
+
+- `dd`：删除整行内容
+- `D`：删除当前字符至行尾
+
+**change**
+
+- `cc`：删除整行内容并进入 `insert mode`
+- `C`：删除当前字符至行尾并进入 `insert mode`
+
+**shift**
+
+- `>>`：向右缩进
+- `<<`：向左缩进
+
+**operator + move**
+
+以上三种操作，都可以与 move 建结合。比如 `d` 是删除，则：
+
+- `dl`：删除右侧字符（当前字符）
+
+- `dh`：删除左侧字符
+
+- `d$`：删除至行尾
+
+- `dG`：删除至末尾
+
+- `3dl`：删除右侧三个字符
+
+  `d3l`：删除右侧三个字符
+
+**text object**
+
+除此之外，结合 `a/i` 还可以更好地在括号、引号内工作
+
+- `aw`：a word
+- `iw`：inner word
+- `aW`：a WORD
+- `iW`：inner WORD
+- `a[`：a [] block
+- `a(`
+- `a<`
+- `a{`
+- `a"`
+- `a'`
+
+如何删除括号内所有内容：
+
+- `daw`：删除当前单词
+- `di(`：删除括号所有内容
+- `da(`：删除括号内所有内容，包括括号
+- `ca(`：删除括号内所有内容，包括括号，并进入 `insert mode`
+
+**undo/redo/search**
+
+- `u`：撤销
+- `ctrl + r`：重做
+- `/{word}<cr>`：高亮搜索词，如果不需要高亮时，可使用 `:noh[lsearch]` 取消高亮
+- `n`：下一个搜索
+- `N`：上一个搜索
+
+### 27 vim visual mode
+
+**visual mode**
+
+- `v`：逐字选择
+- `V`：逐行选择
+- `ctrl + v`：逐块选择
+
+进入 `visual mode` 后
+
+1. 用 vim move 移动选择区域
+2. 用 vim operator 选中区域进行复制、删除、缩进等操作
+
+如果需要中途退出 `visual mode`，使用 `ctrl + c`
+
+**ctrl + v**
+
+`ctrl + v` 可以以方形选中区域，并可同时操作多行。比如，同时给三行内容前添加 `HELLO`，可使用 `ctrl + v jjIHELLO ctrl + [`
+
+- `ctrl + v`：进入 `vim visual mode`
+- `jj`：往下选择两行
+- `I`：进入区域首字符进行编辑
+- `HELLO`：编辑文字
+- `ctrl + [`：退出 `visual mode`
+
+### 28 vim config
+
+vim 的配置文件位于 `~/.vimrc`，在 Github 上有许多受欢迎的 `.vimrc` 配置
+
+- [vim-config](https://github.com/shfshanyue/vim-config)：山月的 vim 配置
+- [amix/vimrc](https://github.com/amix/vimrc)：有可能是最受欢迎的 vim 配置
+
+**leader**
+
+通过 `leader` 可以配置诸多自定义的快捷键，一般会先按下 `leader` 键，再按自定义键就可以完成快捷键操作
+
+编辑 `~/.vimrc`，添加以下内容，表示 `,` 为 `<leader>` 键
+
+```bash
+let mapleader=","
+```
+
+**map/nmap**
+
+在 vim 中，可通过 `leader` 与 `map` 自定义快捷键，`nmap` 代表 `normal mode` 下的快捷键映射
+
+```bash
+# w：快速保存
+nmap <leader>w :w!<回车>
+
+# 配置 Y 与 D/C 一样可以从当前字符复制
+nmap Y y$;
+```
+
+在 vim 中也可以打开多个窗口，通过 `<ctrl-w>` 与 `jkhl` 结合即可上下左右切换窗口
+
+```bash
+# 快速切换窗口
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+```
+
+**swapfile**
+
+![image-20220812144213458](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220812144213458.png)
+
+```bash
+# 不产生交换文件(当打开一个文件未正常关闭时会产生交换文件)
+set noswapfile
+```
+
+**tab/space**
+
+```bash
+# tab == 2 space
+set expandtab
+set smarttab
+set shiftwidth=2
+set tabstop=2
+```
+
+### 29 vim plugin
+
+> [vim 插件推荐](https://q.shanyue.tech/command/vim-plugin.html#nerdtree)
+
+### 30 tmux
+
+> [一文助你打通 tmux](https://zhuanlan.zhihu.com/p/102546608)
+
+`tmux` 是一个终端复用器，这也是它命名的由来 `t(terminal) mux(multiplexer)`，你可以在 linux 终端管理多个窗口。
+
+1. 分屏
+2. attach。`attach` 可以起到保护现场的作用，不至于因 `ssh timeout`，而丧失了工作环境
+3. 操作简单，可配置化。你可以使用快捷键很快地在多个窗口，面板间切换，粘贴复制，无限滚屏
+
+**安装**
+
+> [Mac终端： brew command not found 解决方法](https://blog.csdn.net/weixin_43822632/article/details/110472605)
+
+```bash
+# 安装 brew
+/bin/zsh -c "$(curl -fsSL https://gitee.com/cunkai/HomebrewCN/raw/master/Homebrew.sh)"
+
+brew install tmux
+```
+
+如果在 linux 上，可直接通过 [tmux源码](https://github.com/tmux/tmux) 编译安装
+
+```bash
+# 安装软件依赖
+$ yum install -y gcc automake libevent-devel ncurses-devel glibc-static
+
+# 下载源代码
+$ git clone git@github.com:tmux/tmux.git
+
+# 编译源码
+$ sh autogen.sh && ./configure && make
+
+# 直接执行
+$ ./tmux 
+
+# 使得 tmux 可全局执行
+$ cp ./tmux /usr/local/bin/tmux
+```
+
+**术语**
+
+- `server`：包含多个 `session`
+- `session`：可以理解为谷歌浏览器打开了两个浏览器，每个浏览器就是一个 `session`，每一个 `session` 包含多个 `window`
+- `window`：可以理解为谷歌浏览器的每个标签页，每一个 `window` 包含多个 `pane`
+- `pane`：面板
+
+**命令**
+
+在 `tmux` 中直接使用 `tmux` 命令可进入 `tmux` 环境
+
+```bash
+# 新建一个 tmux session
+# new：new-session 的简写
+$ tmux new -s shanyue
+
+# 也可以直接通过 tmux 命令进入
+$ tmux
+```
+
+如果需要退出 `tmux` 环境但需要保存工作现场，则输入命令 `tmux detach` 即可，下次进入时选择 `tmux attach`
+
+```bash
+# 退出并保存环境
+$ tmux detach
+
+# 列出所有的 session
+# ls：list-sessions 的简写
+$ tmux ls
+shanyue: 1 windows (created Sun Jul 31 16:02:49 2022)
+
+# a: attach 简写，
+# -t：选择要 attach 的 session name
+$ tmux a -t shanyue
+```
+
+### 31 tmux 快捷键与配置
