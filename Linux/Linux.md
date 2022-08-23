@@ -58,7 +58,7 @@ xunlianying10086
      IdentityFile ~/.ssh/id_rsa
    ```
 
-   这里需要注意，需要把 `~/.ssh/id_rsa.pub` 文件粘贴到远程服务器远程服务器 `~/.ssh/authorized_keys` 中，这里可以使用 `ssh-copy-id` 工具来代替 `Ctrl-C + Ctrl-V` 操作 
+   这里需要注意，需要把 `~/.ssh/id_rsa.pub` 文件粘贴到远程服务器远程服务器 `~/.ssh/authorized_keys` 中，这里可以使用 `ssh-copy-id` 工具来代替 `<ctrl + c>、<ctrl + v>` 操作 
 
    ```bash
    # 提示你输入密码，成功后可以直接 ssh 登陆
@@ -1374,21 +1374,21 @@ ZSH_THEME="random"
 >
 > ![image-20220802091442639](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220802091442639.png)
 
-- `ctrl + a`：移至行首
-- `ctrl + e`：移至行尾
-- `meta + b`：移至上一个单词
-- `meta + f`：移至下一个单词
-- `ctrl + u`：删除光标之前内容
-- `ctrl + k`：删除光标之后内容
-- `ctrl + l`：清屏
-- `ctrl + p`：上一个历史记录
-- `ctrl + n`：下一个历史记录
+- `<ctrl + a>`：移至行首
+- `<ctrl + e>`：移至行尾
+- `<meta + b>`：移至上一个单词
+- `<meta + f>`：移至下一个单词
+- `<ctrl + u>`：删除光标之前内容
+- `<ctrl + k>`：删除光标之后内容
+- `<ctrl + l>`：清屏
+- `<ctrl + p>`：上一个历史记录
+- `<ctrl + n>`：下一个历史记录
 - 更多快捷键，可查看 [Readline 手册](https://www.man7.org/linux/man-pages/man3/readline.3.html#EDITING_COMMANDS)
 
 **Vim Mode**
 
 - 在 bash 下，通过 `set -o vi`，可以将快捷键改为 vi 风格
-- 在 Emacs Mode 下的清屏快捷键还挺好用，可在 vi mode 下通过 bind 命令绑定 `ctrl + l` 清屏命令
+- 在 Emacs Mode 下的清屏快捷键还挺好用，可在 vi mode 下通过 bind 命令绑定 `<ctrl + l>` 清屏命令
 
 ```bash
 # 将这两行命令放置在 shell 配置文件下
@@ -1397,7 +1397,7 @@ ZSH_THEME="random"
 
 # 切换为 vi mode
 set -o vi
-# 绑定清屏的快捷键为 <ctrl-l>
+# 绑定清屏的快捷键为 <ctrl + l>
 bind -m vi-insert "\C-l":clear-screen
 ```
 
@@ -1938,7 +1938,7 @@ $ vim Readme.md
 1. `<esc>` 过于偏远，按键不方便
 2. 在 VSCode/Codepen/Codesandbox 及命令行的 vi 模式下，`<esc>` 可能与其它快捷键发生冲突
 
-可使用 `ctrl + c` 或 `ctrl + [` 进行替代
+可使用 `<ctrl + c>` 或 `<ctrl + [>` 进行替代
 
 ### 24 vim move
 
@@ -1990,17 +1990,17 @@ $ vim Readme.md
 - `gg`：移至首行
 - `<n>G`：移至第 n 行
 - `:n<enter>`：移至第 n 行
-- `ctrl + o`：移至上次光标出现位置
-- `ctrl + i`：移至下次光标出现位置
+- `<ctrl + o>`：移至上次光标出现位置
+- `<ctrl + i>`：移至下次光标出现位置
 
 ### 25 vim scroll
 
 **逐页移动**
 
-- `ctrl + u`：向上移动半屏
-- `ctrl + d`：向下移动半屏
-- `ctrl + b`：向上移动一屏
-- `ctrl + f`：向下移动一屏
+- `<ctrl + u>`：向上移动半屏
+- `<ctrl + d>`：向下移动半屏
+- `<ctrl + b>`：向上移动一屏
+- `<ctrl + f>`：向下移动一屏
 
 **居中光标**
 
@@ -2073,7 +2073,7 @@ $ vim Readme.md
 **undo/redo/search**
 
 - `u`：撤销
-- `ctrl + r`：重做
+- `<ctrl + r>`：重做
 - `/{word}<cr>`：高亮搜索词，如果不需要高亮时，可使用 `:noh[lsearch]` 取消高亮
 - `n`：下一个搜索
 - `N`：上一个搜索
@@ -2084,24 +2084,24 @@ $ vim Readme.md
 
 - `v`：逐字选择
 - `V`：逐行选择
-- `ctrl + v`：逐块选择
+- `<ctrl + v>`：逐块选择
 
 进入 `visual mode` 后
 
 1. 用 vim move 移动选择区域
 2. 用 vim operator 选中区域进行复制、删除、缩进等操作
 
-如果需要中途退出 `visual mode`，使用 `ctrl + c`
+如果需要中途退出 `visual mode`，使用 `<ctrl + c>`
 
 **ctrl + v**
 
-`ctrl + v` 可以以方形选中区域，并可同时操作多行。比如，同时给三行内容前添加 `HELLO`，可使用 `ctrl + v jjIHELLO ctrl + [`
+`<ctrl + v>` 可以以方形选中区域，并可同时操作多行。比如，同时给三行内容前添加 `HELLO`，可使用 `ctrl + v jjIHELLO ctrl + [`
 
-- `ctrl + v`：进入 `vim visual mode`
+- `<ctrl + v>`：进入 `vim visual mode`
 - `jj`：往下选择两行
 - `I`：进入区域首字符进行编辑
 - `HELLO`：编辑文字
-- `ctrl + [`：退出 `visual mode`
+- `<ctrl + [>`：退出 `visual mode`
 
 ### 28 vim config
 
@@ -2132,7 +2132,7 @@ nmap <leader>w :w!<回车>
 nmap Y y$;
 ```
 
-在 vim 中也可以打开多个窗口，通过 `<ctrl-w>` 与 `jkhl` 结合即可上下左右切换窗口
+在 vim 中也可以打开多个窗口，通过 `<ctrl + w>` 与 `jkhl` 结合即可上下左右切换窗口
 
 ```bash
 # 快速切换窗口
@@ -2242,3 +2242,112 @@ $ tmux a -t shanyue
 ```
 
 ### 31 tmux 快捷键与配置
+
+tmux 默认配置文件为 `~/.tmux.conf` 
+
+- [tmux-config for shanyue](https://github.com/shfshanyue/tmux-config)
+- [gpakosz/.tmux](https://github.com/gpakosz/.tmux)
+
+在 tmux 中，可通过 `<prefix>:` 进入命令模式
+
+![image-20220815162737718](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220815162737718.png)
+
+此时可输入 `detach` 来 `detach session`，在命令行直接输入 `tmux detach` 是一样的效果
+
+**prefix-key**
+
+在 tmux，有一个 `<prefix>` 键，默认为 `<ctrl + b>`，在按任意快捷键之前需要按一个 `<prefix>` 键
+
+`send-prefix` 指令代表向 tmux 发送 `<prefix>` 键，`send-prefix-2` 代表新增一个 `prefix` 键
+
+- 由于 `<ctrl + s>` 相比 `ctrl + b` 更加便捷，因此使用它作为常用的快捷键
+
+```bash
+# 以下命令直接在 tmux 命令模式执行，或者加关键字 `tmux` 在 shell 中执行，或者写入配置文件 ~/.tmux.conf 中生效
+# `prefix :` 可以进入 tmux 命令模式
+
+$ set -g prefix2 C-s
+$ bind C-s send-prefix -2
+```
+
+**查看帮助**
+
+在 tmux 下可通过 `<prefix?>` 查看所有快快捷键
+
+![image-20220815163705733](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220815163705733.png)
+
+**split-window**
+
+在 tmux 环境下快捷键 `<prefix>%`（左右） 与 `<prefix>"`（上下） 完成分屏
+
+- 可以通过命令 `tmux split-window` 进行分屏
+
+```bash
+# -h：水平分屏
+# -c：指定路径
+$ tmux split-window -h -c ~
+```
+
+为了每次分屏都能定位到分屏窗口的当前路径，可使用以下快捷键进行绑定
+
+```bash
+bind % split-window -h -c "#{pane_current_path}"
+bind '"' split-window -c "#{pane_current_path}"
+```
+
+**分屏移动**
+
+移动面板命令为 `tmux select-pane`，可配置移动命令为 `hljk`，例如： `<prefix>h` 就是向左移动面板
+
+```bash
+# 以下命令直接在 tmux 命令模式执行，或者加关键字 `tmux` 在 shell 中执行，或者写入配置文件 ~/.tmux.conf 中生效
+# `prefix :` 可以进入 tmux 命令模式
+
+# bind：绑定快捷键
+# -r：可重复按键
+# select-pane：选择面板
+$ bind -r h select-pane -L 
+$ bind -r l select-pane -R
+$ bind -r j select-pane -D
+$ bind -r k select-pane -U
+```
+
+**常见快捷键**
+
+- `<prefix>d`：detach session
+- `<prefix>$`：rename session
+- `<prefix>s`：切换 session
+- `<prefix>c`：新建窗口
+- `<prefix>,`：重命名窗口
+- `<prefix>1`：选择1号窗口
+- `<prefix>2`：选择2号窗口
+- `<prefix><space>`：重排局当前窗口
+- `<prefix>x`：杀掉当前面板，当当前面板卡死时特别有用
+- `<prefix>z`：将当前面板最大化或恢复
+
+**翻屏**
+
+按 `prefix [` 键进入 tmux 的 `copy mode`，此时可见到在 tmux 右上角有一个黄色的行号
+
+该模式类似于 vi 的 normal mode，支持复制，粘贴，查找，以及翻页。具体是 vi 还是 emacs 可以根据以下命令探知
+
+与 vi 命令相同，如上下翻页(半屏)可使用 `<ctrl-d>` 以及 `<ctrl-u>`
+
+```bash
+$ tmux show-window-options -g mode-keys
+vi
+
+# 以下命令直接在 tmux 命令模式执行，或者加关键字 `tmux` 在 shell 中执行，或者写入配置文件 ~/.tmux.conf 中生效
+# 设置为 vi-mode
+$ set -wg mode-keys v
+```
+
+## 数据处理
+
+### 32 grep
+
+grep：`Global Regular Expression（Processor | Parser | Printer）` 的简写，用以在命令行中使用正则表达式对文件进行匹配筛选
+
+**简单用法**
+
+在某个文件中查找匹配到正则的行
