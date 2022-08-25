@@ -1,0 +1,16 @@
+{
+  "name": "learn",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --entry ./webpack/2.cjs运行时/build.js --output-path build"
+  },
+  "keywords": [],
+  "author": "lyn",
+  "license": "MIT",
+  "dependencies": {
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
+  }
+}
