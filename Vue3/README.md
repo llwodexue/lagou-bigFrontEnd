@@ -10,10 +10,10 @@
 | 8        | [08-devServer.md](08-devServer.md)                           |
 | 9        | [09-Vuecli和Vite.md](09-Vuecli和Vite.md)                     |
 | 10       | [10-Vue3组件化开发.md](10-Vue3组件化开发.md)                 |
-| 11       |                                                              |
-| 12       |                                                              |
-| 13       |                                                              |
-| 14       |                                                              |
-| 15       |                                                              |
-| 16       |                                                              |
-| 17       |                                                              |
+| 11       | [11-Vue3实现动画.md](11-Vue3实现动画.md)                     |
+| 12       | [12-CompositionAPI.md](12-CompositionAPI.md)                 |
+| 13       | [13-Vue3高级语法补充.md](13-Vue3高级语法补充.md)             |
+| 14       | [14-Vue3源码.md](14-Vue3源码.md)                             |
+| 15       | [15-VueRouter.md](15-VueRouter.md)                           |
+| 16       | [16-Vuex.md](16-Vuex.md)                                     |
+| 17       | [17-TypeScript.md](17-TypeScript.md)                         |
