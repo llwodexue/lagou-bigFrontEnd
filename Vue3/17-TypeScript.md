@@ -634,9 +634,8 @@ function printMessageLength(message?: string) {
 
 可选链事实上并不是 TypeScript 独有的特性，它是 ES11（ES2020）中增加的特性：
 
-- 可选链使用可选链操作符 `?.`
+- 可选链操作符： `?.`
 - 它的作用是当对象的属性不存在时，会短路，直接返回 undefined，如果存在，那么才会继续执行
-- 虽然可选链操作是 ECMAScript 提出的特性，但是和 TypeScript 一起使用更版本
 
 ```tsx
 type Person = {
@@ -742,5 +741,668 @@ const options3 = {
   method: 'POST'
 } as const
 request(options3.url, options3.method)
+```
+
+### 类型缩小
+
+类型缩小的英文是 Type Narrowing
+
+- 我们可以通过类似于 `typeof padding === 'number'` 的判断语句，来改变 TypeScript 的执行路径
+- 我们编写的 `typeof padding === 'number'` 可以称之为 类型保护（type guards）
+
+常见的类型保护有如下几种：
+
+- `typeof`
+
+```tsx
+type IDType = number | string
+function printID(id: IDType) {
+  if (typeof id === 'string') {
+    console.log(id.toUpperCase())
+  } else {
+    console.log(id)
+  }
+}
+```
+
+- 平等缩小（比如`===`、`!==`）
+
+```tsx
+type Direction = 'left' | 'right' | 'top' | 'bottom'
+function printDirection(direction: Direction) {
+  // 1.if判断
+  if (direction === 'left') {
+    console.log(direction)
+  }
+  // 2.switch判断
+  switch (direction) {
+    case 'left':
+      console.log(direction)
+      break
+  }
+}
+```
+
+- `instanceof`
+
+```tsx
+function printTime(time: string | Date) {
+  if (time instanceof Date) {
+    console.log(time.toUTCString())
+  } else {
+    console.log(time)
+  }
+}
+
+class Student {
+  studying() {}
+}
+class Teacher {
+  teaching() {}
+}
+function work(p: Student | Teacher) {
+  if (p instanceof Student) {
+    p.studying()
+  } else {
+    p.teaching()
+  }
+}
+```
+
+- `in`
+
+```tsx
+type Fish = {
+  swimming: () => void
+}
+type Dog = {
+  running: () => void
+}
+function walk(animal: Fish | Dog) {
+  if ('swimming' in animal) {
+    animal.swimming()
+  } else {
+    animal.running()
+  }
+}
+const fish: Fish = {
+  swimming() {
+    console.log('swimming')
+  }
+}
+walk(fish) // swimming
+```
+
+## Typescript 函数类型
+
+### 函数类型
+
+在 JavaScript 开发中，函数是重要的组成部分，并且函数可以作为一等公民（可以作为参数，也可以作为返回值进行传递）
+
+- 我们可以编写函数类型的表达式（Function Type Expressions），来表示函数类型
+
+```tsx
+// 1.函数作为参数时, 在参数中如何编写类型
+type FooFnType = () => void
+function bar(fn: FooFnType) {
+  fn()
+}
+
+// 2.定义常量时, 编写函数的类型
+type AddFnType = (num1: number, num2: number) => number
+const add: AddFnType = (a1: number, a2: number) => {
+  return a1 + a2
+}
+```
+
+上面的语法中 `(num1: number, num2: number) => number`，代表的就是一个函数类型
+
+- 接收两个参数的函数：num1 和 num2，并且都是 number 类型，并且函数的返回值是 number 类型
+- 在某些语言中，可能参数名称 num1 和 num2 是可以省略的，但是 Typescript 是不可以的
+
+**参数可选类型**
+
+- 可选参数需要在必传参数的后面
+- 可选参数：`y -> undefined | number`
+
+![image-20220906102013460](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220906102013460.png)
+
+```tsx
+function foo(x: number, y?: number) {}
+
+foo(20, 30)
+foo(20)
+```
+
+**默认参数**
+
+```tsx
+// 顺序：必传参数-有默认值参数-可选参数
+function foo(y: number, x: number = 20) {
+  console.log(x, y)
+}
+foo(30)
+```
+
+**剩余参数**
+
+```tsx
+function sum(initialNum: number, ...nums: number[]) {
+  let total = initialNum
+  for (const num of nums) {
+    total += num
+  }
+  return total
+}
+console.log(sum(20, 30))
+console.log(sum(20, 30, 40))
+```
+
+### 函数中的 this
+
+**可推导的 this 类型**
+
+- TypeScript 认为函数 sayHello 有一个对应的 this 的外部对象 info，所以在使用时，就会把 this 当做该对象
+
+```tsx
+// this 是可以被推导出来 info 对象(TypeScript推导出来)
+const info = {
+  name: 'cat',
+  sayHello() {
+    console.log(this.name)
+  }
+}
+
+info.sayHello()
+```
+
+**不确定的 this 类型**
+
+如下代码会报错：
+
+- 对于 sayHello 的调用来说，我们虽然将其放到了 info 中，通过 info 去调用，this 依然是指向 info 对象的
+- 但是对于 TypeScript 编译器来说，这个代码是非常不安全的，因为我们也有可能直接调用函数，或者通过别的对象来调用函数
+
+```tsx
+function sayHello() {
+  console.log(this.name)
+}
+const info = {
+  name: 'cat',
+  sayHello
+}
+
+info.sayHello()
+```
+
+**指定 this 的类型**
+
+- 通常 TypeScript 会要求我们明确的指定 this 的类型
+
+```tsx
+type ThisType = { name: string }
+function sayHello(this: ThisType, message: string) {
+  console.log(this.name + ' sayHello', message)
+}
+const info = {
+  name: 'cat',
+  sayHello
+}
+
+// 隐式绑定
+info.sayHello('哈哈哈')
+// 显示绑定
+sayHello.call({ name: 'kobe' }, '呵呵呵')
+sayHello.apply({ name: 'james' }, ['嘿嘿嘿'])
+```
+
+### 函数重载
+
+需求：在 TypeScript 中，如果我们编写了一个 add 函数，希望可以对字符串和数字类型进行相加
+
+我们可能会这样编写，但其实是错误的：
+
+![image-20220906110105915](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220906110105915.png)
+
+那我们可以使用类型缩小对其范围进行限定，但是该方式有如下缺点：
+
+1. 进行很多的逻辑判断（类型缩小）
+2. 返回值的类型依然是不能确定
+
+```tsx
+type AddType = number | string
+function add(a1: number | string, a2: number | string) {
+  if (typeof a1 === 'number' && typeof a2 === 'number') {
+    return a1 + a2
+  } else if (typeof a1 === 'string' && typeof a2 === 'string') {
+    return a1 + a2
+  }
+}
+```
+
+函数重载：函数名称相同，但是参数不同的几个函数
+
+```tsx
+function add(num1: number, num2: number): number
+function add(num1: string, num2: string): string
+function add(num1: any, num2: any): any {
+  if (typeof num1 === 'string' && typeof num2 === 'string') {
+    return num1.length + num2.length
+  }
+  return num1 + num2
+}
+
+console.log(add(10, 20))
+console.log(add('abc', 'cba'))
+// 在函数的重载中，实现函数是不能直接被调用的
+console.log(add(10, 'cba')) // No overload matches this call.
+```
+
+需求：定义一个函数，可以传入字符串或者数组，获取它们的长度
+
+- 方案一：使用联合类型来实现
+- 方案二：实现函数重载来实现
+
+这种情况，在开发中，尽量选择使用联合类型来实现
+
+```tsx
+// 实现方式一: 联合类型
+function getLength(args: string | any[]) {
+  return args.length
+}
+console.log(getLength('abc'))
+console.log(getLength([123, 321, 123]))
+
+// 实现方式二: 函数的重载
+function getLength(args: string): number
+function getLength(args: any[]): number
+function getLength(args: any): number {
+  return args.length
+}
+console.log(getLength('abc'))
+console.log(getLength([123, 321, 123]))
+```
+
+## 类
+
+编程范式：
+
+- 面向对象编程
+- 函数式编程
+
+在早期的 JavaScript 开发中（ES5）我们需要通过函数和原型链来实现类和继承，从 ES6 开始，引入了 class 关键字，可以更加方便的定义和使用类
+
+- TypeScript 作为 JavaScript 的超集，也是支持使用 class 关键字的，并且还可以对类的属性和方法等进行静态类型检测
+
+实际上在 JavaScript 的开发过程中，我们更加习惯于函数式编程：
+
+- 比如 React 开发中，目前更多使用的函数组件以及结合 Hook 的开发模式
+- 比如在 Vue3 开发中，目前也更加推崇使用 Composition API
+
+### 继承多态
+
+**类定义**
+
+使用 class 关键字来定义一个类
+
+我们可以声明一些类的属性：在类的内部声明类的属性以及对应的类型
+
+- 如果类型没有声明，那么它们默认是 any 的
+
+- 我们也可以给属性设置初始化值
+
+- 在默认的 strictPropertyInitialization 模式下面我们的属性是必须初始化的，如果没有初始化，那么编译时就会报错
+
+  如果我们在 `strictPropertyInitialization` 模式下确实不希望给属性初
+  始化，可以使用 `name!: string` 语法
+
+- 类可以有自己的构造函数 constructor，当我们通过 new 关键字创建一个实例时，构造函数会被调用
+
+  构造函数不需要返回任何值，默认返回当前创建出来的实例
+
+- 类中可以有自己的函数，定义的函数称之为方法
+
+```tsx
+class Person {
+  name: string
+  age: number
+
+  constructor(name: string, age: number) {
+    this.name = name
+    this.age = age
+  }
+  eating() {
+    console.log(this.name + ' eating')
+  }
+}
+
+const p = new Person('why', 18)
+console.log(p.name)
+console.log(p.age)
+p.eating()
+```
+
+**类继承**
+
+- 封装、继承、多态、抽象
+
+面向对象的其中一大特性就是继承，继承不仅仅可以减少我们的代码量，也是多态的使用前提
+
+- 使用 extends 关键字来实现继承，子类使用 super 来访问父类
+- 在构造函数中，我们可以通过 super 来调用父类的构造方法，对父类中的属性进行初始化
+
+```tsx
+class Person {
+  name: string = ''
+  age: number = 0
+
+  constructor(name: string, age: number) {
+    this.name = name
+    this.age = age
+  }
+  eating() {
+    console.log('eating')
+  }
+}
+
+class Student extends Person {
+  sno: number = 0
+
+  constructor(name: string, age: number, sno: number) {
+    // super调用父类的构造器
+    super(name, age)
+    this.sno = sno
+  }
+  // overwrite
+  eating() {
+    console.log('student eating')
+    super.eating()
+  }
+  studying() {
+    console.log('studying')
+  }
+}
+
+const stu = new Student('cat', 18, 1001)
+console.log(stu.name, stu.age, stu.sno) // cat 18 1001
+stu.eating() // student eating eating
+```
+
+**类多态**
+
+- 多态的目的：为了写出更加具备通用性的代码
+
+```tsx
+class Animal {
+  action() {
+    console.log('animal action')
+  }
+}
+class Dog extends Animal {
+  action() {
+    console.log('dog running!!!')
+  }
+}
+class Fish extends Animal {
+  action() {
+    console.log('fish swimming')
+  }
+}
+class Person extends Animal {}
+
+function makeActions(animals: Animal[]) {
+  animals.forEach(animal => {
+    animal.action()
+  })
+}
+
+makeActions([new Dog(), new Fish(), new Person()])
+```
+
+### 类成员的修饰符
+
+TypeScript 中，类的属性和方法支持三种修饰符：public、private、protected
+
+- public 修饰的是在任何地方可见、公有的属性或方法，默认编写的属性就是 public 的
+- private 修饰的是仅在同一类中可见、私有的属性或方法
+- protected 修饰的是仅在类自身及子类中可见、受保护的属性或方法
+
+```tsx
+class Person {
+  private name: string = ''
+  getName() {
+    return this.name
+  }
+  setName(newName) {
+    this.name = newName
+  }
+}
+
+const p = new Person()
+// p.name = '123' // Property 'name' is private and only accessible within class 'Person'
+console.log(p.getName())
+p.setName('cat')
+```
+
+在子类里可以直接通过 this 访问父类的公有、保护属性
+
+```tsx
+class Person {
+  protected name: string = '123'
+}
+class Student extends Person {
+  getName() {
+    return this.name
+  }
+}
+
+const stu = new Student()
+console.log(stu.getName()) // 123
+```
+
+**只读属性**
+
+- 只读属性是可以在构造器中赋值，赋值之后就不可以修改
+- 属性本身不能进行修改，但是如果它是对象类型，对象中的属性是可以修改的
+
+```tsx
+class Person {
+  readonly name: string
+  age?: number
+  readonly friend?: Person
+  constructor(name: string, friend?: Person) {
+    this.name = name
+    this.friend = friend
+  }
+}
+
+const p = new Person('why', new Person('kobe'))
+console.log(p.name, p.friend)
+// 不可以直接修改friend
+// p.friend = new Person('james')
+if (p.friend) {
+  p.friend.age = 30
+}
+```
+
+**getters/setters**
+
+私有属性我们是不能直接访问的
+
+- 我们想要监听它的获取（getter）和设置（setter）就需要使用存储器
+
+```tsx
+class Person {
+  private _name: string
+  constructor(name: string) {
+    this._name = name
+  }
+
+  // setter
+  set name(newName) {
+    this._name = newName
+  }
+  // getter
+  get name() {
+    return this._name
+  }
+}
+
+const p = new Person('cat')
+p.name = 'dog'
+console.log(p.name)
+```
+
+**静态成员**
+
+我们在类中定义的成员和方法都属于对象级别的, 在开发中, 我们有时候也需要定义类级别的成员和方法
+
+```tsx
+class Student {
+  static time: string = '20:00'
+  static attendClass() {
+    console.log('去学习~')
+  }
+}
+
+console.log(Student.time)
+Student.attendClass()
+```
+
+### 抽象类
+
+继承是多态使用的前提
+
+- 在定义很多通用的**调用接口时, 我们通常会让调用者传入父类，通过多态来实现更加灵活的调用方式**
+- 但是，**父类本身可能并不需要对某些方法进行具体的实现，所以父类中定义的方法,，我们可以定义为抽象方法**
+
+抽象方法：在 Typescript 中没有具体实现的方法（没有方法体）
+
+- 抽象方法，必须存在抽象类中
+- 抽象类是使用 abstract 声明的类
+
+抽象类的特点：
+
+- 抽象类不能被实例化（不能通过 new 创建）
+- 抽象方法必须被子类实现，否则该类必须是一个抽象类
+
+```tsx
+abstract class Shape {
+  abstract getArea()
+}
+function makeArea(shape: Shape) {
+  return shape.getArea()
+}
+class Rectangle extends Shape {
+  private width: number
+  private height: number
+
+  constructor(width: number, height: number) {
+    super()
+    this.width = width
+    this.height = height
+  }
+  getArea() {
+    return this.width * this.height
+  }
+}
+class Circle extends Shape {
+  private r: number
+
+  constructor(r: number) {
+    super()
+    this.r = r
+  }
+  getArea() {
+    return this.r * this.r * 3.14
+  }
+}
+
+const rectangle = new Rectangle(20, 30)
+console.log(makeArea(rectangle))
+// Argument of type 'number' is not assignable to parameter of type 'Shape'.ts(2345)
+makeArea(123)
+// Cannot create an instance of an abstract class.ts(2511)
+makeArea(new Shape())
+```
+
+### 类的类型
+
+类本身也可以作为一种数据类型
+
+```tsx
+class Person {
+  name: string = '123'
+  eating() {}
+}
+// const p = new Person()
+const p1: Person = {
+  name: 'why',
+  eating() {}
+}
+function printPerson(p: Person) {
+  console.log(p.name)
+}
+
+printPerson(new Person())
+printPerson({ name: 'kobe', eating: function () {} })
+```
+
+## 接口
+
+如果被一个类实现，那么在之后需要传入接口的地方，都可以将这个类传入
+
+- 可以定义可选类型
+- 可以定义只读属性
+
+```tsx
+interface IInfoType {
+  readonly name: string
+  age: number
+  friend?: {
+    name: string
+  }
+}
+
+const info: IInfoType = {
+  name: 'cat',
+  age: 18,
+  friend: {
+    name: 'kobe'
+  }
+}
+console.log(info.friend?.name)
+```
+
+**索引类型**
+
+```tsx
+interface IndexLanguage {
+  [index: number]: string
+}
+
+const frontLanguage: IndexLanguage = {
+  0: 'HTML',
+  1: 'CSS',
+  2: 'JavaScript',
+  3: 'Vue'
+}
+```
+
+**函数类型**
+
+```tsx
+// type CalcFn = (n1: number, n2: number) => number
+interface CalcFn {
+  (n1: number, n2: number): number
+}
+
+function calc(num1: number, num2: number, calcFn: CalcFn) {
+  return calcFn(num1, num2)
+}
+const add: CalcFn = (num1, num2) => {
+  return num1 + num2
+}
+console.log(calc(20, 30, add))
 ```
 
