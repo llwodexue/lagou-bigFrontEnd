@@ -1350,6 +1350,8 @@ printPerson({ name: 'kobe', eating: function () {} })
 
 ## 接口
 
+### 接口类型
+
 如果被一个类实现，那么在之后需要传入接口的地方，都可以将这个类传入
 
 - 可以定义可选类型
@@ -1406,3 +1408,306 @@ const add: CalcFn = (num1, num2) => {
 console.log(calc(20, 30, add))
 ```
 
+**接口继承**
+
+```tsx
+interface ISwim {
+  swimming: () => void
+}
+interface IFly {
+  flying: () => void
+}
+interface IAction extends ISwim, IFly {}
+
+const action: IAction = {
+  swimming() {},
+  flying() {}
+}
+```
+
+**交叉类型**
+
+```tsx
+interface ISwim {
+  swimming: () => void
+}
+interface IFly {
+  flying: () => void
+}
+// 联合类型
+type MyType1 = ISwim | IFly
+// 交叉类型
+type MyType2 = ISwim & IFly
+
+const obj1: MyType1 = {
+  flying() {}
+}
+const obj2: MyType2 = {
+  swimming() {},
+  flying() {}
+}
+```
+
+### 接口实现
+
+接口定义后，是可以被类实现的：
+
+- 如果被一个类实现，那么在之后需要传入接口的地方，都可以将这个类传入
+
+```tsx
+interface ISwim {
+  swimming: () => void
+}
+interface IEat {
+  eating: () => void
+}
+class Animal {}
+// 实现接口，类可以实现多个接口
+class Fish extends Animal implements ISwim, IEat {
+  swimming() {
+    console.log('Fish Swmming')
+  }
+  eating() {
+    console.log('Fish Eating')
+  }
+}
+// 编写一些公共的API: 面向接口编程
+function swimAction(swim: ISwim) {
+  swim.swimming()
+}
+// 所有实现了接口的类对应的对象, 都是可以传入
+swimAction(new Fish())
+swimAction({ swimming: function () {} })
+```
+
+**interface 和 type 区别**
+
+interface 和 type 都可以用来定义对象类型，在开发中如何选择？
+
+- 定义非对象类型，通常推荐使用 type，比如：Direction、Alignment，一些 Function
+- 定义对象类型，它们是有区别的：
+  - interface 可以重复的对某个接口来定义属性和方法
+  - 而 type 定义的是别名，别名是不能重复的
+
+![image-20220907151219944](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220907151219944.png)
+
+**字面量赋值**
+
+![image-20220907155259261](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220907155259261.png)
+
+Typescript 在字面量直接赋值的过程中，为了进行类型推导会进行严格的类型限制
+
+- 但是之后如果我们是将一个变量标识符赋值给其他的变量时，会进行 freshness 擦除操作（删除多余属性）
+- 当使用第三方库时，如果出现报错可以借用这个擦除操作解决
+
+```tsx
+interface IPerson {
+  name: string
+  age: number
+  height: number
+}
+function printInfo(person: IPerson) {
+  console.log(person)
+}
+
+// 代码会报错
+printInfo({
+  name: 'why',
+  age: 18,
+  height: 1.88,
+  address: '广州市'
+})
+
+// 代码不会报错
+const info = {
+  name: 'why',
+  age: 18,
+  height: 1.88,
+  address: '广州市'
+}
+printInfo(info)
+```
+
+## 枚举类型
+
+枚举类型是为数不多的 Typescript 特有的特性之一：
+
+- 枚举其实就是将一组可能出现的值，一个个列举出来，定义在一个类型中，这个类型就是枚举类型
+- 枚举允许开发者定义一组命名变量，常量可以是数字、字符串类型
+
+```tsx
+enum Direction {
+  LEFT,
+  RIGHT,
+  TOP,
+  BOTTOM
+}
+
+function turnDirection(direction: Direction) {
+  switch (direction) {
+    case Direction.LEFT:
+      console.log('改变角色的方向向左')
+      break
+    case Direction.RIGHT:
+      console.log('改变角色的方向向右')
+      break
+    case Direction.TOP:
+      console.log('改变角色的方向向上')
+      break
+    case Direction.BOTTOM:
+      console.log('改变角色的方向向下')
+      break
+    default:
+      const foo: never = direction
+      break
+  }
+}
+
+turnDirection(Direction.LEFT)
+turnDirection(Direction.RIGHT)
+turnDirection(Direction.TOP)
+turnDirection(Direction.BOTTOM)
+```
+
+枚举类型默认是有值的，默认是 `0、1、2、3`
+
+```tsx
+enum Direction {
+  LEFT = 'LEFT',
+  RIGHT = 'RIGHT',
+  TOP = 'TOP',
+  BOTTOM = 'BOTTOM'
+}
+```
+
+## 泛型
+
+软件工程的主要目的是构建不仅仅明确和一致的 API，还要让你的代码具有很强的可重用性：
+
+- 我们可以通过函数来封装一些 API，通过传入不同的函数参数，让函数帮助我们完成不同的操作
+
+什么是类型的参数化：
+
+- 比如：封装一个函数，传入一个参数，并且返回这个参数
+
+```tsx
+function sum(num: number): number {
+  return num
+}
+```
+
+上面代码虽然实现了，但是不适用于其他类型，比如：string、boolean、Person 等类型
+
+- 泛型就是解决这个问题的，它就是将类型参数化，让外界在调用时就决定它属于什么类型
+
+### 类型参数化
+
+虽然 any 是可以的，但是定义 any 的时候，其实已经丢失了类型信息
+
+- 比如传入的是一个 number，那么我们希望返回的可不是 any 类型，而是 number 类型
+- 所以，我们需要在函数中可以捕获到参数的类型是 number，并且同时使用它的来作为返回值的类型
+
+这里使用一种特性的变量：类型变量（type variable），它作用于类型，而不是值
+
+- 方式一：通过 `<类型>` 的方式将类型传递给函数
+- 方式二：通过类型推导，自动推导出我们传入变量的类型
+
+```tsx
+function sum<Type>(num: Type) {
+  return num
+}
+
+// 方式一
+sum<string>('abc')
+sum<number>(123)
+// 方式二
+sum('abc')
+sum(123)
+```
+
+**泛型补充**
+
+```tsx
+function foo<T, E, O>(arg1: T, arg2: E, arg3?: O, ...args: T[]) {}
+
+foo<number, string, boolean>(10, 'abc', true)
+```
+
+平时在开发中我们可能会看到一些常用的名称：
+
+- T：Type 的缩写，类型
+- K、V：key 和 value 的缩写，键值对
+- E：Elment 的缩写，元素
+- O：Object 的缩写，对象
+
+### 泛型接口与泛型类
+
+我们可以给泛型一个默认值
+
+**泛型接口**
+
+```tsx
+interface IPerson<T1 = string, T2 = number> {
+  name: T1
+  age: T2
+}
+
+const p: IPerson = {
+  name: 'cat',
+  age: 18
+}
+```
+
+**泛型类**
+
+```tsx
+class Point<T> {
+  x: T
+  y: T
+  z: T
+
+  constructor(x: T, y: T, z: T) {
+    this.x = x
+    this.y = y
+    this.z = z
+  }
+}
+const p1 = new Point('1.3.2', '2.2.3', '4.2.1')
+const p2 = new Point<string>('1.3.2', '2.2.3', '4.2.1')
+const p3: Point<string> = new Point('1.3.2', '2.2.3', '4.2.1')
+
+const names1: string[] = ['abc', 'cba', 'nba']
+const names2: Array<string> = ['abc', 'cba', 'nba'] // 不推荐(react jsx <>)
+```
+
+**泛型约束**
+
+有时传入的类型有某些共性，但是这些共性可能不是在同一种类型中：
+
+- 比如 string 和 array 都是有 length 的，或者某些对象也是会有 length 属性的
+
+```tsx
+interface ILength {
+  length: number
+}
+function getLength<T extends ILength>(arg: T) {
+  return arg.length
+}
+// getLength(123)
+getLength('abc')
+getLength(['abc'])
+getLength({ length: 10 })
+```
+
+**非空判断运算符**
+
+```js
+null ?? true // true
+undefined ?? true // true
+'' ?? true // ''
+false ?? true // false
+```
+
+## 应用项目
+
+### 模块化开发
