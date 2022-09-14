@@ -1711,3 +1711,88 @@ false ?? true // false
 ## 应用项目
 
 ### 模块化开发
+
+TypeScript 支持两种方式来控制我们的作用域：
+
+- 模块化：每个文件可以是一个独立的模块，支持 ES Module，也支持 CommonJS
+- 命名空间：通过 namespace 来声明一个命名空间
+
+**模块化**
+
+![image-20220913171046885](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220913171046885.png)
+
+**命名空间 namespace**
+
+命名空间在 Typescript 早期时，称之为内部模块，主要目的是将一个模块内部再进行作用域的划分，防止一些命名冲突的问题
+
+![image-20220913172145047](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220913172145047.png)
+
+**类型查找**
+
+HTMLImageElement 类型来自哪里呢？这里涉及到 Typescript 对类型的管理和查找规则
+
+```js
+const imageEl = document.getElementById('image') as HTMLImageElement
+```
+
+这里说一下另外一种 Typescript 文件：`.d.ts` 文件
+
+- 我们之前编写的 Typescript 文件都是 `.ts` 文件，这些文件最终会输出 `.js` 文件，也是我们通常编写代码的地方
+- 还有另外一种文件 `.d.ts` 文件，它是用来做类型的声明(declare)。 它仅仅用来做类型检测，告知 Typescript 我们有哪些类型
+
+### 类型声明查找机制
+
+- 内置类型声明
+- 外部定义类型声明
+- 自己定义类型声明
+
+**内置类型声明**
+
+内置类型声明是 Typescript 自带的、帮助我们内置了 JavaScript 运行时的一些标准化 API 的声明文件；包括比如 Math、Date 等内置类型，也包括 DOM API，比如 Window、Document 等
+
+内置类型声明通常在我们安装 Typescript 的环境中会带有的
+
+- [https://github.com/microsoft/TypeScript/tree/main/lib](https://github.com/microsoft/TypeScript/tree/main/lib)
+
+**外部定义类型声明**
+
+外部类型声明通常是我们使用一些库（比如第三方库）时，需要的一些类型声明
+
+这些库通常有两种类型声明方式：
+
+- 方式一：在自己库中进行类型声明（编写 `.d.ts` 文件），比如 axios
+- 方式二：通过社区的一个公有库 DefinitelyTyped 存放类型声明文件
+  - 该库的 GitHub 地址：[https://github.com/DefinitelyTyped/DefinitelyTyped/](https://github.com/DefinitelyTyped/DefinitelyTyped/)
+  - 该库查找声明安装方式的地址：[https://www.typescriptlang.org/dt/search?search=](https://www.typescriptlang.org/dt/search?search=)
+  - 比如我们安装 react 的类型声明： `npm i @types/react --save-dev`
+
+```tsx
+// 声明模块
+declare module 'lodash' {
+  export function join(arr: any[]): void
+}
+
+// 声明变量/函数/类
+declare let whyName: string
+declare let whyAge: number
+declare let whyHeight: number
+declare function whyFoo(): void
+declare class Person {
+  name: string
+  age: number
+  constructor(name: string, age: number)
+}
+
+// 声明文件
+declare module '*.jpg'
+declare module '*.jpeg'
+declare module '*.png'
+declare module '*.svg'
+declare module '*.gif'
+
+// 声明命名空间
+declare namespace $ {
+  export function ajax(settings: any): any
+}
+```
+
