@@ -435,7 +435,7 @@ module.exports = {
 
 ### Scope Hoisting 作用域提升
 
-作用域提升是指 webpack 通过 ES6 语法的静态分析，分析出魔抗之间的依赖关系，尽可能地把模块放到同一个函数中，让 webpack 打包出来的代码更小、运行的更快
+作用域提升是指 webpack 通过 ES6 语法的静态分析，分析出模块之间的依赖关系，尽可能地把模块放到同一个函数中，让 webpack 打包出来的代码更小、运行的更快
 
 ```js
 module.exports = {
