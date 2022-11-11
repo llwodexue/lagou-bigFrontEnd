@@ -1,0 +1,32 @@
+{
+  "name": "node-nuxt-server",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt --hostname 127.0.0.1 --port 8005",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "export": "nuxt export",
+    "serve": "nuxt serve",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@nuxtjs/axios": "^5.11.0",
+    "element-ui": "^2.13.2",
+    "highlight.js": "^10.1.1",
+    "marked": "^1.1.1",
+    "md5": "^2.2.1",
+    "nuxt": "^2.13.0",
+    "spark-md5": "^3.0.1"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^1.0.3",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-jest": "^26.0.1",
+    "jest": "^26.0.1",
+    "node-sass": "^4.14.1",
+    "sass-loader": "^10.2.0",
+    "style-loader": "^3.3.1",
+    "vue-jest": "^3.0.4"
+  }
+}
