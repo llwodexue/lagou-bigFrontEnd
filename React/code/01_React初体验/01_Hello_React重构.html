@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>01_Hello_React重构</title>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script src="../lib/react.js"></script>
+    <script src="../lib/react-dom.js"></script>
+    <script src="../lib/babel.js"></script>
+
+    <script type="text/babel">
+      class App extends React.Component {
+        constructor() {
+          super()
+          this.state = {
+            message: 'Hello World'
+          }
+        }
+
+        btnClick() {
+          console.log('btnClick')
+        }
+
+        render() {
+          return (
+            <div>
+              <h2>{this.state.message}</h2>
+              <button onClick={this.btnClick}>修改文本</button>
+            </div>
+          )
+        }
+      }
+
+      // 将组件渲染到界面上
+      const root = ReactDOM.createRoot(document.querySelector('#root'))
+      // App根组件
+      root.render(<App />)
+    </script>
+  </body>
+</html>
