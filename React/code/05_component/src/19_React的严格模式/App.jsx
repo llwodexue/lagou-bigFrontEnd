@@ -8,9 +8,9 @@ export class App extends PureComponent {
     return (
       <div>
         <StrictMode>
-          <Home/>
+          <Home />
         </StrictMode>
-        <Profile/>
+        <Profile />
       </div>
     )
   }

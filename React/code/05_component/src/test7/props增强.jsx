@@ -8,8 +8,7 @@ function enhanceUserInfo(OriginComponent) {
       this.state = {
         userinfo: {
           name: 'bird',
-          age: 99,
-          level: 2
+          age: 99
         }
       }
     }
@@ -27,9 +26,6 @@ const Home = enhanceUserInfo(function (props) {
 const Profile = enhanceUserInfo(function (props) {
   return <h1>Profile {props.banner}</h1>
 })
-const HelloWorld = enhanceUserInfo(function (props) {
-  return <h1>HelloWorld {props.level}</h1>
-})
 
 export class App extends PureComponent {
   render() {
@@ -37,7 +33,6 @@ export class App extends PureComponent {
       <div>
         <Home />
         <Profile banner={'aaa'} />
-        <HelloWorld />
       </div>
     )
   }

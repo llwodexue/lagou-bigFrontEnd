@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react'
-import { createPortal } from "react-dom"
+import { createPortal } from 'react-dom'
 import Modal from './Modal'
 
 export class App extends PureComponent {
@@ -7,9 +7,7 @@ export class App extends PureComponent {
     return (
       <div className='app'>
         <h1>App H1</h1>
-        {
-          createPortal(<h2>App H2</h2>, document.querySelector("#why"))
-        }
+        {createPortal(<h2>App H2</h2>, document.querySelector('#why'))}
 
         {/* 2.Modal组件 */}
         <Modal>
