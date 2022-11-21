@@ -19,7 +19,8 @@ import ReactDOM from 'react-dom/client'
 // import App from './17_React的Portals/App.jsx'
 // import App from './18_React的fragment/App.jsx'
 // import App from './19_React的严格模式/App.jsx'
-import App from './test/App'
+import App from './20_React的动画实现/03_TransitionGroup/App'
+// import App from './test/App'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(<App name='why' />)
