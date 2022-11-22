@@ -247,7 +247,7 @@ Docker 在本机寻找该镜像
 
   去 Docker Hub 上查找该镜像，Hub 能找到，下载该镜像到本地以该镜像为模板生产容器实例运行；如果 Hub 找不到，返回失败错误，差不到该镜像
 
-![image-20220819173202812](E:\learn\lagouBigFront\md\Docker\img\image-20220819173202812.png)
+![image-20220819173202812](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220819173202812.png)
 
 **为什么 Docker 会比 VM 虚拟机快**
 

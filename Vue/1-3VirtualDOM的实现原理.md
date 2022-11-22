@@ -424,7 +424,7 @@ DOMAPI 里都是 DOM 操作，通过指定 DOMAPI 来决定如何转换虚拟 DO
 
 首次渲染需要真实 DOM
 
-![image-20220526173647797](img/image-20220526173647797.png)
+![image-20220526173647797](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220526173647797.png)
 
 在 `init` 内部初始化了 cbs 对象，并且把所有模块钩子函数存储到 cbs 对应的属性中
 
@@ -446,8 +446,8 @@ const cbs: ModuleHooks = {
 - children 是 `[]`
 - text 是 `undefined` 与 children 互斥
 
-![image-20220526173205521](img/image-20220526173205521.png)
+![image-20220526173205521](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220526173205521.png)
 
 判断 vnode 的 key 和 sel 是否相同
 
-![image-20220621165235773](E:\learn\lagouBigFront\md\Vue\img\image-20220621165235773.png)
+![image-20220621165235773](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20220621165235773.png)
