@@ -6,8 +6,8 @@ export class App extends PureComponent {
   constructor() {
     super()
     this.state = {
-      size: 60
-      // color: 'yellow'
+      size: 60,
+      color: 'yellow'
     }
   }
   render() {

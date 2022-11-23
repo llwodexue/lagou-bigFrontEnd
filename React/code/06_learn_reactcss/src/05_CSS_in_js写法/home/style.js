@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components'
 
 const HYButton = styled.button`
   border: 1px solid red;
