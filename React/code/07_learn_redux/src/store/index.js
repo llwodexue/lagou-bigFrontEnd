@@ -1,8 +1,7 @@
-const { createStore } = require("redux")
-const reducer =  require("./reducer.js")
+const { createStore } = require('redux')
+const reducer = require('./reducer')
 
-// 创建的store
+// 创建的 store
 const store = createStore(reducer)
 
 module.exports = store
-

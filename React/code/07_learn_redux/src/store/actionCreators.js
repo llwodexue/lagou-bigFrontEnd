@@ -1,17 +1,15 @@
-const { ADD_NUMBER, CHANGE_NAME } = require("./constants")
+const { CHANGE_NAME, ADD_COUNT } = require('./constants')
 
-const changeNameAction = (name) => ({
+const changeNameAction = name => ({
   type: CHANGE_NAME,
   name
 })
-
-const addNumberAction = (num) => ({
-  type: ADD_NUMBER,
+const addCountAction = num => ({
+  type: ADD_COUNT,
   num
 })
 
-
 module.exports = {
   changeNameAction,
-  addNumberAction
+  addCountAction
 }

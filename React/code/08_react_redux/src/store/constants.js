@@ -1,2 +1,3 @@
-export const ADD_NUMBER = "add_number"
-export const SUB_NUMBER = "sub_number"
+const add_count = 'add_count'
+
+export default {}
