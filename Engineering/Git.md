@@ -4,7 +4,7 @@
 
 安装 Git 后，要做的第一件事就是设置你的用户名和邮件地址
 
-![image-20221128143946134](E:\learn\lagouBigFront\md\Engineering\img\image-20221128143946134.png)
+![image-20221128143946134](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20221128143946134.png)
 
 `~/.gitconfig 或 C/用户/coderwhy/.gitconfig` 文件：只针对当前用户
 
@@ -45,7 +45,7 @@
 
 **Git 操作流程图**
 
-![image-20221128144610891](E:\learn\lagouBigFront\md\Engineering\img\image-20221128144610891.png)
+![image-20221128144610891](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20221128144610891.png)
 
 检测文件的状态
 
