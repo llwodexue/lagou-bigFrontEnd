@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import store from '../store'
+import { subNumberAction } from '../store/actionCreators'
 
 export class Home extends PureComponent {
   constructor() {
@@ -14,14 +15,17 @@ export class Home extends PureComponent {
       this.setState({ counter: state.counter })
     })
   }
+  subNumber(num){
+    store.dispatch(subNumberAction(num))
+  }
   render() {
     const { counter } = this.state
     return (
       <div>
         <h2>Home {counter}</h2>
-        <button>count+1</button>
-        <button>count+5</button>
-        <button>count-1</button>
+        <button onClick={e => this.subNumber(1)}>count-1</button>
+        <button onClick={e => this.subNumber(5)}>count-5</button>
+        <button onClick={e => this.subNumber(8)}>count-8</button>
       </div>
     )
   }
