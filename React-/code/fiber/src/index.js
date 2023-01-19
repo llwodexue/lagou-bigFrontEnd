@@ -8,7 +8,6 @@ const jsx = (
     <p>Hi Fiber</p>
   </div>
 )
-
 // render(jsx, root)
 
 class Greeting extends Component {
@@ -16,7 +15,12 @@ class Greeting extends Component {
     super(props)
   }
   render() {
-    return <p>Hello React</p>
+    return <p>{this.props.title} ClassComponent</p>
   }
 }
-render(<Greeting />, root)
+render(<Greeting title="Hello" />, root)
+
+function FnComponent(props){
+  return <div>{props.title} FnComponent</div>
+}
+// render(<FnComponent title="Hello" />, root)
