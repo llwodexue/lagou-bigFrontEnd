@@ -12,6 +12,14 @@ let pendingCommit = null
 const commitAllWork = fiber => {
   fiber.effects.forEach(item => {
     if (item.effectTag === 'placement') {
+      let fiber = item
+      let parentFiber = item.parent
+      while (parentFiber.tag === 'class_component') {
+        parentFiber = parentFiber.parent
+      }
+      if (fiber.tag === 'host_component') {
+        parentFiber.stateNode.appendChild(fiber.stateNode)
+      }
       item.parent.stateNode.appendChild(item.stateNode)
     }
   })
@@ -38,6 +46,7 @@ const getFirstTask = () => {
 }
 
 const reconcileChildren = (fiber, children) => {
+  console.log(children)
   /**
    * children 可能是对象也可能是数组，将 children 转换成数组
    */
@@ -87,7 +96,11 @@ const reconcileChildren = (fiber, children) => {
  * 将这个子级当做父级，构建这个父级下的子级
  */
 const executeTask = fiber => {
-  reconcileChildren(fiber, fiber.props.children)
+  if (fiber.tag === 'class_component') {
+    reconcileChildren(fiber, fiber.stateNode.render())
+  } else {
+    reconcileChildren(fiber, fiber.props.children)
+  }
 
   if (fiber.child) {
     return fiber.child
