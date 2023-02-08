@@ -1,0 +1,18 @@
+<body>
+  <div class="login-wrap">
+    <input type="text" placeholder="输入url" class="url" />
+    <br />
+    <br />
+    <button class="btn">提交</button>
+    <div class="content"></div>
+  </div>
+</body>
+<script>
+  var btn = document.querySelector('.btn')
+  var content = document.querySelector('.content')
+
+  btn.onclick = function () {
+    var url = document.querySelector('.url').value
+    content.innerHTML = `<a href=${url}>跳转到输入的url</a>`
+  }
+</script>
