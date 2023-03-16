@@ -49,3 +49,4 @@ function quickSort(arr) {
   return quickSort(left).concat([middle], quickSort(right))
 }
 console.log(quickSort([1, 2, 3, 2, 3, 2, 1, 6]))
+

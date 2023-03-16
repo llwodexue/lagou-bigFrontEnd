@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style type="text/css">
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .container {
+        border: 1px solid black;
+        display: grid;
+        grid-template-columns: 100px 1fr;
+      }
+      .left {
+        border: 1px solid orange;
+        height: 300px;
+      }
+      .right {
+        border: 1px solid red;
+        height: 400px;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="container">
+      <article class="left"></article>
+      <article class="right"></article>
+    </section>
+  </body>
+</html>
+<!-- 使用Grid网格布局实现双列布局的要点在于列数为2，且首列的宽度根据需要自行设置，第二列使用片段"fr"属性进行自适应即可。行数不需要指定，每行会根据内容高度进行自适应缩放 -->

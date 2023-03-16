@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style type="text/css">
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .container {
+        border: 1px solid black;
+        display: grid;
+        grid-template-columns: 100px auto 100px;
+      }
+      .left {
+        border: 1px solid orange;
+        height: 100px;
+      }
+      .center {
+        border: 1px solid green;
+        height: 200px;
+      }
+      .right {
+        border: 1px solid red;
+        height: 300px;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="container">
+      <article class="left"></article>
+      <article class="center"></article>
+      <article class="right"></article>
+    </section>
+  </body>
+</html>
+<!-- 使用grid网格布局实现三列布局，和之前所讲的gird实现双列布局是同样的思想，只是把列数变为了3，高度依然不设置，通过容器项的内容高度自适应撑开整体高度 -->

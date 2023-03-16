@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style type="text/css">
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .container {
+        border: 1px solid black;
+        overflow: hidden;
+      }
+      .left {
+        border: 1px solid orange;
+        float: left;
+        width: 100px;
+        height: 100px;
+      }
+      .center {
+        margin: 0 100px;
+        border: 1px solid green;
+        height: 200px;
+      }
+      .right {
+        border: 1px solid red;
+        float: right;
+        width: 100px;
+        height: 00px;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="container">
+      <article class="left"></article>
+      <article class="center"></article>
+      <article class="right"></article>
+    </section>
+  </body>
+</html>
+<!-- 使用浮动实现三列布局的注意点是浮动元素需要写在内容元素之前，否则布局是混乱的。这种方式实现三列布局是优点是简单、兼容性好，但缺点是需要清除浮动，否则父盒子的高度无法撑开，可能会导致其他页面元素的布局混乱 -->

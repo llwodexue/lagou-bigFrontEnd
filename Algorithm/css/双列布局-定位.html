@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style type="text/css">
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      .container {
+        position: relative;
+        border: 1px solid black;
+      }
+      .left {
+        border: 1px solid orange;
+        position: absolute;
+        left: 0;
+        width: 100px;
+        height: 300px;
+      }
+      .right {
+        border: 1px solid red;
+        position: absolute;
+        left: 100px;
+        right: 0px;
+        height: 400px;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="container">
+      <article class="left"></article>
+      <article class="right"></article>
+    </section>
+  </body>
+</html>
+<!-- 通过绝对定位实现的双列布局看起来会比较僵硬，因为父盒子首先需要设置定位属性并且父盒子的高度无法被子盒子撑开，如果子盒子的高度是自适应的，那么父盒子的高度也就无法确定从而设置了，但优点是设置属性比浮动来得更直观 -->
