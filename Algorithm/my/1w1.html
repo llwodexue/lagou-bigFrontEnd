@@ -1,0 +1,28 @@
+<ul class="content"></ul>
+<script>
+  // 总数据
+  const total = 10000
+  // 每次处理数据
+  const each = 20
+  // 需要处理次数
+  const needTimes = Math.ceil(total / each)
+  // 父容器
+  const content = document.querySelector('.content')
+  // 当前处理次数
+  let currentTime = 0
+  // 处理元素插入
+  function add() {
+    const fragment = document.createDocumentFragment()
+    for (let i = 0; i < each; i++) {
+      const li = document.createElement('li')
+      li.innerText = Math.floor(i + currentTime * each)
+      fragment.appendChild(li)
+    }
+    content.appendChild(fragment)
+    currentTime++
+    if (currentTime < needTimes) {
+      window.requestAnimationFrame(add)
+    }
+  }
+  window.requestAnimationFrame(add)
+</script>

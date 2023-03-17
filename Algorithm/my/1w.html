@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #app {
+        position: relative;
+        background-color: lightblue;
+        width: 300px;
+        height: 1000px;
+      }
+
+      #target {
+        position: absolute;
+        top: 450px;
+        width: 300px;
+        height: 100px;
+        background-color: lightcoral;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <p>App</p>
+      <div id="target">Target</div>
+    </div>
+  </body>
+</html>
+<script>
+  // const target = document.querySelector('#target')
+
+  // const callback = entries => {
+  //   console.log(entries[0])
+  //   if (entries[0].intersectionRatio > 0) {
+  //     document.body.style.backgroundColor = '#333'
+  //   } else {
+  //     document.body.style.backgroundColor = '#fff'
+  //   }
+  // }
+
+  // let observer = new IntersectionObserver(callback)
+
+  // observer.observe(target)
+
+  // const images = document.querySelectorAll('img')
+  // window.addEventListener('scroll', e => {
+  //   images.forEach(image => {
+  //     const imageTop = image.getBoundingClientRect().top
+  //     if (imageTop < window.innerHeight) {
+  //       const data_src = image.getAttribute('data-src')
+  //       image.setAttribute('scr', data_src)
+  //     }
+  //   })
+  // })
+
+  // const images = document.querySelectorAll('img')
+  // const callback = entries => {
+  //   entries.forEach(entry => {
+  //     if (entry.isIntersecting) {
+  //       const image = entry.target
+  //       const data_src = image.getAttribute('data-src')
+  //       image.setAttribute('scr', data_src)
+  //       observer.unobserve(image)
+  //     }
+  //   })
+  // }
+  // const observer = new IntersectionObserver(callback)
+  // images.forEach(image => {
+  //   observer.observe(image)
+  // })
+
+  const ul = document.getElementById('box')
+  const totalNum = 100000
+  const onceNum = 20
+  const page = totalNum / onceNum
+  let index = 0
+  function loop(curTotal, curIndex) {
+    if (curTotal <= 0) {
+      return false
+    }
+    const pageCount = Math.min(curTotal, onceNum)
+
+    window.requestIdleCallback(() => {
+      let fragment = document.createDocumentFragment()
+      for (let i = 0; i < pageCount; i++) {
+        const li = document.createElement('li')
+        li.innerText = curIndex + i + ';' + ~~(Math.random() * total)
+        fragment.appendChild(li)
+        ul.appendChild(li)
+      }
+      loop(curTotal - pageCount, curIndex + pageCount)
+    })
+  }
+  loop(totalNum, index)
+</script>
