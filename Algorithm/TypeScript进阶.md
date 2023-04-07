@@ -734,6 +734,8 @@ setTimeout(() => {
 
 ## 应用
 
+### Component
+
 在 1.6 版本中，TypeScript 官方专门实现了对 React JSX 语法的静态类型支持，并在 tsconfig 中新增了一个 jsx 参数用来定制 JSX 的转译规则
 
 Component 类型化的本质在于清晰地表达组件的属性、状态以及 JSX 元素的类型和结构
@@ -767,5 +769,95 @@ const ClassCp: React.ComponentClass<
 }
 ```
 
+### 遍历对象
 
+在 TypeScript 里面，当遍历对象的时候会出现如下错误提示
+
+```typescript
+function test (foo: object) {
+  for (let key in foo) {
+    console.log(foo[key]); // typescript错误提示
+    // do something
+  }
+}
+```
+
+![image-20230403102936566](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20230403102936566.png)
+
+因为 foo 作为 object 没有声明 string 类型可用，所以 foo[key] 将会是 any 类型
+
+```js
+Element implicitly has an 'any' type because expression of type 'string' can't be used to index type '{}'.
+  No index signature with a parameter of type 'string' was found on type '{}'.ts(7053)
+```
+
+解决方案：
+
+1. 把对象声明 as any
+
+   ```typescript
+   function test(foo: object) {
+     for (const key in foo) {
+       console.log((foo as any)[key]) // 报错消失
+       // do something
+     }
+   }
+   ```
+
+2. 给对象声明一个接口
+
+   ```typescript
+   interface StringKeyObject {
+     [key: string]: any
+   }
+   
+   function test(foo: StringKeyObject) {
+     for (const key in foo) {
+       console.log(foo[key]) // 报错消失
+       // do something
+     }
+   }
+   ```
+
+3. 使用泛型
+
+   ```typescript
+   function test<T extends object>(foo: T) {
+     for (const key in foo) {
+       console.log(foo[key]) // 报错消失
+       // do something
+     }
+   }
+   ```
+
+4. 使用 keyof
+
+   ```typescript
+   interface Ifoo {
+     name: string
+     age: number
+     weight: number
+   }
+   
+   function test(opt: Ifoo) {
+     let key: keyof Ifoo
+     for (key in opt) {
+       console.log(opt[key]) // 报错消失
+       // do something
+     }
+   }
+   ```
+
+### 类型缩减
+
+TypeScript 如下的场景做了缩减，它把字面量类型、枚举成员类型缩减掉，只保留原始类型、枚举类型等父类型，这是合理的优化
+
+```typescript
+type URStr = 'string' | string; // 类型是 string
+
+// 可是这个缩减，却极大地削弱了 IDE 自动提示的能力
+type BorderColor = 'black' | 'red' | 'green' | 'yellow' | 'blue' | string; // 类型缩减成 string
+// 使用类型黑魔法
+type BorderColor = 'black' | 'red' | 'green' | 'yellow' | 'blue' | string & {}; // 字面类型都被保留
+```
 
