@@ -1,3 +1,37 @@
+## 问题
+
+你觉得使用 TS 的好处是什么？
+
+1. TypeScript 是 JavaScript 的超集，它给 JavaScript 添加了可选的静态类型和基于类的面向对象编程，它拓展了 JavaScript 的语法
+
+   TypeScript 是面向对象的编程语言，包含类和接口的概念
+
+2. TypeScript 开发时能给出编译错误，JavaScript 需要运行时暴露
+
+3. TypeScript 为强类型语言，代码可读性强
+
+4. TypeScript 添加很多方便的特性，比如可选链
+
+type 和 interface 的异同？
+
+- 相同点
+  - 都可以描述一个对象或者函数
+  - 都允许扩展 extends：interface 和 type 都可以拓展，并且两者并不是相互独立的，也就是说 interface 可以 extends type 也可以 extends interface
+- 异同点
+  - type 可以声明基础类型别名、联合类型、元组等类型
+  - type 语句中还可以使用 typeof 获取实例的类型进行赋值
+  - interface 能够声明合并
+
+什么是泛型？
+
+- 泛型是指在定义函数、接口或类的时候，不预先指定具体的类型，而在使用的时候再指定类型的一种特性
+
+  好处：
+
+  - 增程序的可扩展性：函数或类可以很轻松地支持多种类型
+  - 增强代码的可读性：不必写多条函数重载，或者冗长的联合类型声明
+  - 灵活地控制类型之间的约束
+
 ## 基础
 
 ### 基础
