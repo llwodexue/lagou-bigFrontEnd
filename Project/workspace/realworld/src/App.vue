@@ -7,17 +7,23 @@
       <button @click="handleClick">button</button>
     </div>
     <router-view></router-view>
+
+    <Child/>
+    <h2>父组件h2</h2>
+    <h3>父组件h3</h3>
   </div>
 </template>
 
 <script>
 import Parcel from "single-spa-vue/dist/esm/parcel"
 import { mountRootParcel } from "single-spa"
+import Child from './components/Child'
 
 export default {
   name: "App",
   components: {
-    Parcel
+    Parcel,
+    Child
   },
   data() {
     return {
@@ -38,4 +44,13 @@ export default {
 }
 </script>
 
-<style></style>
+<style scoped>
+h3 {
+  background-color: red;
+}
+</style>
+<style>
+h2 {
+  background-color: red;
+}
+</style>
