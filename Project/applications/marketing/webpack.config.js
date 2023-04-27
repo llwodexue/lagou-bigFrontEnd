@@ -1,11 +1,11 @@
-const HtmlWebpackPlugin = require("html-webpack-plugin")
-const ModuleFederationPlugin = require("webpack/lib/container/ModuleFederationPlugin")
-const packageJSON = require("./package.json")
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ModuleFederationPlugin = require('webpack/lib/container/ModuleFederationPlugin')
+const packageJSON = require('./package.json')
 
 module.exports = {
-  mode: "development",
+  mode: 'development',
   output: {
-    publicPath: "http://localhost:8081/"
+    publicPath: 'http://localhost:8081/'
   },
   devServer: {
     port: 8081,
@@ -17,10 +17,10 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader",
+          loader: 'babel-loader',
           options: {
-            presets: ["@babel/preset-react", "@babel/preset-env"],
-            plugins: ["@babel/plugin-transform-runtime"]
+            presets: ['@babel/preset-react', '@babel/preset-env'],
+            plugins: ['@babel/plugin-transform-runtime']
           }
         }
       }
@@ -28,15 +28,15 @@ module.exports = {
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: "marketing",
-      filename: "remoteEntry.js",
+      name: 'marketing',
+      filename: 'remoteEntry.js',
       exposes: {
-        "./MarketingApp": "./src/bootstrap.js"
+        './MarketingApp': './src/bootstrap.js'
       },
       shared: packageJSON.dependencies
     }),
     new HtmlWebpackPlugin({
-      template: "./public/index.html"
+      template: './public/index.html'
     })
   ]
 }

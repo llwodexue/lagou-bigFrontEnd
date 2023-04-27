@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from "react"
-import { mount } from "auth/AuthApp"
-import { useHistory } from "react-router-dom"
+import React, { useEffect, useRef } from 'react'
+import { mount } from 'auth/AuthApp'
+import { useHistory } from 'react-router-dom'
 
 export default function AuthApp({ setStatus }) {
   const ref = useRef()
