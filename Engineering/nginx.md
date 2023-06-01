@@ -84,6 +84,7 @@ http {
 - weight：weight 代表权重，默认为 1，权重越高被分配的客户端越多，weight 和访问比率成正比，用于后端服务器性能不均的情况
 - ip_hash：每个请求按访问 IP 的 hash 结果分配，这样每个访客固定访问一个后端服务器，可以解决 session 的问题
 - url_hash(需安装第三方插件)：此方法按访问 url 的 hash 结果来分配请求,使每个 url 定向到同一个后端服务器，可以进一步提高后端缓存服务器的效率。Nginx 本身是不支持 url_hash的，如果需要使用这种调度算法，必须安装 Nginx 的 hash 软件包
+- fair(需安装第三方插件)：这是比上面两个更加智能的负载均衡算法。此种算法可以依据页面大小和加载时间长短智能地进行负载均衡，也就是根据后端服务器的响应时间来分配请求，响应时间短的优先分配。Nginx 本身是不支持 fair 的,如果需要使用这种调度算法，必须下载 Nginx 的 upstream_fair 模块
 
 ### 动静分离
 
@@ -186,22 +187,37 @@ http {
 
 ```nginx
 http {
-  # 开启gzip压缩输出
-  gzip on;
-  # 允许压缩的页面的最小字节数,页面字节数从header偷得content-length中获取.默认是0,不管页面多大都进行压缩.建议设置成大于1k的字节数,小于1k可能会越压越大
+  # 开启gzip
+  gzip  on;
+  # 低于1kb的资源不压缩
   gzip_min_length 1k;
-  # 表示申请4个单位为16k的内存作为压缩结果流缓存,默认值是申请与原始数据大小相同的内存空间来存储gzip压缩结果
-  gzip_buffers 4 16k;
-  # 压缩版本（默认1.1,目前大部分浏览器已经支持gzip解压.前端如果是squid2.5请使用1.0）
-  gzip_http_version 1.1;
-  # 压缩等级 1压缩比最小,处理速度快 9压缩比最大,比较消耗cpu资源,处理速度最慢,但是因为压缩比最大,所以包最小,传输速度快
-  gzip_comp_level 2;
-  #压缩类型,默认就已经包含text/html,所以下面就不用再写了,写上去也不会有问题,但是会有一个warn
-  gzip_types text/plain application/x-javascript text/css application/xml;
-  # 选项可以让前端的缓存服务器缓存经过gzip压缩的页面.例如:用squid缓存经过nginx压缩的数据
+  # 压缩级别1-9，越大压缩率越高，同时消耗cpu资源也越多，建议设置在5左右。
+  gzip_comp_level 5;
+  # 需要压缩哪些响应类型的资源，多个空格隔开。不建议压缩图片.
+  gzip_types text/plain text/css text/javascript application/json application/javascript application/x-javascript application/xml;
+  # 配置禁用gzip条件，支持正则。此处表示ie6及以下不启用gzip（因为ie低版本不支持）
+  gzip_disable "MSIE [1-6]\.";
+  # 是否添加“Vary: Accept-Encoding”响应头
   gzip_vary on;
 }
 ```
+
+webpack 插件 `compression-webpack-plugin`
+
+```js
+config.plugins.push(
+  new CompressionWebpackPlugin({
+    filename: '[path].gz[query]',
+    algorithm: 'gzip',
+    test: /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i,
+    threshold: 10240,
+    minRatio: 0.8,
+    deleteOriginalAssets: false,
+  }),
+)
+```
+
+比如 nginx 服务器，开启了 `gzip: on;`，服务器会先去目录下寻找有没有对应的 gz 文件，如果没有，nginx 要做一次压缩再返回。如果短时间访问量过高，会造成服务器压力大（压缩是消耗服务器资源的），提前打包好 gz，服务器压力就没那么大了
 
 ### fastcgi
 
@@ -280,3 +296,88 @@ http {
   keepalive_timeout 120;
 }
 ```
+
+## 自己配置
+
+```nginx
+# 定义Nginx运行的用户和用户组
+# user  nobody;
+
+# nginx进程数，建议设置为等于CPU总核心数 `cat /proc/cpuinfo | grep processor | wc -l`
+worker_processes  2;
+
+# 全局错误日志定义类型，[ debug | info | notice | warn | error | crit ]
+error_log  logs/error.log info;
+
+# 进程文件
+pid        logs/nginx.pid;
+
+# 配置Nginx worker进程最大打开文件数，建议与 `ulimit -n` 的值保持一致
+worker_rlimit_nofile 3200;
+
+events {
+  # 单个进程最大连接数（worker_rlimit_nofile / worker_processes）
+  worker_connections  1600;
+}
+
+
+http {
+  # 文件扩展名与文件类型映射表
+  include       mime.types;
+  # 默认文件类型
+  default_type  application/octet-stream;
+
+  upstream my_server {
+    server 198.216.41.86:8080;
+    server 198.216.41.86:8081;
+  }
+
+  # 开启gzip
+  gzip  on;
+  # 低于1kb的资源不压缩
+  gzip_min_length 1k;
+  # 压缩级别1-9，越大压缩率越高，同时消耗cpu资源也越多，建议设置在5左右。
+  gzip_comp_level 5;
+  # 需要压缩哪些响应类型的资源，多个空格隔开。不建议压缩图片.
+  gzip_types text/plain text/css text/javascript application/json application/javascript application/x-javascript application/xml;
+  # 配置禁用gzip条件，支持正则。此处表示ie6及以下不启用gzip（因为ie低版本不支持）
+  gzip_disable "MSIE [1-6]\.";
+  # 是否添加“Vary: Accept-Encoding”响应头
+  gzip_vary on;
+
+  server {
+    listen       9090;
+    server_name  _;
+
+    root D:/UI;
+    location / {
+      if ($request_uri ~* .*[.](js|css|map|jpg|png|svg|ico)$) {
+        # 非html缓存1个月
+        add_header Cache-Control "public, max-age=2592000";
+      }
+      if ($request_filename ~* ^.*[.](html|htm)$) {
+        # html文件使用协商缓存
+        add_header Cache-Control "public, no-cache";
+      }
+      try_files $uri $uri/ /index.html;
+    }
+  }
+
+  server {
+    listen       9091;
+    server_name  _;
+
+    root D:/project;
+    location / {
+      try_files $uri $uri/ /index.html;
+    }
+    location /api {
+      proxy_pass http://my_server;
+      proxy_set_header HOST $host;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+  }
+}
+```
+
