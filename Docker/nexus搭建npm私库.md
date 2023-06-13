@@ -76,3 +76,36 @@ $ docker run -d -p 8081:8081 --name nexus sonatype/nexus
 **创建 npmGroup**
 
 ![image-20221019163139357](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20221019163139357.png)
+
+## 3.推送 npm 包到私库
+
+> [配置 nexus npm 包](https://blog.sonatype.com/using-sonatype-nexus-repository-3-part-2-npm-packages)
+
+创建 `.npmrc` 文件，将私库地址粘贴过来
+
+- 如果想免密登陆推送可以加上 _auth，加密规则：`user:password -> base64`
+
+```bash
+registry=http://192.168.1.123:8081/nexus/content/repositories/npm-test/
+_auth=YWRtaW46YWRtaW4xMjM=
+email=any@email.com
+```
+
+可以使用浏览器自带的方法 `window.btoa` 或 `window.atob`
+
+![image-20230613101343312](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20230613101343312.png)
+
+还可以使用 linux base64 命令
+
+![image-20230613101349194](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20230613101349194.png)
+
+也可以通过配置 package.json 来实现
+
+```json
+{
+  "publishConfig": {
+    "registry": "http://192.168.1.123:8081/nexus/content/repositories/npm-test/"
+  }
+}
+```
+
