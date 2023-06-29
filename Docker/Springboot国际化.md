@@ -88,6 +88,13 @@ public class Constants {
 
 前端设置 Accept-Language 请求头
 
-- 剩下工作：多语言组件封装、多语言插件（i18n）的封装、多语言文字提取
-
 ![image-20230629091819259](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20230629091819259.png)
+
+剩下工作：
+
+- 多语言组件封装（是否需要多语言输入）
+- 多语言插件及第三方库封装（i18n、Element、moment）
+- 消息提示组件封装（统一处理）
+- 多语言文字提取（label内容展示、placeholer内容提示、title标题、form表单校验、tip消息提示、Vue.extends需要单独注入），还需要考虑错误处理（$te、$t）
+- 打包处理
+- ...

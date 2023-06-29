@@ -1,20 +1,6 @@
----
-title: Vue+Element 国际化(i18n)页面全覆盖（路由、表单检验、弹出框等）
-tags:
-  - Vue
-  - i18n
-  - Element
-  - 切换语言
-categories: Vue
-author: LiLyn
-copyright: ture
-abbrlink: 82482c19
----
 # 安装 i18n
 
 `internationalization` 这个单词中，i 和 n 之间有 18 个字母
-
-<!--more-->
 
 **注意：** 当前 i18n 最新版本为 9 版本，9 版本没有 VueI18n，`import VueI18n from 'vue-i18n'` 解构会报错 `Cannot read property 'install' of undefined`
 
