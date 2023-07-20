@@ -42,7 +42,32 @@ vue 是通过 vnode 去生成 dom 树，如果数据去更新，vnode 之间的�
 
   watchEffect 在使用时，传入的函数会立刻执行一次。watch 默认情况下并不会执行回调函数，除非我们手动设置 immediate 选项
 
+watchEffect 相当于将 watch 的依赖源和回调函数合并，当任何你有用到的响应式依赖更新时，该函数便会重新执行，不同于 watch，watchEffect 的回调函数会被立刻执行（`{ immediate: true }`）
 
+- 推荐大部分时候用 watch 显式指定依赖以避免不必要的重复触发，也避免在后续代码修改或重构时不小心引入新的依赖
+- watchEffect 适用于一些逻辑相对简单，依赖源和逻辑强相关的场景
+
+### 响应式原理
+
+> vue2中的响应式原理：[剖析Vue原理&实现双向绑定MVVM](https://www.cnblogs.com/chuaWeb/articles/13554465.html)
+
+![Vue2响应式原理的基本使用流程](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/831429-20200910180025951-1785345503.png)
+
+- Vue2 Observer 负责通过 defineProperty 劫持数据 Data，每个被劫持的 Data都在各自闭包中维护一个 Dep 实例，用于收集依赖着它的 Watcher（观察者），被收集的 Watcher 存入 Dep 实例的 subs 数组中。如果 Data 是对象，则递归收集
+- Dep 维护一个公共的 Target 属性，在触发劫持前，将 Target 设置为当前 Watcher，然后触发 getter 将 Target（Watcher）收集到 subs 中，然后再将 Target 置为 null
+- Data 数据变更的时候触发 setter，然后从 Data 维护的 Dep 实例的 subs 数组中将 Watcher 取出来，执行其 update 方法，如果变更的值是对象，再劫持之
+
+这样其实是有问题的
+
+1. 如果 Watcher 使用的 Data 是对象类型，那么 Data 中所有的子属性都要递归将 Watcher 收集，这个是个资源浪费
+2. 数据劫持和依赖收集是强耦合关系
+3. 对数组劫持也没有做好，部分操作不是响应式的
+
+为了解决 vue2 的问题，依赖收集（添加观察者、通知观察者）模块单独出来，就是现在的 effect，用来生成、处理、追踪 reactiveEffect 数据，主要是收集数据依赖（观察者）和通知收集的依赖（观察者）。提供了是三个主要函数：
+
+- effect：将传入的函数转换为 reactiveEffect 格式的函数
+- track：将 reactiveEffect 添加为 target[key] 的观察者
+- trigger：通知 target[key] 的观察者
 
 ## vue 优化
 
