@@ -348,6 +348,53 @@ Upgrading @vue/cli-plugin-eslint from 4.4.4 to 5.0.8
    + "sass-loader": "^12.6.0"
    ```
 
+   **这个一定要解决**
+
+   ```bash
+   warning  in ./src/pages/xx/components/layout/components/Sidebar/index.vue?vue&type=script&lang=js&
+   export 'default' (imported as 'variables') was not found in '@/styles/variables.scss' (module has no exports)
+   ```
+
+   因为页面里用到了 `variables.scss` 导出的变量，新版如果没有进行处理会导致页面阻塞
+
+   - 需要将 `variables.scss` 名改为 `variables.module.scss`
+
+10. 打包两次问题，Vue-cli5 以后你会发现会打包两次
+
+   > [vue2 项目升级到 vue3 之后 npm run build 执行两遍打包](https://blog.csdn.net/weixin_44243061/article/details/124401155)
+
+   ```bash
+   -  Building legacy bundle for production...
+   -  Building module bundle for production...
+   ```
+
+   主要是因为要兼容浏览器导致，可以在 `.browserslistrc` 里配置 `not dead` 和 `not ie 11`
+
+   ```js
+   > 1%
+   last 2 versions
+   not dead
+   not ie 11
+   ```
+
+   再进行打包就只会打包一次
+
+   ```bash
+   -  Building for production...
+   ```
+
+11. eslint 可能会有一些警告或报错
+
+    - 可以先整体修复一遍，之后再解决一下没办法修复的
+
+    ```json
+    {
+      "scripts": {
+        "lint": "eslint . --ext .html,.vue,.js,.jsx --fix"
+      }
+    }
+    ```
+
 ### 升级vue
 
 1. 升级 `vue` 至 2.7。同时可以将 `vue-template-compiler` 从依赖中移除
@@ -364,3 +411,4 @@ Upgrading @vue/cli-plugin-eslint from 4.4.4 to 5.0.8
    ```
 
 2. 这里我没有使用 vite，很多和 vite 相关的就没必要处理了
+

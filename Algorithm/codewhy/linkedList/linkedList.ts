@@ -1,3 +1,4 @@
+import ILinkedList from './ILinkedList'
 class Node<T> {
   value: T
   next: Node<T> | null = null
@@ -6,20 +7,23 @@ class Node<T> {
   }
 }
 
-class LinkedList<T> {
+class LinkedList<T> implements ILinkedList<T> {
   private head: Node<T> | null = null
-  private size: number = 0
-  get lenght() {
-    return this.size
-  }
+  private length: number = 0
   // 根据position获取到当前的节点（不是节点的value，而是获取节点）
-  private getNode(position: number): Node<T> | null {
+  private getNode(position: number) {
     let index = 0
     let current = this.head
     while (index++ < position && current) {
       current = current.next
     }
     return current
+  }
+  size() {
+    return this.length
+  }
+  peek() {
+    return this.head?.value
   }
 
   append(value: T) {
@@ -35,7 +39,7 @@ class LinkedList<T> {
       }
       current.next = newNode
     }
-    this.size++
+    this.length++
   }
 
   traverse() {
@@ -48,9 +52,9 @@ class LinkedList<T> {
     console.log(values.join('->'))
   }
 
-  insert(value: T, position: number): boolean {
+  insert(value: T, position: number) {
     // 1.越界的判断
-    if (position < 0 || position > this.size) return false
+    if (position < 0 || position > this.length) return false
     // 2.根据value创建新的节点
     const newNode = new Node(value)
     // 3.判断是否需要插入头部
@@ -73,13 +77,13 @@ class LinkedList<T> {
       newNode.next = previous?.next ?? null
       previous!.next = newNode
     }
-    this.size++
+    this.length++
     return true
   }
 
-  removeAt(position: number): T | null {
+  removeAt(position: number) {
     // 1.越界的判断
-    if (position < 0 || position >= this.size) return null
+    if (position < 0 || position >= this.length) return null
     // 2.判断是否是删除第一个节点
     let current = this.head
     if (position === 0) {
@@ -96,26 +100,26 @@ class LinkedList<T> {
       const previous = this.getNode(position - 1)
       previous!.next = previous?.next?.next ?? null
     }
-    this.size--
+    this.length--
     return current?.value ?? null
   }
 
-  get(position: number): T | null {
+  get(position: number) {
     // 1.越界的判断
-    if (position < 0 || position >= this.size) return null
+    if (position < 0 || position >= this.length) return null
     // 2.查找元素，并且返回元素
     return this.getNode(position)?.value ?? null
   }
 
-  update(value: T, position: number): boolean {
-    if (position < 0 || position >= this.size) return false
+  update(value: T, position: number) {
+    if (position < 0 || position >= this.length) return false
     const currentNode = this.getNode(position)
     // 获取对应位置的节点，直接更新即可
     currentNode!.value = value
     return true
   }
 
-  indexOf(value: T): number {
+  indexOf(value: T) {
     let current = this.head
     let index = 0
     while (current) {
@@ -128,13 +132,13 @@ class LinkedList<T> {
     return -1
   }
 
-  remove(value: T): T | null {
+  remove(value: T) {
     const index = this.indexOf(value)
     return this.removeAt(index)
   }
 
   isEmpty() {
-    return this.size === 0
+    return this.length === 0
   }
 }
 
@@ -170,7 +174,7 @@ console.log('\n-----测试indexOf-----')
 console.log(linkedList.indexOf('ccc'))
 
 console.log('\n-----测试remove-----')
-console.log(linkedList.remove('ccc'))
+linkedList.remove('ccc')
 linkedList.traverse()
 
 export {}
