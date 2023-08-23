@@ -109,3 +109,20 @@ email=any@email.com
 }
 ```
 
+
+
+推送私库可能存在的问题：
+
+1. 分析依赖锁时，有些包命名重复，导致下载错误
+
+   比如：下载 `parse-json@4.0.0` 链接，既有可能下载的是 `@types/parse-json` 也有可能下载就是 `parse-json`，如果按文件名进行覆盖则会导致少传包
+
+2. 上传包时，有些包的 `package.json` 里面配置 `publishConfig`
+
+   ![image-20230823160618665](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20230823160618665.png)
+
+   比如：`archiver-5.0.0` 里面配置了如上 publishConfig。在内网情况下，使用 `npm i --registry=xx`，是会报错的，内网无法访问到 `https://registry.npmjs.org/`
+
+   - 目前我想到的解决方案是：把 `archiver-5.0.0.tgz` 解压，之后解压 `archiver-5.0.0.tar`，修改 `package.json` 里面的 publishConfig，之后执行 npm publish
+
+3. 分析依赖锁时，types 包下载不下来，这个就只能用笨方法（缺什么依赖，npm i 之后把对应包 tgz 包下载下来）
