@@ -121,8 +121,15 @@ email=any@email.com
 
    ![image-20230823160618665](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20230823160618665.png)
 
-   比如：`archiver-5.0.0` 里面配置了如上 publishConfig。在内网情况下，使用 `npm i --registry=xx`，是会报错的，内网无法访问到 `https://registry.npmjs.org/`
-
-   - 目前我想到的解决方案是：把 `archiver-5.0.0.tgz` 解压，之后解压 `archiver-5.0.0.tar`，修改 `package.json` 里面的 publishConfig，之后执行 npm publish
+   - 比如：`archiver-5.0.0` 里面配置了如上 publishConfig。在内网情况下，使用 `npm i --registry=xx`，是会报错的，内网无法访问到 `https://registry.npmjs.org/`
+     - 目前我想到的解决方案是：把 `archiver-5.0.0.tgz` 解压，之后解压 `archiver-5.0.0.tar`，修改 `package.json` 里面的 publishConfig，之后执行 npm publish
+   - 比如：`simple-update-notifier@2.0.0` 也是里面配置了 publishConfig，这个包里 scripts 命令里还会有 prepare，需要先把它去掉
+   - 比如：`builtins@1.0.3` 里面也配置了 publishConfig
 
 3. 分析依赖锁时，types 包下载不下来，这个就只能用笨方法（缺什么依赖，npm i 之后把对应包 tgz 包下载下来）
+
+   比如：
+
+   - `@vue/cli` 需要 `@types/inquirer@8.1.3`、`@types/accepts@1.3.5` 、`body-parser@1.19.2`、`qs@6.9.7`、`@vitejs/plugin-react@4.0.3`、`@types/html-minifier-terser@6.0.0`、`serve-index@1.9.1`
+   - 其实这个是和第一个原因是一样的都是名重复了，导致下载不下来
+
