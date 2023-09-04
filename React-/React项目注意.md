@@ -35,4 +35,36 @@
    - [react 函数组件中使用 useState 改变值后立刻获取最新值](https://segmentfault.com/a/1190000039365818)
 
      react 合成事件中改变状态是异步的，出于减少 render 次数，react 会收集所有状态变更，然后对比优化，最后做一次变更
+   
+   比如：分页组件，设置完 pageNumber 和 pageSize 的值后立即请求列表接口，这样拿到的值其实是上一次的值
+   
+   ```js
+   const [pageNumber, setPageNumber] = useState(1)
+   const [pageSize, setPageSize] = useState(10)
+   
+   const onPageChange = (pageNumber, pageSize) => {
+     setPageNumber(pageNumber)
+     setPageSize(pageSize)
+     getList()
+   }
+   ```
+   
+   正确写法如下
+   
+   ```js
+   const page = useRef({
+     pageNumber: 1,
+     pageSize: 10
+   })
+   
+   const onPageChange = (pageNumber, pageSize) => {
+     page.current = {
+       pageNumber,
+       pageSize
+     }
+     getList()
+   }
+   ```
+   
+   
 
