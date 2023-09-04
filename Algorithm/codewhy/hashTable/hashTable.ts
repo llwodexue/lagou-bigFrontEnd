@@ -45,6 +45,7 @@ class HashTable<T = any> {
       }
     })
   }
+  // 是否是质数
   private isPrime(num: number): boolean {
     // 质数的特点：只能被1和num整除
     const sqrt = Math.sqrt(num)
