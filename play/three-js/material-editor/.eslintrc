@@ -1,0 +1,29 @@
+{
+  "extends": ["vue"],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "sourceType": "module"
+  },
+  "plugins": ["vue"],
+  "rules": {
+    "no-new": 0,
+    "semi": "off",
+    "max-len": 0,
+    "no-console": 0,
+    "no-param-reassign": 0,
+    "no-nested-ternary": 0,
+    "linebreak-style": "off",
+    "no-useless-call": "off",
+    "no-plusplus": "off",
+    "arrow-parens": "off",
+    "global-require": "warn",
+    "object-curly-spacing": "off",
+    "space-before-function-paren": "off",
+    "import/no-extraneous-dependencies": "off",
+    "generator-star-spacing": 0
+  },
+  "env": {
+    "browser": true,
+    "node": true
+  }
+}

@@ -1,0 +1,97 @@
+.fieldset {
+  font-size: 13px;
+  flex-direction: column;
+  flex-basis: 100%;
+  display: flex;
+
+  .type,
+  .name {
+    cursor: default;
+    border-bottom: 1px solid #454545;
+    height: 28px;
+    align-items: center;
+    display: flex;
+    flex: 0 0 auto;
+    color: #7f7f7f;
+    background-color: rgba(194, 199, 215, 0.04);
+
+    label {
+      background-color: #2d2d2d;
+    }
+
+    .label {
+      cursor: default;
+      opacity: 0.7;
+      flex: 0 0 50px;
+      padding-left: $controls-gutter;
+    }
+
+    .title {
+      padding-left: 5px;
+    }
+  }
+}
+
+.controls {
+  .row {
+    display: flex;
+    align-items: center;
+    min-height: 27px;
+    padding: 5px 5px 5px 0;
+    border-bottom: 1px solid #383838;
+
+    > .label {
+      flex: 0 0 100px;
+      cursor: default;
+    }
+
+    button,
+    label {
+      margin-left: $controls-gutter;
+    }
+
+    .info {
+      display: flex;
+      padding-left: 5px;
+      flex-direction: column;
+      flex: 0 0 145px;
+
+      .name {
+        font-size: 13px;
+      }
+
+      .type {
+        font-size: 11px;
+        color: #505050;
+      }
+    }
+
+    .matrix {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      flex: 0 1 100%;
+
+      label {
+        margin-top: 1px;
+        margin-bottom: 1px;
+      }
+
+      &.mat2 label {
+        flex: 0 0 calc(50% - 5px);
+      }
+
+      &.mat3 label {
+        flex: 0 0 calc(33.3% - 5px);
+      }
+
+      &.mat4 label {
+        flex: 0 0 calc(25% - 5px);
+      }
+    }
+
+    &:nth-child(even) {
+      background-color: rgba(194, 199, 215, 0.04);
+    }
+  }
+}

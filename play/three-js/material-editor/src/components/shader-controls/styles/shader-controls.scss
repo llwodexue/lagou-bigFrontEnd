@@ -1,0 +1,30 @@
+.shader-controls {
+  display: flex;
+  flex-direction: column;
+
+  .grab-resize-row {
+    top: -3px;
+  }
+
+  .ctrl-btn.active .icon-plus {
+    font-size: 13px;
+  }
+
+  .shader-ctrl-settings {
+    flex-direction: column;
+    flex-basis: 100%;
+    display: flex;
+
+    .create-new {
+      display: flex;
+      flex-direction: column;
+      background-color: #000;
+      border-top: 1px solid #383838;
+      flex: 0 0 auto;
+    }
+  }
+}
+
+.data-type-select {
+  max-width: 140px;
+}

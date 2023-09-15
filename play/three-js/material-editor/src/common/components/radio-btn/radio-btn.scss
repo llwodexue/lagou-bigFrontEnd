@@ -1,0 +1,79 @@
+$radio-btn-checked-color: #1e90ff;
+$radio-btn-unchecked-color: #727272;
+$radio-btn-hover-color: #fff;
+
+.radio-btn {
+  font-size: 13px;
+  align-items: center;
+  display: flex;
+  cursor: pointer;
+  user-select: none;
+
+  .switch-icon {
+    font-size: 14px;
+    font-family: 'icomoon' !important; /* stylelint-disable-line */
+    color: $radio-btn-unchecked-color;
+    transition: border-color 200ms linear;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    &:before {
+      content: "\e937";
+    }
+  }
+
+  .prefix {
+    cursor: inherit;
+    padding-right: 3px;
+  }
+
+  .sufix {
+    cursor: inherit;
+    padding-left: 3px;
+  }
+
+  input[type="radio"] {
+    display: none;
+
+    &:checked + .switch-icon {
+      color: $radio-btn-checked-color;
+
+      &:before {
+        content: "\e936";
+      }
+    }
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus,
+  &:hover {
+    color: $radio-btn-hover-color;
+
+    .switch-icon, input[type="radio"]:checked + .switch-icon { /* stylelint-disable-line */
+      cursor: pointer;
+      color: $radio-btn-hover-color;
+    }
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.3;
+
+    .switch-icon { /* stylelint-disable-line */
+      cursor: inherit;
+    }
+
+    &:focus,
+    &:hover {
+      color: inherit;
+
+      .switch-icon { /* stylelint-disable-line */
+        color: inherit;
+        cursor: inherit;
+      }
+    }
+  }
+}

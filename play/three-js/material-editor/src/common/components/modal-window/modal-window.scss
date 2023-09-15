@@ -1,0 +1,118 @@
+$grab-resizer-dimension: 5px;
+
+.modal-window {
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  position: fixed;
+  display: flex;
+  z-index: 11;
+  flex-direction: column;
+
+  &.is-overlay {
+    background-color: rgba(19, 19, 19, 0.72);
+  }
+
+  &.center-center {
+    align-items: center;
+    justify-content: center;
+  }
+
+  &.top-center {
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .content {
+    position: relative;
+    background-color: #fafafa;
+    box-shadow: 0 2px 14px 0 #000;
+    min-width: 300px;
+    min-height: 80px;
+
+    .header {
+      cursor: move;
+    }
+
+    .top-left-corner {
+      cursor: se-resize;
+      position: absolute;
+      height: $grab-resizer-dimension;
+      width: $grab-resizer-dimension;
+      top: -$grab-resizer-dimension;
+      left: -$grab-resizer-dimension;
+    }
+
+    .top-right-corner {
+      cursor: sw-resize;
+      position: absolute;
+      height: $grab-resizer-dimension;
+      width: $grab-resizer-dimension;
+      top: -$grab-resizer-dimension;
+      right: -$grab-resizer-dimension;
+    }
+
+    .bottom-left-corner {
+      cursor: sw-resize;
+      position: absolute;
+      height: $grab-resizer-dimension;
+      width: $grab-resizer-dimension;
+      bottom: -$grab-resizer-dimension;
+      left: -$grab-resizer-dimension;
+    }
+
+    .bottom-right-corner {
+      cursor: se-resize;
+      position: absolute;
+      height: $grab-resizer-dimension;
+      width: $grab-resizer-dimension;
+      bottom: -$grab-resizer-dimension;
+      right: -$grab-resizer-dimension;
+    }
+
+    .top-border {
+      cursor: n-resize;
+      position: absolute;
+      height: $grab-resizer-dimension;
+      top: -$grab-resizer-dimension;
+      left: 0;
+      right: 0;
+    }
+
+    .left-border {
+      cursor: e-resize;
+      position: absolute;
+      width: $grab-resizer-dimension;
+      left: -$grab-resizer-dimension;
+      top: 0;
+      bottom: 0;
+    }
+
+    .right-border {
+      cursor: e-resize;
+      position: absolute;
+      width: $grab-resizer-dimension;
+      right: -$grab-resizer-dimension;
+      top: 0;
+      bottom: 0;
+    }
+
+    .bottom-border {
+      cursor: n-resize;
+      position: absolute;
+      height: $grab-resizer-dimension;
+      bottom: -$grab-resizer-dimension;
+      left: 0;
+      right: 0;
+    }
+  }
+
+  &.is-maximized .content {
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    position: fixed;
+  }
+}

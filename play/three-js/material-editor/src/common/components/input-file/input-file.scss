@@ -1,0 +1,57 @@
+$input-file-color: #fafafa;
+$input-file-bg-color: #c28419;
+$input-file-hover-color: #fff;
+$input-file-hover-bg-color: #f79d00;
+
+.input-file {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  user-select: none;
+
+  .button {
+    cursor: pointer;
+    font-size: 13px;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $input-file-color;
+    background-color: $input-file-bg-color;
+    transition: background-color 150ms ease-in-out;
+    height: 27px;
+    min-width: 55px;
+    width: 100%;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus,
+  &:hover {
+    .button {
+      background-color: $input-file-hover-bg-color;
+      color: $input-file-hover-color;
+    }
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.3;
+
+    &:focus,
+    &:hover {
+      .button {
+        cursor: inherit;
+        color: $input-file-color;
+        background-color: $input-file-bg-color;
+      }
+    }
+  }
+}

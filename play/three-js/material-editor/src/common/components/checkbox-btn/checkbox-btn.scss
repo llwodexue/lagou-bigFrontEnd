@@ -1,0 +1,72 @@
+$checkbox-btn-active-color: #1e90ff;
+$checkbox-btn-color: #727272;
+$checkbox-btn-hover-color: #fff;
+
+.checkbox-btn {
+  font-size: 13px;
+  align-items: center;
+  display: flex;
+  cursor: pointer;
+  user-select: none;
+
+  .switch-icon {
+    font-size: 32px;
+    line-height: 28px;
+    color: $checkbox-btn-color;
+    font-family: 'icomoon' !important; /* stylelint-disable-line */
+    transition: border-color 200ms linear;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    &:before {
+      content: "\e94d";
+    }
+  }
+
+  .prefix {
+    cursor: inherit;
+    padding-right: 3px;
+  }
+
+  .sufix {
+    cursor: inherit;
+    padding-left: 3px;
+  }
+
+  input[type="checkbox"] {
+    display: none;
+
+    &:checked + .switch-icon {
+      color: $checkbox-btn-active-color;
+
+      &:before {
+        content: "\e94e";
+      }
+    }
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus,
+  &:hover {
+    color: $checkbox-btn-hover-color;
+
+    .switch-icon, input[type="checkbox"]:checked + .switch-icon { /* stylelint-disable-line */
+      cursor: pointer;
+      color: $checkbox-btn-hover-color;
+    }
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+    color: inherit;
+    opacity: 0.3;
+
+    .switch-icon { /* stylelint-disable-line */
+      color: inherit;
+      cursor: inherit;
+    }
+  }
+}

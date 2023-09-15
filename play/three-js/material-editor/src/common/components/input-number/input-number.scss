@@ -1,0 +1,78 @@
+$input-number-color: #f1f1f1;
+$input-number-bg-color: #3c3c3c;
+$input-number-hover-color: #64add1;
+$input-number-hover-bg-color: rgba(121, 136, 185, 0.14);
+
+.input-number {
+  font-size: 13px;
+  height: 27px;
+  display: flex;
+  align-items: center;
+  background-color: $input-number-bg-color;
+  color: $input-number-color;
+  width: 100%;
+
+  input[type="number"] {
+    cursor: initial;
+    background-color: inherit;
+    font-family: monospace;
+    color: inherit;
+    width: inherit;
+    height: inherit;
+    padding-left: 5px;
+    padding-right: 5px;
+    text-overflow: ellipsis;
+    appearance: none;
+    -moz-appearance: textfield; /* stylelint-disable-line */
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      appearance: none;
+      margin: 0;
+    }
+
+    &:hover,
+    &:focus {
+      outline: none;
+      background-color: $input-number-hover-bg-color;
+      color: $input-number-hover-color;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+
+      &:hover,
+      &:focus {
+        background-color: inherit;
+        color: inherit;
+      }
+    }
+  }
+
+  .prefix,
+  .sufix {
+    cursor: inherit;
+    min-width: 16px;
+    text-align: center;
+    text-transform: uppercase;
+    color: #979797;
+  }
+
+  .prefix {
+    padding-left: 5px;
+  }
+
+  .sufix {
+    padding-right: 5px;
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+    opacity: 0.3;
+
+    .prefix,
+    .sufix {
+      cursor: not-allowed;
+    }
+  }
+}

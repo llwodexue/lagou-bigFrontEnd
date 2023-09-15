@@ -1,0 +1,36 @@
+.resize-box {
+  position: relative;
+
+  &.column {
+    padding-right: 3px;
+
+    > .grab-resize {
+      cursor: col-resize;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+    }
+  }
+
+  &.row {
+    > .grab-resize {
+      cursor: row-resize;
+      right: 0;
+      top: 0;
+      left: 0;
+      height: 3px;
+    }
+  }
+
+  .grab-resize {  /* stylelint-disable-line */
+    position: absolute;
+    background-color: $grab-color;
+    transition: background-color 300ms ease-in-out;
+    z-index: 3;
+
+    &:hover {
+      background-color: $grab-hover-color;
+    }
+  }
+}

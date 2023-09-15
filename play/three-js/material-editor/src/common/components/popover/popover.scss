@@ -1,0 +1,65 @@
+
+$popover-fade-in-enter-transition-duration: 150ms;
+$popover-fade-out-leave-transition-duration: 150ms;
+$triangle-color: #7fabca;
+$triangle-width: 10px;
+
+.popover-fade-enter-active {
+  position: fixed;
+  opacity: 0;
+  transition: opacity $popover-fade-in-enter-transition-duration linear;
+
+  &.popover-fade-enter-to {
+    opacity: 1;
+    transition: opacity $popover-fade-in-enter-transition-duration linear;
+  }
+}
+
+.popover-fade-leave-active {
+  position: fixed;
+  opacity: 0.7;
+  transition: opacity $popover-fade-out-leave-transition-duration linear;
+
+  &.popover-fade-leave-to {
+    opacity: 0;
+    transition: opacity $popover-fade-out-leave-transition-duration linear;
+  }
+}
+
+.popover {
+  background-color: #434343;
+  box-shadow: 0 0 12px 0 #000;
+  position: fixed;
+  z-index: 13;
+
+  .triangle {
+    position: absolute;
+    border-style: solid;
+    width: 0;
+    height: 0;
+
+    &.top {
+      top: -$triangle-width;
+      border-width: 0 $triangle-width $triangle-width $triangle-width;
+      border-color: transparent transparent $triangle-color transparent;
+    }
+
+    &.bottom {
+      bottom: -$triangle-width;
+      border-width: $triangle-width $triangle-width 0 $triangle-width;
+      border-color: $triangle-color transparent transparent transparent;
+    }
+
+    &.left {
+      left: -$triangle-width;
+      border-width: $triangle-width $triangle-width $triangle-width 0;
+      border-color: transparent $triangle-color transparent transparent;
+    }
+
+    &.right {
+      right: -$triangle-width;
+      border-width: $triangle-width 0 $triangle-width $triangle-width;
+      border-color: transparent transparent transparent $triangle-color;
+    }
+  }
+}

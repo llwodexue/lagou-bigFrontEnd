@@ -1,0 +1,63 @@
+.CodeMirror-lint-markers {
+  width: 21px;
+}
+
+.CodeMirror-lint-tooltip {
+  background-color: #f1f1f1;
+  border: 1px solid #272727;
+  color: #3c3c3c;
+  font-family: Arial;
+  font-size: 13px;
+  overflow: hidden;
+  padding: 4px;
+  position: fixed;
+  white-space: pre-wrap;
+  z-index: 100;
+  max-width: 600px;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.CodeMirror-lint-mark-error {
+  border-bottom: 1px dashed #ff0000;
+}
+
+.CodeMirror-lint-mark-warning {
+  border-bottom: 1px dashed #ff7f00;
+}
+
+.CodeMirror-lint-marker-error,
+.CodeMirror-lint-marker-warning {
+  margin-left: 5px;
+  font-family: 'icomoon';
+  font-size: 11px;
+  cursor: pointer;
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+}
+
+.CodeMirror-lint-marker-error:before {
+  color: #ff0000;
+  content: "\e900";
+}
+
+.CodeMirror-lint-marker-warning:before {
+  color: #ff7f00;
+  content: "\e901";
+}
+
+.CodeMirror-lint-message-error:before,
+.CodeMirror-lint-message-warning:before {
+  font-family: 'icomoon';
+}
+
+.CodeMirror-lint-message-error:before {
+  color: #ff0000;
+  content: "\e900";
+}
+
+.CodeMirror-lint-message-warning:before {
+  color: #ff7f00;
+  content: "\e901";
+}

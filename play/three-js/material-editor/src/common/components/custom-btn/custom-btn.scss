@@ -1,0 +1,113 @@
+.ctrl-btn {
+  text-decoration: none;
+  text-align: center;
+  font-size: 13px;
+  flex: 1 1 auto;
+  padding: 4px 4px 3px 4px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  user-select: none;
+  min-height: 27px;
+  background-color: $ctrl-btn-default-bg-color;
+  color: $ctrl-btn-default-color;
+  transition: background-color 150ms linear, color 150ms linear;
+
+  &.active {
+    background-color: $ctrl-btn-default-active-bg-color;
+    color: $ctrl-btn-default-hover-color;
+  }
+
+  &:hover {
+    background-color: $ctrl-btn-default-hover-bg-color;
+    color: $ctrl-btn-default-hover-color;
+  }
+
+  &:focus {
+    outline: none;
+    color: $ctrl-btn-default-hover-color;
+  }
+
+  &.disabled,
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.3;
+
+    &:hover {
+      cursor: not-allowed;
+    }
+  }
+
+  &.xs {
+    flex: 0 0 50px;
+  }
+
+  &.sm {
+    flex: 0 0 100px;
+  }
+
+  &.md {
+    flex: 0 0 150px;
+  }
+
+  &.lg {
+    flex: 0 0 200px;
+  }
+
+  &.danger {
+    background-color: $ctrl-btn-danger-bg-color;
+    color: $ctrl-btn-danger-color;
+
+    &.active {
+      background-color: $ctrl-btn-danger-active-bg-color;
+      color: $ctrl-btn-danger-hover-color;
+    }
+
+    &:hover {
+      background-color: $ctrl-btn-danger-hover-bg-color;
+      color: $ctrl-btn-danger-hover-color;
+    }
+
+    &:focus {
+      color: $ctrl-btn-danger-hover-color;
+    }
+  }
+
+  &.success {
+    background-color: $ctrl-btn-success-bg-color;
+    color: $ctrl-btn-success-color;
+
+    &.active {
+      background-color: $ctrl-btn-success-active-bg-color;
+      color: $ctrl-btn-success-hover-color;
+    }
+
+    &:hover {
+      background-color: $ctrl-btn-success-hover-bg-color;
+      color: $ctrl-btn-success-hover-color;
+    }
+
+    &:focus {
+      color: $ctrl-btn-success-hover-color;
+    }
+  }
+
+  &.primary {
+    background-color: $ctrl-btn-primary-bg-color;
+    color: $ctrl-btn-primary-color;
+
+    &.active {
+      background-color: $ctrl-btn-primary-active-bg-color;
+      color: $ctrl-btn-primary-hover-color;
+    }
+
+    &:hover {
+      background-color: $ctrl-btn-primary-hover-bg-color;
+      color: $ctrl-btn-primary-hover-color;
+    }
+
+    &:focus {
+      color: $ctrl-btn-primary-hover-color;
+    }
+  }
+}
