@@ -123,8 +123,14 @@ email=any@email.com
 
    - 比如：`archiver-5.0.0` 里面配置了如上 publishConfig。在内网情况下，使用 `npm i --registry=xx`，是会报错的，内网无法访问到 `https://registry.npmjs.org/`
      - 目前我想到的解决方案是：把 `archiver-5.0.0.tgz` 解压，之后解压 `archiver-5.0.0.tar`，修改 `package.json` 里面的 publishConfig，之后执行 npm publish
-   - 比如：`simple-update-notifier@2.0.0` 也是里面配置了 publishConfig，这个包里 scripts 命令里还会有 prepare，需要先把它去掉
    - 比如：`builtins@1.0.3` 里面也配置了 publishConfig
+   - 比如：`ahooks@3.7.8`、`ahooks-v3-count-1.0.0`、`hoist-non-react-statics@3.3.2`（react-redux@8 的依赖）
+
+   **特殊**
+
+   - 比如：`simple-update-notifier@2.0.0` 也是里面配置了 publishConfig，这个包里 scripts 命令里还会有 prepare 钩子，需要先把它去掉
+   - 比如：`@ant-design/icons@4.8.1` 这个比较有特殊性，它依赖了 `@ant-design/icons-svg@4.3.1`，这两个包都配置了 publishConfig，所以需要单独推送，但是这个包里 scripts 命令里配置了 prepublishOnly 钩子，需要先把它去掉
+   - 比如：`antd@5.8.4`、`antd@4.24.13` 同时配置了 prepare、prepublishOnly、postpublish 钩子，需要先把它们去掉
 
 3. 分析依赖锁时，types 包下载不下来，这个就只能用笨方法（缺什么依赖，npm i 之后把对应包 tgz 包下载下来）
 
