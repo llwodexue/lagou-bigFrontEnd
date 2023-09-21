@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>主线程</title>
+  </head>
+  <body>
+    <h1>主线程</h1>
+    <script>
+      var worker = new Worker('work.js')
+      // worker.postMessage({ cmd: 'start', msg: 'Hello World' })
+      worker.onmessage = function (event) {
+        console.log(event.data)
+      }
+      // worker.postMessage({ cmd: 'stop', msg: 'Hello World' })
+      // worker.postMessage({ cmd: 'start', msg: 'Hello World' })
+
+      // var uInt8Array = new Uint8Array(new ArrayBuffer(10))
+      // for (var i = 0; i < uInt8Array.length; ++i) {
+      //   uInt8Array[i] = i * 2 // [0, 2, 4, 6, 8,...]
+      // }
+      // worker.postMessage(uInt8Array)
+
+      function createWorker(f) {
+        var blob = new Blob(['(' + f.toString() + ')()'])
+        var url = window.URL.createObjectURL(blob)
+        var worker = new Worker(url)
+        return worker
+      }
+      var pollingWorker = createWorker(function (e) {
+        var cache
+        function compare(newData, oldData) {
+          return newData === oldData
+        }
+        setInterval(function () {
+          fetch('/analytics', {
+            method: 'POST',
+            mode: 'cors'
+          }).then(function (res) {
+            var data = res.json()
+
+            if (!compare(data, cache)) {
+              cache = data
+              self.postMessage(data)
+            }
+          })
+        }, 1000)
+      })
+      pollingWorker.onmessage = function () {
+        console.log('render data')
+      }
+      pollingWorker.postMessage('init')
+
+      // worker.terminate()
+    </script>
+  </body>
+</html>

@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require('path')
 
 const app = express()
 let count = 0
@@ -9,12 +10,13 @@ app.post('/analytics', (req, res) => {
   res.send({
     code: 200,
     msg: 'success',
-    data: [{ info: 'post请求成功' }]
+    data: [{ info: 'post请求成功', data: count }]
   })
 })
 
 app.get('/analytics', (req, res) => {
-  console.log('get', req.params)
+  count++
+  console.log('get', count, req.params)
   setTimeout(() => {
     res.send({
       code: 200,
@@ -24,6 +26,10 @@ app.get('/analytics', (req, res) => {
   }, 2000)
 })
 
-const port = 8089
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, './index.html'))
+})
+
+const port = 8090
 
 app.listen(port, () => console.log(`http://127.0.0.1:${port}`))

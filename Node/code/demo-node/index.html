@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>主线程</title>
+  </head>
+  <body>
+    <h1>主线程</h1>
+    <script>
+      function createWorker(f) {
+        const blob = new Blob(['(' + f.toString() + ')()'])
+        const url = window.URL.createObjectURL(blob)
+        const worker = new Worker(url)
+        return worker
+      }
+      const pollingWorker = createWorker(e => {
+        let cache
+        function compare(newData, oldData) {
+          return false
+        }
+        setInterval(async () => {
+          const url = 'http://127.0.0.1:8090/analytics'
+          const res = await fetch(url, {
+            method: 'POST',
+            mode: 'cors'
+          })
+          const data = await res.json()
+
+          if (!compare(data, cache)) {
+            cache = data
+            self.postMessage(data)
+          }
+        }, 1000)
+      })
+      pollingWorker.onmessage = function (event) {
+        console.log(event.data)
+      }
+      pollingWorker.postMessage('init')
+    </script>
+  </body>
+</html>
