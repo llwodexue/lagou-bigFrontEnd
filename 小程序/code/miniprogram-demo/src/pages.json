@@ -1,0 +1,28 @@
+{
+    "pages": [
+        {
+            "path": "pages/index/index",
+            "style": {
+                "navigationBarTitleText": "首页"
+            }
+        },
+        {
+            "path": "pages/list/index",
+            "style": {
+                "navigationBarTitleText": "列表页"
+            }
+        },
+        {
+            "path": "pages/detail/index",
+            "style": {
+                "navigationBarTitleText": "详情页"
+            }
+        }
+    ],
+    "globalStyle": {
+        "navigationBarTextStyle": "black",
+        "navigationBarTitleText": "uni-app",
+        "navigationBarBackgroundColor": "#F8F8F8",
+        "backgroundColor": "#F8F8F8"
+    }
+}

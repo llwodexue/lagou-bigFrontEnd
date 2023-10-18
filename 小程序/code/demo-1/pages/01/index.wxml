@@ -1,0 +1,26 @@
+<!--pages/01/index.wxml-->
+<view class="banner">
+  <swiper circular>
+    <block wx:for="{{banners}}" wx:key="acm">
+      <swiper-item>
+        <image src="{{item.image}}" mode="widthFix" />
+      </swiper-item>
+    </block>
+  </swiper>
+</view>
+
+<view class="counter">
+  <view>当前计数：{{counter}}</view>
+</view>
+
+<view class="buttons">
+  <block wx:for="{{btns}}" wx:key="*this">
+    <button class="btn" style="background: {{item}};" bind:tap="onBtnClick" data-color="{{item}}">{{item}}</button>
+  </block>
+</view>
+
+<view class="list">
+  <block wx:for="{{30}}" wx:key="*this">
+    <view>列表数据：{{item}}</view>
+  </block>
+</view>

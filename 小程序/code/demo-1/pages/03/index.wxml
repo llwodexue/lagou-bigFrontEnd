@@ -1,0 +1,13 @@
+<!--pages/03/index.wxml-->
+
+<!-- 1.应用全局样式 -->
+<view class="title">learn wxss title</view>
+
+<!-- 2.页面中的样式 -->
+<view class="message">learn wxss message</view>
+
+<!-- 3.行内的样式 -->
+<view style="color: blue;">inline style</view>
+
+<!-- rpx单位的使用 -->
+<view class="item">我是文本</view>

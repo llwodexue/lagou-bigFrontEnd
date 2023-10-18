@@ -1,0 +1,17 @@
+/* pages/favor/favor.wxss */
+.title {
+  font-size: 20px;
+  color: red;
+}
+.message {
+  font-size: 30px;
+  font-weight: 700;
+  color: green;
+}
+.counter {
+  margin-top: 30px;
+  font-size: 20px;
+  font-weight: 700;
+  color: orange;
+  text-align: center;
+}

@@ -1,0 +1,15 @@
+<!--pages/10/index.wxml-->
+
+<!-- 1.展示弹窗 -->
+<view>
+  <button size="mini" bind:tap="onShowToast">showToast</button>
+  <button size="mini" bind:tap="onShowModal">showModal</button>
+  <button size="mini" bind:tap="onShowAction">showAction</button>
+</view>
+
+
+<!-- 3.设备信息 -->
+<button type="primary" bind:tap="onGetSystemInfo">设备信息</button>
+
+<!-- 4.本地存储 -->
+<button bind:tap="onLocalStorage">本地存储</button>

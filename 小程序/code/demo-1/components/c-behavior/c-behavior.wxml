@@ -1,0 +1,6 @@
+<!--components/c-behavior/c-behavior.wxml-->
+<view>
+  <view class="counter">当前计数：{{counter}}</view>
+  <button bind:tap="increment">+1</button>
+  <button bind:tap="decrement">-1</button>
+</view>

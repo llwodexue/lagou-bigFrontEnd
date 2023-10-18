@@ -1,0 +1,20 @@
+<!--pages/favor/favor.wxml-->
+<!-- 1.显示普通文本 -->
+<text class="title">普通的文本</text>
+
+<!-- 2.动态绑定message属性 -->
+<view class="message">{{ message }}</view>
+
+<!-- 3.动态展示列表数据 -->
+<view class="movies">
+  <view wx:for="{{movies}}" wx:key="*this">
+    {{item}} -- {{index}}
+  </view>
+</view>
+
+<!-- 4.事件绑定：计数器 -->
+<view class="counter">
+  <view>当前计数：{{counter}}</view>
+  <button size="mini" type="primary" bind:tap="increment">+1</button>
+  <button size="mini" type="warn" bind:tap="decrement">-1</button>
+</view>

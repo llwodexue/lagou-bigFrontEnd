@@ -1,0 +1,7 @@
+<template name="subtree">
+  <block wx:for="{{childNodes}}" wx:key="nodeId">
+    <view wx:if="{{item.type === 'view'}}">{{item.value}}</view>
+    <text wx:if="{{item.type === 'text'}}">{{item.value}}</text>
+    <button wx:if="{{item.type === 'button'}}" size="{{item.size}}">{{item.value}}</button>
+  </block>
+</template>

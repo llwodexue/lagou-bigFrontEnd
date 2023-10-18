@@ -1,0 +1,23 @@
+<!--pages/05/index.wxml-->
+<!-- <wxs module="format">
+  function formatPrice(price) {
+    return '¥' + price
+  }
+  module.exports = {
+    formatPrice: formatPrice
+  }
+</wxs> -->
+
+<wxs src="/utils/format.wxs" module="format"></wxs>
+
+<view class="books">
+  <block wx:for="{{books}}" wx:key="id">
+    <view>name:{{item.name}}-price:{{format.formatPrice(item.price)}}</view>
+  </block>
+</view>
+<view class="total">总价格: {{format.calcPrice(books)}}</view>
+
+<view class="count">播放量: {{format.formatCount(playCount)}}</view>
+<view class="time">
+  {{format.formatTime(currentTime)}}/{{format.formatTime(duration)}}
+</view>

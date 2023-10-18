@@ -1,0 +1,5 @@
+/* components/test-style/test-style.wxss */
+.title {
+  font-size: 36rpx;
+  color: red;
+}

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>视图部分</title>
+  </head>
+  <body>
+    <script>
+      new Vue({
+        components: {},
+        template: '<text>这是详情页面</text>'
+      })
+      window.addEventListener('message', data => {
+        vm.data = data
+      })
+    </script>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+/* pages/03/index.wxss */
+.title {
+  font-size: 30px;
+  font-weight: 700;
+  color: red;
+}
+.message {
+  color: green;
+}
+.item {
+  font-size: 32rpx;
+  /* iphone6: 1px === 2rpx */
+  width: 200rpx;
+  height: 200rpx;
+  background-color: #f00;
+}

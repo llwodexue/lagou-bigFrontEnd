@@ -1,0 +1,3 @@
+<import src="../../subtree.wxml" />
+
+<template is="subtree" data="{{childNodes}}" />

@@ -1,0 +1,6 @@
+<!--index.wxml-->
+<view>
+  <block wx:for="{{pages}}" wx:key="name">
+    <button type="primary" bind:tap="onBtnClick" data-item="{{item}}">{{item.name}}</button>
+  </block>
+</view>

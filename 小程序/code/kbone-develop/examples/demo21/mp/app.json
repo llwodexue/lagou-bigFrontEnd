@@ -1,0 +1,27 @@
+{
+  "pages": [
+    "pages/index/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "black"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "useExtendedLib": {
+    "kbone": true
+  },
+  "subpackages": [{
+    "root": "package1",
+    "pages": [
+      "pages/page1/index",
+      "pages/page2/index"
+    ],
+    "independent": true,
+    "useExtendedLib": {
+      "kbone": true
+    }
+  }]
+}

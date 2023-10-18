@@ -1,0 +1,6 @@
+text {
+  background-color: aqua;
+}
+view {
+  background-color: chartreuse;
+}

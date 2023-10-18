@@ -1,0 +1,10 @@
+/* pages/07/index.wxss */
+.title {
+  background: paleturquoise;
+}
+.abc {
+  background-color: greenyellow;
+}
+.cba {
+  background-color: palevioletred;
+}

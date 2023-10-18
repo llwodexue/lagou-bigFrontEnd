@@ -1,0 +1,4 @@
+<!--components/test-style/test-style.wxml-->
+<view class="title">--测试组件样式--</view>
+<view>--测试组件样式--</view>
+<view>--测试组件样式--</view>

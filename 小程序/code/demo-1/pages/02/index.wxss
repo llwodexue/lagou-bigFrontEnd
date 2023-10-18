@@ -1,0 +1,22 @@
+/* pages/02/index.wxss */
+.active {
+  background-color: skyblue;
+}
+.container {
+  background-color: orange;
+  height: 150px;
+}
+.item {
+  width: 100px;
+  height: 100px;
+  color: white;
+  flex-shrink: 0;
+}
+.scroll-x {
+  display: flex;
+}
+input {
+  width: 200px;
+  height: 30px;
+  border: 1px solid orange;
+}

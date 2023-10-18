@@ -1,0 +1,17 @@
+<!--pages/08/index.wxml-->
+<!-- <my-slot>
+  <button>我是按钮</button>
+</my-slot>
+<my-slot>
+  <image src="/assets/nhlt.jpg" mode="widthFix"></image>
+</my-slot> -->
+
+<mul-slot>
+  <button slot="left" size="mini">left</button>
+  <view slot="center">哈哈哈</view>
+  <button slot="right" size="mini">right</button>
+</mul-slot>
+
+<c-behavior></c-behavior>
+
+<c-liftime></c-liftime>

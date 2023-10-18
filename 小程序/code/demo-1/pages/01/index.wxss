@@ -1,0 +1,7 @@
+/* pages/01/index.wxss */
+image {
+  width: 1000%;
+}
+button {
+  color: #fff;
+}

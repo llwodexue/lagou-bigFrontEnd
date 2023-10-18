@@ -1,0 +1,7 @@
+<!--pages2/detail/detail.wxml-->
+<view>name:{{name}}</view>
+<view>age:{{age}}</view>
+<button bind:tap="onBackTap">navigator返回</button>
+<button bind:tap="onBackEventTap">eventChannel返回</button>
+
+<navigator open-type="navigateBack">navigator组件返回</navigator>
