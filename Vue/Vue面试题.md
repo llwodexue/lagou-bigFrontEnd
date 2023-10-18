@@ -292,6 +292,16 @@ vue3 diff 算法采用的是 去头尾的最长递增子序列算法。patchKeye
 
 ## 路由原理
 
+### history 原理
+
+在 History 模式下，Vue Router 使用 `history.pushState()` 方法来修改浏览器的历史记录，并使用 `popstate` 事件来监听历史记录的变化
+
+`history` 对象和 `popstate` 事件无法监听到以下几种情况：
+
+1. **页面刷新**：当用户刷新页面时，`popstate` 事件不会被触发。因为刷新页面并不会改变浏览器的历史记录。
+2. **链接点击**：当用户通过点击链接跳转到其他页面时，`popstate` 事件也不会被触发。这是因为 `popstate` 事件只会在通过前进或后退按钮、`history.back()`、`history.forward()`、`history.pushState()`、`history.replaceState()` 或 `history.go()` 方法导致历史记录发生变化时触发
+3. **地址栏修改**：如果用户直接在地址栏中输入新的 URL 并按下回车键，`popstate` 事件同样不会被触发。因为这种方式也不会改变浏览器的历史记录
+
 
 ### 导航守卫实现原理
 
