@@ -1,7 +1,15 @@
 const express = require('express')
 const path = require('path')
+const cors = require('cors')
 
 const app = express()
+
+app.use(
+  cors({
+    origin: 'http://127.0.0.1:5500'
+  })
+)
+
 let count = 0
 
 app.post('/analytics', (req, res) => {
@@ -23,7 +31,7 @@ app.get('/analytics', (req, res) => {
       msg: 'success',
       data: [{ info: 'get请求成功' }]
     })
-  }, 2000)
+  }, 6000)
 })
 
 app.get('/', (req, res) => {
