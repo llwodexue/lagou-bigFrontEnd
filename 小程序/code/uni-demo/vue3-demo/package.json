@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@dcloudio/uni-ui": "^1.4.28",
+    "vue3-lazy": "^1.0.0-alpha.1"
+  }
+}

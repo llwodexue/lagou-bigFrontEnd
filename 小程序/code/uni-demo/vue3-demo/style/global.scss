@@ -1,0 +1,9 @@
+@mixin normalFlex($direction: row, $justify: space-between) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+}
+
+.fl {
+  @include normalFlex();
+}
