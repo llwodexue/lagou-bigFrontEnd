@@ -412,3 +412,33 @@ Upgrading @vue/cli-plugin-eslint from 4.4.4 to 5.0.8
 
 2. 这里我没有使用 vite，很多和 vite 相关的就没必要处理了
 
+## 写法注意
+
+dialog 和 自己封装的组件，不能像 vue3 那样直接 v-model
+
+```html
+<el-dialog :visible.sync="configOpen" :title="configTitle" width="800px" append-to-body />
+<Pagination
+  :page.sync="queryParams.pageNumber"
+  :limit.sync="queryParams.pageSize"
+  :total="total"
+  @pagination="getList"
+/>
+```
+
+在 Vue2 中，`emit` 和 `defineEmits` 是无效的
+
+```html
+<!-- vue3 -->
+<el-date-picker
+  v-model="form.startDate"
+  value-format="YYYY-MM-DD"
+ />
+
+<!-- vue2 -->
+<el-date-picker
+  v-model="form.startDate"
+  value-format="yyyy-MM-dd"
+ />
+```
+

@@ -12,7 +12,7 @@ app.use(
 
 let count = 0
 
-app.post('/analytics', (req, res) => {
+app.post('/login', (req, res) => {
   count++
   console.log('post', count, req.query)
   res.send({
@@ -22,7 +22,7 @@ app.post('/analytics', (req, res) => {
   })
 })
 
-app.get('/analytics', (req, res) => {
+app.get('/login', (req, res) => {
   count++
   console.log('get', count, req.params)
   setTimeout(() => {

@@ -1,0 +1,6 @@
+$fsColor: purple;
+$fs20: 20px;
+
+@mixin border() {
+  border: 1px solid red;
+}
