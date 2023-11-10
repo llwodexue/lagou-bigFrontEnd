@@ -154,24 +154,22 @@ $ yum install -y git
 
 ### 安装HedgeDoc
 
-安装 hedgedoc
+两种方式启动，我一般会使用第二种方式
 
-```bash
-$ docker pull quay.io/hedgedoc/hedgedoc
-```
+1. 镜像方式启动
 
-镜像方式启动
+   ```bash
+   $ docker pull quay.io/hedgedoc/hedgedoc
+   $ docker-compose down
+   $ docker-compose up -d
+   ```
 
-```bash
-$ docker-compose down
-$ docker-compose up -d
-```
+2. 下载文件方式启动
 
-下载文件方式启动
-
-```bash
-$ git clone https://github.com/hedgedoc/container.git hedgedoc-container
-$ cd hedgedoc-container
-$ docker-compose up
-```
+   ```bash
+   $ git clone https://github.com/hedgedoc/container.git hedgedoc-container
+   $ cd hedgedoc-container
+   $ docker-compose down
+   $ docker-compose up -d
+   ```
 
