@@ -93,3 +93,15 @@ $ kill -9 xxx(pid)
 > [Jenkins常用插件汇总以及简单介绍](https://www.cnblogs.com/iancloud/p/16045093.html)
 >
 > [Jenkins针对不同的项目视图对不同的用户进行权限分配](https://blog.csdn.net/chj_1224365967/article/details/117924420)
+>
+> [新版Jenkins 2.346.1自动化部署（SVN+Maven）](https://www.cnblogs.com/leyfung/p/16881843.html)
+>
+> [Jenkins构建(8):Jenkins 执行远程shell :Send files or execute commands over SSH](https://blog.csdn.net/fen_fen/article/details/114649877)
+>
+> [jenkins：一个jenkins项目远程触发另一个jenkins项目构建配置](https://www.cnblogs.com/wolfshining/p/7685725.html)
+>
+> [前端工程化：保姆级教学 Jenkins 部署前端项目](https://juejin.cn/post/7102360505313918983)
+>
+> [Jenkins Blue Ocean 环境搭建和Pipeline基本使用（基于docker-compose）](https://blog.csdn.net/asd0654123/article/details/108993781)
+>
+> [Jenkins持续集成部署实战采坑系列(三)](https://blog.csdn.net/madeByOurselves/article/details/100130915)

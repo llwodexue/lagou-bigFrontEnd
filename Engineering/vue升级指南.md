@@ -1,4 +1,4 @@
-## vue2.7升级指南
+## vue2.6升级vue2.7
 
 > [vue2.7升级指南](https://v2.cn.vuejs.org/v2/guide/migration-vue-2-7.html#升级指南)
 
@@ -412,33 +412,61 @@ Upgrading @vue/cli-plugin-eslint from 4.4.4 to 5.0.8
 
 2. 这里我没有使用 vite，很多和 vite 相关的就没必要处理了
 
-## 写法注意
+## vue2.7升级vue3
 
-dialog 和 自己封装的组件，不能像 vue3 那样直接 v-model
+### Element写法注意
 
-```html
-<el-dialog :visible.sync="configOpen" :title="configTitle" width="800px" append-to-body />
-<Pagination
-  :page.sync="queryParams.pageNumber"
-  :limit.sync="queryParams.pageSize"
-  :total="total"
-  @pagination="getList"
-/>
-```
+> [Element UI 2.x 升级到 Element Plus](https://github.com/element-plus/element-plus/discussions/5658)
 
-在 Vue2 中，`emit` 和 `defineEmits` 是无效的
+主要说的就是把 vue2.7 代码直接粘贴到 vue3 项目里会出现的问题
 
-```html
-<!-- vue3 -->
-<el-date-picker
-  v-model="form.startDate"
-  value-format="YYYY-MM-DD"
- />
+1. el-dialog 和 自己封装的组件，子组件改父组件
 
-<!-- vue2 -->
-<el-date-picker
-  v-model="form.startDate"
-  value-format="yyyy-MM-dd"
- />
-```
+    - vue3 使用 v-model
+    - vue2 使用 .sync
+
+    ```html
+    <!-- vue3 -->
+    <el-dialog v-model="configOpen" :title="弹出框" width="800px" append-to-body />
+    <Pagination
+      v-model:page="queryParams.pageNumber"
+      v-model:limit="queryParams.pageSize"
+      :total="total"
+      @pagination="getList"
+    />
+    
+    <!-- vue2 -->
+    <el-dialog :visible.sync="configOpen" :title="弹出框" width="800px" append-to-body />
+    <Pagination
+      :page.sync="queryParams.pageNumber"
+      :limit.sync="queryParams.pageSize"
+      :total="total"
+      @pagination="getList"
+    />
+    ```
+
+2. el-date-picker 的 format 属性写法改变
+
+    - vue2 format 为 `yyyy-MM-dd`
+    - vue3 format 为
+
+    ```html
+    <!-- vue3 -->
+    <el-date-picker v-model="form.startDate" value-format="YYYY-MM-DD" />
+    
+    <!-- vue2 -->
+    <el-date-picker v-model="form.startDate" value-format="yyyy-MM-dd" />
+    ```
+
+3. .native
+
+    ```html
+    <!-- vue3 -->
+    <el-input v-model="listQuery.jobName" @keyup.enter="handleQuery"/>
+    
+    <!-- vue2 -->
+    <el-input v-model="listQuery.jobName" @keyup.enter.native="handleQuery"/>
+    ```
+
+4. 在 Vue2 中，`emit` 和 `defineEmits` 是无效的
 
