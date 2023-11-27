@@ -120,6 +120,8 @@ $ yum install -y git
 
    ```bash
    $ systemctl start docker
+   
+   $ systemctl status docker
    ```
 
 ### 安装docker-compose
@@ -173,3 +175,8 @@ $ yum install -y git
    $ docker-compose up -d
    ```
 
+文件目录：`/usr/local/software/hedgedoc-container`
+
+数据库名
+
+![image-20231124140838989](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231124140838989.png)
