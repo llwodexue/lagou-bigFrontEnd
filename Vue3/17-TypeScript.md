@@ -1,3 +1,5 @@
+# TypeScript
+
 ## TypeScript 介绍
 
 ### JavaScript 缺陷

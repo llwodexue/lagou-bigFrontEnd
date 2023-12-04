@@ -1,4 +1,6 @@
-## Babel
+# Babel
+
+## Babel 使用
 
 开发中，我们想要使用 ES6+ 的语法，想要使用 TypeScript，开发 React 项目，它们都是离不开 Babel 的
 
