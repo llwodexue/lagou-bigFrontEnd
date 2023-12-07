@@ -1,16 +1,72 @@
-## 1.安装nexus
+# Nexus搭建npm私库
 
-### docker安装nexus3
+## 安装Nexus
+
+### 官网下载
+
+> [https://www.sonatype.com/products/sonatype-nexus-oss-download](https://www.sonatype.com/products/sonatype-nexus-oss-download)
+
+进入官网下载，最新下载方式需要输入个人信息才能下载了
+
+![image-20231206140429489](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206140429489.png)
+
+选择对应的系统进行下载
+
+- **Windows 推荐也下载 UNIX 版本**（Windows 版本配置比较难改）
+
+![image-20231206135901989](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206135901989.png)
+
+如果没有下载，点一下 click here 重新下载，下载还是很快的
+
+![image-20231206140624901](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206140624901.png)
+
+### Windows安装
+
+linux 安装步骤与启动方式跟 windows 是一样的，解压后如下图
+
+![image-20231206141655045](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206141655045.png)
+
+```bash
+$ tar -zxvf nexus-3.63.0-01-unix.tar.gz
+$ cd nexus-3.63.0-01/bin
+$ ./nexus /run
+```
+
+**注意**：nexus 必须使用 Java1.8，我现在用的是 Java17，提示信息让咱们配置 `INSTALL4J_JAVA_HOME`
+
+![image-20231206145305323](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206145305323.png)
+
+```bash
+$ vim nexus
+INSTALL4J_JAVA_HOME_OVERRIDE=/d/Develop/Java/jdk1.8.0_161
+```
+
+![image-20231206150123385](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206150123385.png)
+
+显示这个之后访问：`http://localhost:8081/`，点击 Sign In
+
+- 账号为 admin，密码粘贴 `sonatype-work/nexus3/admin.password` 里面的密码，登录成功会提示你改密码
+
+![image-20231206150205067](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206150205067.png)
+
+如果想更改启动端口，可以修改 `etc/nexus-default.properties` 文件
+
+![image-20231206150804664](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206150804664.png)
+
+### docker安装nexus
 
 > nexus3 安装参考：
 >
 > - [docker-nexus3 GitHub](https://github.com/sonatype/docker-nexus3)
-> - [【Nexus】通过Nexus搭建Npm私库](https://blog.csdn.net/qq_31635851/article/details/109333231)
-> - [Docker快速部署Nexus3](https://blog.csdn.net/nthack5730/article/details/84347849?spm=1001.2014.3001.5501)
+
+镜像说明：
+
+- `sonatype/nexus` 是 nexus2 版本
+- `sonatype/nexus3` 是 nexus3 版本
 
 ```bash
 $ docker pull sonatype/nexus3
-$ docker run -d -p 8081:8081 -p 8082:8082 --name nexus3 --restart=always sonatype/nexus3
+$ docker run -d -p 8081:8081 --name nexus sonatype/nexus
 
 # 查看 nexus 日志
 $ docker logs -f nexus
@@ -38,7 +94,7 @@ Memory: 4k page, physical 1006968k(877280k free), swap 0k(0k free)
 $ docker run -d -p 8081:8081 --name nexus3 --restart=always --platform linux/amd64 -e INSTALL4J_ADD_VM_PARAMS="-Xms256M -Xmx256M -XX:MaxDirectMemorySize=2048M" sonatype/nexus3
 ```
 
-用户权限不够的话输入这个
+用户权限不够的话输入如下内容，之后即可启动成功
 
 ```bash
 WARNING: ************************************************************
@@ -53,39 +109,152 @@ $ vi nexus
 run_as_root=true -> run_as_root=false
 ```
 
-### docker安装nexus2
+## 创建仓库
 
-> nexus2 安装参考：
->
-> - [docker 搭建 maven 私服 nexus2](https://blog.csdn.net/wsjzzcbq/article/details/89035941)
-> - [nexus2架设npm私服](https://blog.csdn.net/weixin_34120274/article/details/88744322)
+### 仓库管理
+
+Nexus 仓库类型分为如下几种
+
+1. hosted：本地仓库，通常我们会部署自己的构件到这一类型的仓库，如公司的第二方库
+2. proxy：代理仓库，它们被用来代理远程的公共仓库，如 Maven 中央仓库
+3. group：仓库组，用来合并多个 hosted/proxy 仓库，当你的项目希望在多个 repository 使用资源时就不需要多次引用了，只需要引用一个 group 即可
+
+在创建 repository 之前，最好再创建 Blob Stores 便于统一管理，默认的是 default
+
+![image-20231206151333577](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206151333577.png)
+
+选择 File，名字填写为 npm
+
+![image-20231206151428449](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206151428449.png)
+
+### 创建仓库
+
+之后即可创建仓库
+
+![image-20231206151933100](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206151933100.png)
+
+一会儿会创建 npm(group)、npm(hosted)、npm(proxy) 这几个仓库
+
+![image-20231206151758355](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206151758355.png)
+
+### 创建npm(hosted)
+
+`hosted` 宿主仓库：主要用于部署无法从公共仓库获取的构件以及自己或第三方的项目构件
+
+- 如果是内网情况（无法访问互联网）即可当 npm 总仓库
+- 是否允许重复推送可以根据自己项目情况来考虑
+
+![image-20231206153443838](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206153443838.png)
+
+### 创建npm(proxy)
+
+`proxy` 代理仓库：代理公共的远程仓库
+
+![image-20231206152954330](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206152954330.png)
+
+### 创建npm(group)
+
+`group` 仓库组：通过仓库组统一管理多个仓库，这样我们在项目中直接请求仓库组即可请求到仓库组管理的多个仓库
+
+- hosted 和 proxy 这两个都弄好了之后，在通过 group 聚合提供统一的访问地址
+
+![image-20231206153604374](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206153604374.png)
+
+### 测试
+
+指定 npm 的 registry 为自己的 group 地址，安装 express 依赖
+
+![image-20231206155638015](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206155638015.png)
+
+proxy 地址由于没有对应依赖会去镜像源地址下载，之后 proxy 仓库就有对应依赖了
+
+![image-20231206155807939](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206155807939.png)
+
+## 创建推送包角色
+
+### 添加角色用户
+
+点击 Roles，添加角色权限，搜索 npm- 之后点击 `Transfer All` 把所有权限都附上即可
+
+- 可以根据对应需求赋对应权限，比如只让上传不让修改只赋 edit 即可
+
+![image-20231206161750869](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206161750869.png)
+
+之后创建对应用户，并设置对应权限
+
+![image-20231206161935295](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206161935295.png)
+
+点击 Realms，添加 `npm Bearer Token Realm`，不然 npm publish 会报 401
+
+![image-20231206164136875](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206164136875.png)
+
+### 添加推送账号
+
+> [https://blog.sonatype.com/using-sonatype-nexus-repository-3-part-2-npm-packages](https://blog.sonatype.com/using-sonatype-nexus-repository-3-part-2-npm-packages)
+
+添加推送账号，常用如下两种方法
+
+**npm adduser**
+
+示例：使用 `npm adduser` 方法
 
 ```bash
-$ docker pull sonatype/nexus
-$ docker run -d -p 8081:8081 --name nexus sonatype/nexus
+$ npm adduser
+Username: admin
+Password: admin123
+Email: (this IS public): any@email.com
 ```
 
-访问 [http://localhost:8081/nexus](http://localhost:8081/nexus) 即可进入，默认账户密码：admin/admin123
+推荐：加 `--scope` 限制作用域，加 `--registry` 限制仓库地址
 
+```bash
+$ npm adduser --registry=http://localhost:8081/repository/npm_hosted/ --scope=@mynpm
+npm notice Log in on http://localhost:8081/repository/npm_hosted/
+Username: npm
+Email: (this IS public) ll@123.com
+Logged in to scope @mynpm on http://localhost:8081/repository/npm_hosted/.
+```
 
+```bash
+$ npm publish --scope=@mynpm
+```
 
-## 3.设置三个npm库
+![image-20231206170241797](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206170241797.png)
 
-nexus2 和 nexus3 其实都差不多，以 nexus2 举例了
+### 使用.npmrc
 
-### 创建 npmHost
+不添加推送账号也可以使用 `.npmrc`，创建 `.npmrc` 文件，将私库地址粘贴过来
 
-![image-20221019162837106](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20221019162837106.png)
+- 如果想免密登陆推送可以加上 _auth，加密规则：`user:password -> base64`
 
-### 创建 npmProxy
+```bash
+registry=http://localhost:8081/repository/npm_hosted/
+# 只是举例，不推荐使用 admin 用户
+_auth=YWRtaW46YWRtaW4xMjM=
+email=any@email.com
+```
 
-![image-20221019162711202](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20221019162711202.png)
+`_auth` 加密方式：
 
-### 创建 npmGroup
+- 可以使用浏览器自带的方法 `window.btoa` 或 `window.atob`
 
-![image-20221019163139357](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20221019163139357.png)
+  ![image-20230613101343312](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20230613101343312-16956948588061.png)
 
-## 4.下载依赖包
+- 还可以使用 linux base64 命令
+
+  ![image-20230613101349194](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20230613101349194.png)
+
+registry 也可以通过配置 package.json 来实现
+
+```json
+{
+  "publishConfig": {
+    "registry": "http://localhost:8081/repository/npm_hosted/"
+  }
+}
+```
+
+## 下载依赖包
 
 ### python下载
 
@@ -262,67 +431,18 @@ const pkgLock = require('./package-lock')
 downloadByPackageJsonLockFile(pkgLock)
 ```
 
-## 5.添加推送账号
-
-> [配置 nexus npm 包](https://blog.sonatype.com/using-sonatype-nexus-repository-3-part-2-npm-packages)
-
-添加推送账号，常用如下两种方法
-
-### npm adduser
-
-使用 `npm adduser` 方法，可以加 `--scope` 限制作用域
-
-```bash
-$ npm adduser
-Username: admin
-Password: admin123
-Email: (this IS public): any@email.com
-```
-
-### .npmrc 配置文件
-
-创建 `.npmrc` 文件，将私库地址粘贴过来
-
-- 如果想免密登陆推送可以加上 _auth，加密规则：`user:password -> base64`
-
-```bash
-registry=http://192.168.1.123:8081/nexus/content/repositories/npm-test/
-_auth=YWRtaW46YWRtaW4xMjM=
-email=any@email.com
-```
-
-`_auth` 加密方式：
-
-- 可以使用浏览器自带的方法 `window.btoa` 或 `window.atob`
-
-  ![image-20230613101343312](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20230613101343312-16956948588061.png)
-
-- 还可以使用 linux base64 命令
-
-  ![image-20230613101349194](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20230613101349194.png)
-
-registry 也可以通过配置 package.json 来实现
-
-```json
-{
-  "publishConfig": {
-    "registry": "http://192.168.1.123:8081/nexus/content/repositories/npm-test/"
-  }
-}
-```
-
-## 6.推送依赖包
+## 推送依赖包
 
 ### shell单线程推送
 
-- 只使用一个线程推送
+- 只使用一个线程推送，我比较常用，一般推送的包不会很多
 
 ```bash
 #!/bin/bash
 # 待publish文件夹地址
 PACKAGE_PATH=./download
 # 前端私库地址
-REPOSITORY=http://192.168.1.123:8081/repository/npm-test
+REPOSITORY=http://localhost:8081/repository/npm_hosted/
 npm login --registry=$REPOSITORY
 for file in $PACKAGE_PATH/*.tgz; do
  npm publish --registry=$REPOSITORY $file
@@ -331,7 +451,7 @@ done
 
 ### node多线程推送
 
-- 多线程推送，如果包过多会导致电脑卡死
+多线程推送，上传包较多可以使用，如果包过多可能会导致电脑卡死
 
 ```js
 let fs = require('fs')
@@ -339,7 +459,7 @@ let path = require('path')
 const { exec } = require('child_process')
 
 // 前端私库地址
-const registry = 'http://192.168.1.123:8081/repository/npm-test'
+const registry = 'http://localhost:8081/repository/npm_hosted/'
 const publishPosition = `npm publish --registry=${registry}`
 // 待publish文件夹地址
 const filesDir = './download'
@@ -372,7 +492,7 @@ fs.readdir(filesDir, (errs, files) => {
 # 待publish文件夹地址
 PACKAGE_PATH=./download
 # 前端私库服务地址
-PUBLISH_RESTFUL=http://192.168.1.123:8081/service/rest/v1/components?repository=npm-test
+PUBLISH_RESTFUL=http://localhost:8081/service/rest/v1/components?repository=npm_hosted
 
 echo ">>> 文件所在目录：$PACKAGE_PATH <<<"
 dir=$(ls -l $PACKAGE_PATH | awk '/.tgz$/ {print $NF}')
@@ -387,7 +507,9 @@ do
 done
 ```
 
-## 上传可能存在的问题
+## 问题
+
+### 内网上传问题
 
 1. 分析依赖锁时，有些包命名重复，导致下载错误
 
@@ -408,10 +530,40 @@ done
    - 比如：`@ant-design/icons@4.8.1` 这个比较有特殊性，它依赖了 `@ant-design/icons-svg@4.3.1`，这两个包都配置了 publishConfig，所以需要单独推送，但是这个包里 scripts 命令里配置了 prepublishOnly 钩子，需要先把它去掉
    - 比如：`antd@5.8.4`、`antd@4.24.13` 同时配置了 prepare、prepublishOnly、postpublish 钩子，需要先把它们去掉
 
-3. 分析依赖锁时， 包下载不下来，这个就只能用笨方法（缺什么依赖，npm i 之后把对应包 tgz 包下载下来）
+3. 分析依赖锁时，包下载不下来，这个就只能用笨方法（缺什么依赖，npm i 之后把对应包 tgz 包下载下来）
 
    比如：
 
    - `@vue/cli` 需要 `@types/inquirer@8.1.3`、`@types/accepts@1.3.5` 、`body-parser@1.19.2`、`qs@6.9.7`、`@vitejs/plugin-react@4.0.3`、`@types/html-minifier-terser@6.0.0`、`serve-index@1.9.1`
    - 其实这个是和第一个原因是一样的都是名重复了，导致下载不下来
 
+### 其他问题
+
+#### E400
+
+仓库不允许重复推送会报 400，改为 allow redeploy
+
+![image-20231206165353153](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206165353153.png)
+
+#### E401
+
+没有权限涉及情况较多：
+
+1. 账号密码不对
+2. 检查对应角色是否有对应权限
+3. 比如 npm 推送以什么方式校验，`npm Bearer Token Realm`
+4. token 是否过期，去根目录修改 `.npmrc` 文件，将过期 token 删除
+
+![image-20231206162906061](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206162906061.png)
+
+#### E403
+
+禁止上传，group 仓库禁止上传，上传到 hosted 即可
+
+![image-20231206164947825](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206164947825.png)
+
+#### E503
+
+仓库离线，改为在线即可
+
+![image-20231206165252356](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231206165252356.png)

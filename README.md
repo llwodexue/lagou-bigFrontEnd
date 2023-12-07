@@ -17,7 +17,7 @@
 | -------- | ------------------- | ------------------------------------------------------------ | --------- |
 | 1        | 函数式编程范式      | [1.1函数式编程范式.md](JavaScriptDeep/1.1函数式编程范式.md)  | 2022-3-24 |
 | 2        | JavaScript 异步编程 | [1.2JavaScript异步编程.md](JavaScriptDeep/1.2JavaScript异步编程.md) | 2022-3-25 |
-| 3        | 手写 Promie 源码    | [1.3手写Promie源码.md](JavaScriptDeep/1.3手写Promie源码.md)  | 2022-3-27 |
+| 3        | 手写 Promise 源码   | [1.3手写Promise源码.md](JavaScriptDeep/1.3手写Promise源码.md) | 2022-3-27 |
 | 4        | 模块一作业          | [1.4模块一作业.md](JavaScriptDeep/1.4模块一作业.md)          | 2022-3-28 |
 | 5        | 模块一直播          | [1.5模块一直播.md](JavaScriptDeep/1.5模块一直播.md)          | 2022-3-28 |
 
@@ -93,4 +93,3 @@
 | 4        |            |                                                |           |
 | 5        |            |                                                |           |
 
-## 大厂面试指导

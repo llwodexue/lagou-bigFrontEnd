@@ -22,7 +22,7 @@ Hook 的使用场景：
 - 但是如果是一个旧的项目，你并不需要直接将所有的代码重构为 Hooks，因为它完全向下兼容，你可以渐进式的来使用它
 - Hook 只能在函数组件中使用，不能在类组件，或者函数组件之外的地方使用
 
-![image-20221226164434090](E:\learn\lagouBigFront\md\React\img\image-20221226164434090.png)
+![image-20221226164434090](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20221226164434090.png)
 
 ![image-20221226164522284](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20221226164522284.png)
 

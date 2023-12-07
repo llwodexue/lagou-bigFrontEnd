@@ -230,7 +230,7 @@ npm install postcss postcss-preset-env -D
 
 - Vue 3 单文件组件支持：[@vitejs/plugin-vue](https://github.com/vitejs/vite/tree/main/packages/plugin-vue)
 - Vue 3 JSX 支持：[@vitejs/plugin-vue-jsx](https://github.com/vitejs/vite/tree/main/packages/plugin-vue-jsx)
-- Vue 2 支持：[underfin/vite-plugin-vue2](underfin/vite-plugin-vue2)
+- Vue 2 支持：[underfin/vite-plugin-vue2](https://github.com/underfin/vite-plugin-vue2)
 
 ```bash
 npm install @vitejs/plugin-vue -D
