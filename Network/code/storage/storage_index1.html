@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>sessionStorage1</title>
+  </head>
+  <body>
+    <!-- 
+      sessionStorage
+      1.面会话在浏览器打开期间一直保持，并且重新加载或恢复页面仍会保持原来的会话
+      2.在新标签或窗口打开一个页面时会复制顶级浏览会话的上下文作为新会话的上下文，这点和 session cookies 的运行方式不同
+      3.打开多个相同的 URL 的 Tabs 页面，会创建各自的 sessionStorage
+      4.关闭对应浏览器或窗口，会清除对应的 sessionStorage
+
+      总结：多窗口之间 sessionStorage 不可以共享状态，但是在某些场景下新开的页面会复制之前页面的 sessionStorage，相互之间无关联
+    -->
+    <p2>sessionStorage1</p2>
+    <button class="btn">打开同源页面</button>
+    <a href="./storage_index2.html" target="_blank" rel="noopener">a标签 打开同源页面</a>
+    <a href="./storage_index2.html" target="_blank" rel="opener">
+      a标签 opener 打开同源页面
+    </a>
+    <script>
+      window.sessionStorage.setItem('sessionStorage_page1', 11)
+      window.localStorage.setItem('localStorage_page1', 22)
+      document.cookie = 'cookie_page1=33'
+      let oBtn = document.querySelector('.btn')
+      oBtn.onclick = function () {
+        window.open('storage_index2.html')
+        window.sessionStorage.setItem('sessionStorage_page1', 111)
+        window.localStorage.setItem('localStorage_page1', 222)
+        document.cookie = 'cookie_page1=333'
+      }
+    </script>
+  </body>
+</html>

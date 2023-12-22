@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>sessionStorage2</title>
+  </head>
+  <body>
+    <!-- 
+      sessionStorage
+      1.面会话在浏览器打开期间一直保持，并且重新加载或恢复页面仍会保持原来的会话
+      2.在新标签或窗口打开一个页面时会复制顶级浏览会话的上下文作为新会话的上下文，这点和 session cookies 的运行方式不同
+      3.打开多个相同的 URL 的 Tabs 页面，会创建各自的 sessionStorage
+      4.关闭对应浏览器或窗口，会清除对应的 sessionStorage
+    -->
+    <p2>sessionStorage2</p2>
+    <script>
+      console.log('sessionStorage', window.sessionStorage.getItem('sessionStorage_page1'))
+      console.log('localStorage', window.localStorage.getItem('localStorage_page1'))
+      console.log('cookie', document.cookie)
+    </script>
+  </body>
+</html>
