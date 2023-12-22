@@ -1,7 +1,7 @@
 class INode<T> {
-  value: T
+  data: T
   constructor(value: T) {
-    this.value = value
+    this.data = value
   }
 }
 

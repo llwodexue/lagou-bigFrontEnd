@@ -1,9 +1,24 @@
-import Node from '../types/INode'
 import { btPrint, PrintableNode } from 'hy-algokit'
 
-class TreeNode<T> extends Node<T> {
+class Node<T> {
+  data: T
+  constructor(value: T) {
+    this.data = value
+  }
+}
+class Product {
+  constructor(public name: string, public price: number) {}
+  valueOf() {
+    return this.price
+  }
+}
+class TreeNode<T> extends Node<T> implements PrintableNode {
   left: TreeNode<T> | null = null
   right: TreeNode<T> | null = null
+  get value() {
+    const data = this.data as Product
+    return `${data.name}-${data.price}`
+  }
   parent: TreeNode<T> | null = null
   get isLeft(): boolean {
     return !!(this.parent && this.parent.left === this)
@@ -11,12 +26,7 @@ class TreeNode<T> extends Node<T> {
   get isRight(): boolean {
     return !!(this.parent && this.parent.right === this)
   }
-  get value() {
-    const data = this.data as Product
-    return `${data.name}-${data.price}`
-  }
 }
-
 class BSTree<T> {
   private root: TreeNode<T> | null = null
   print() {
@@ -241,38 +251,50 @@ class BSTree<T> {
     const current = this.searchNode(value)
     if (!current) return false
     // 2.获取到三个东西：当前节点/父节点是否属于父节点的左子节点还是右子节点
-    let replaceNode: TreeNode<T> | null = null
     if (current.left === null && current.right === null) {
       // 2.1.如果删除的是叶子节点
-      replaceNode = null
+      if (current === this.root) {
+        // 根节点
+        this.root = null
+      } else if (current.isLeft) {
+        // 父节点的左子节点
+        current.parent!.left = null
+      } else {
+        current.parent!.right = null
+      }
     } else if (current.right === null) {
       // 2.2.只有一个子节点，只有左子节点
-      replaceNode = current.left
+      if (current === this.root) {
+        this.root = current.left
+      } else if (current.isLeft) {
+        current.parent!.left = current.left
+      } else {
+        current.parent!.right = current.left
+      }
     } else if (current.left === null) {
       // 2.3.只有一个子节点，只有右子节点
-      replaceNode = current.right
+      if (current === this.root) {
+        this.root = current.right
+      } else if (current.isLeft) {
+        current.parent!.left = current.right
+      } else {
+        current.parent!.right = current.right
+      }
     } else {
       // 2.4.两个子节点
       const successor = this.getSuccessor(current)
-      replaceNode = successor
-    }
-    if (current === this.root) {
-      this.root = replaceNode
-    } else if (current.isLeft) {
-      current.parent!.left = replaceNode
-    } else {
-      current.parent!.right = replaceNode
+      if (current === this.root) {
+        this.root = successor
+      } else if (current.isLeft) {
+        current.parent!.left = successor
+      } else {
+        current.parent!.right = successor
+      }
     }
     return true
   }
 }
 
-class Product {
-  constructor(public name: string, public price: number) {}
-  valueOf() {
-    return this.price
-  }
-}
 const bst1 = new BSTree<Product>()
 const p1 = new Product('iphone', 150)
 const p2 = new Product('huawei', 120)
