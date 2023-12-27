@@ -102,15 +102,15 @@ class Heap<T> {
   }
 }
 
-const arr = [19, 100, 36, 17, 3, 25, 1, 2, 7]
-const heap = new Heap<number>()
-arr.forEach(item => heap.insert(item))
-heap.print()
-console.log(heap.extract())
-heap.print()
+// const arr = [19, 100, 36, 17, 3, 25, 1, 2, 7]
+// const heap = new Heap<number>()
+// arr.forEach(item => heap.insert(item))
+// heap.print()
+// console.log(heap.extract())
+// heap.print()
 
-const arrNew = [9, 11, 20, 56, 23, 45]
-const heapNew = new Heap<number>(arrNew, false)
-heapNew.print()
+// const arrNew = [9, 11, 20, 56, 23, 45]
+// const heapNew = new Heap<number>(arrNew, false)
+// heapNew.print()
 
-export {}
+export default Heap
