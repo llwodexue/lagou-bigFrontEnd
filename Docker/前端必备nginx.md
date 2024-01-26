@@ -371,6 +371,45 @@ http {
 }
 ```
 
+### http2
+
+https 升级到 http2 两个必要条件：
+
+1. nginx >= 1.9.5
+2. openssl >= 1.0.2
+
+```nginx
+server {
+  listen 443 ssl http2;
+  # 修改为你的网站
+  server_name xxx;
+
+  # 修改为你的证书存放目录
+  ssl_certificate /home/cert/xx.pem;
+  ssl_certificate_key /home/cert/xx.key;
+
+  ssl_session_cache shared:SSL:1m;
+  ssl_session_timeout 5m;
+
+  ssl_protocols TLSv1.2 TLSv1.3;
+  ssl_ciphers TLS_AES_128_GCM_SHA256:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_256_GCM_SHA384:TLS_AES_128_CCM_SHA256:TLS_AES_128_CCM_8_SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
+  ssl_prefer_server_ciphers on;
+
+  location / {
+    # 代理到指定端口
+    proxy_pass http://127.0.0.1:9093;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_set_header X-NginX-Proxy true;
+    # 展示地址
+    root /home/doc/cloud-doc;
+    try_files $uri $uri/ /index.html;
+    index index.html;
+  }
+}
+```
+
 ## 自己配置
 
 ```nginx

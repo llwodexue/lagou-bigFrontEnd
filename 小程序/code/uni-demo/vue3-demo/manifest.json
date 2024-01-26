@@ -41,9 +41,13 @@
                 ]
             },
             /* ios打包配置 */
-            "ios" : {},
+            "ios" : {
+                "dSYMs" : false
+            },
             /* SDK配置 */
-            "sdkConfigs" : {}
+            "sdkConfigs" : {
+                "ad" : {}
+            }
         }
     },
     /* 快应用特有相关 */
@@ -72,6 +76,11 @@
     "h5" : {
         "devServer" : {
             "https" : false
-        }
+        },
+        "router" : {
+            "mode" : "hash",
+            "base" : "./"
+        },
+        "title" : "demo示例项目"
     }
 }
