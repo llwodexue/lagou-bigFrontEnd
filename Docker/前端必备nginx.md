@@ -1,16 +1,29 @@
 # Nginx
 
-> [前端必备的nginx知识点](https://juejin.cn/post/7210958340712316983)
->
 > [学习Nginx这一篇就够了](https://mp.weixin.qq.com/s/copyuj8KjyJHCD0k7ZRGrg)
->
-> [Nginx配置参数中文说明](https://segmentfault.com/a/1190000005789137)
->
-> [如何使用浏览器缓存和Nginx，提升首屏访问速度](https://juejin.cn/post/7050004962155167781)
->
-> [Nginx 入门教程](https://xuexb.github.io/learn-nginx/)
 
-## nginx 特性
+![nginx.conf](https://gitee.com/lilyn/pic/raw/master/md-img/nginx.conf.png)
+
+## 原理分析
+
+> [从原理到实战，彻底搞懂 Nginx！（高级篇）](https://zhuanlan.zhihu.com/p/102528726)
+
+Nginx 启动之后，在 Linux 系统中有两个进程，一个为 master，一个为 worker。master 作为管理员不参与任何工作，只负责给多个 worker 分配不同的任务（worker 一般有多个）
+
+- **worker 数和服务器的 cpu 数相等是最为适宜的**
+
+![image-20240201173127227](https://gitee.com/lilyn/pic/raw/master/md-img/image-20240201173127227.png)
+
+```bash
+$ ps -ef | grep nginx
+root         902       1  0 Jan02 ?        00:00:00 nginx: master process /usr/sbin/nginx
+root      350634     902  0 Jan18 ?        00:00:21 nginx: worker process
+root      350635     902  0 Jan18 ?        00:00:00 nginx: worker process
+```
+
+## Nginx特性
+
+> [前端必备的nginx知识点](https://juejin.cn/post/7210958340712316983)
 
 Nginx 是一款轻量级、高性能的 Web 服务器 、反向代理服务器，它具有有很多非常优越的特性：
 
@@ -160,6 +173,14 @@ http {
 - url_hash(需安装第三方插件)：此方法按访问 url 的 hash 结果来分配请求,使每个 url 定向到同一个后端服务器，可以进一步提高后端缓存服务器的效率。Nginx 本身是不支持 url_hash的，如果需要使用这种调度算法，必须安装 Nginx 的 hash 软件包
 - fair(需安装第三方插件)：这是比上面两个更加智能的负载均衡算法。此种算法可以依据页面大小和加载时间长短智能地进行负载均衡，也就是根据后端服务器的响应时间来分配请求，响应时间短的优先分配。Nginx 本身是不支持 fair 的,如果需要使用这种调度算法，必须下载 Nginx 的 upstream_fair 模块
 
+![image-20240202144237744](https://gitee.com/lilyn/pic/raw/master/md-img/image-20240202144237744.png)
+
+> [Nginx 负载均衡集群 节点健康检查](https://juejin.cn/post/7319706549915664403)
+
+正常情况下，nginx 做反向代理负载均衡的话，**如果后端节点服务器宕掉的话，nginx 默认是不能把这台服务器踢出 upstream 负载集群的**，所以还会有请求转发到后端的这台服务器上面，这样势必造成网站访问故障
+
+![image-20240218112806659](https://gitee.com/lilyn/pic/raw/master/md-img/image-20240218112806659.png)
+
 ### 动静分离
 
 在访问服务端时，一般会请求一些静态资源，如 js、css、图片等，这些资源可以在反向代理服务器中进行缓存，减少服务器的压力，而动态请求可以继续请求服务器
@@ -181,6 +202,8 @@ http {
 ## 配置详解
 
 ### 缓存设置
+
+> [如何使用浏览器缓存和Nginx，提升首屏访问速度](https://juejin.cn/post/7050004962155167781)
 
 Cache-Control 设置：
 
@@ -271,7 +294,7 @@ http {
   gzip_types text/plain text/css text/javascript application/json application/javascript application/x-javascript application/xml;
   # 配置禁用gzip条件，支持正则。此处表示ie6及以下不启用gzip（因为ie低版本不支持）
   gzip_disable "MSIE [1-6]\.";
-  # 是否添加“Vary: Accept-Encoding”响应头
+  # 是否添加"Vary: Accept-Encoding"响应头
   gzip_vary on;
 }
 ```
@@ -411,6 +434,8 @@ server {
 ```
 
 ## 自己配置
+
+> [Nginx配置参数中文说明](https://segmentfault.com/a/1190000005789137)
 
 ```nginx
 # 定义Nginx运行的用户和用户组
