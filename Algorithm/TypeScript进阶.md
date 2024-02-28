@@ -706,7 +706,7 @@ extends 配置项的值是一个字符串，用来声明当前配置需要继承
 
 接口类型定义中由于使用了非字面量或者非唯一 symbol 类型作为属性名造成的
 
-![image-20230109160233457](E:\learn\lagouBigFront\md\Algorithm\img\image-20230109160233457.png)
+![image-20230109160233457](https://gitee.com/lilyn/pic/raw/master/md-img/image-20230109160233457.png)
 
 ### 2322
 
@@ -726,7 +726,7 @@ ts(2322)是一个静态类型检查的错误，在注解的类型和赋值的类
 
 传参时由于类型不兼容造成的
 
-![image-20230109160331431](E:\learn\lagouBigFront\md\Algorithm\img\image-20230109160331431.png)
+![image-20230109160331431](https://gitee.com/lilyn/pic/raw/master/md-img/image-20230109160331431.png)
 
 ### 2352
 
@@ -734,7 +734,7 @@ ts(2322)是一个静态类型检查的错误，在注解的类型和赋值的类
 
 - 因为 setTimeout 的类型守卫失效，所以 x 的类型不会缩小为 string
 
-![image-20230109160538127](E:\learn\lagouBigFront\md\Algorithm\img\image-20230109160538127.png)
+![image-20230109160538127](https://gitee.com/lilyn/pic/raw/master/md-img/image-20230109160538127.png)
 
 ```typescript
 let x: string | undefined

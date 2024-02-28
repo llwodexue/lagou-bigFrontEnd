@@ -9,7 +9,7 @@
 
 ![image-20230919100800229](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20230919100800229.png)
 
-![image-20230919100938982](E:\learn\lagouBigFront\md\java\img\image-20230919100938982.png)
+![image-20230919100938982](https://gitee.com/lilyn/pic/raw/master/md-img/image-20230919100938982.png)
 
 RPC 需要达到的是:客户端在不知道调用细节的情况下，调用存在于远程计算机上的某个对象，就像调用本地应用程序中的对象一样
 
