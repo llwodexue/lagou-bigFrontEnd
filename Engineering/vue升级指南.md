@@ -1,3 +1,5 @@
+# vue2.6升级vue2.7（panjiachen升级指南）
+
 ## vue2.6升级vue2.7
 
 > [vue2.7升级指南](https://v2.cn.vuejs.org/v2/guide/migration-vue-2-7.html#升级指南)
@@ -448,7 +450,7 @@ Upgrading @vue/cli-plugin-eslint from 4.4.4 to 5.0.8
 2. el-date-picker 的 format 属性写法改变
 
     - vue2 format 为 `yyyy-MM-dd`
-    - vue3 format 为
+    - vue3 format 为 `YYYY-MM-DD`
 
     ```html
     <!-- vue3 -->

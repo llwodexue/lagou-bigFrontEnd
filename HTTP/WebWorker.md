@@ -1,4 +1,8 @@
-## 概述
+# WebWorker使用
+
+> [Web Worker 使用教程](http://www.ruanyifeng.com/blog/2018/07/web-worker.html)
+
+## 基本概述
 
 JavaScript 语言采用的是单线程模型，也就是说，所有任务只能在一个线程上完成，一次只能做一件事
 

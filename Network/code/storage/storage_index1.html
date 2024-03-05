@@ -6,6 +6,31 @@
     <title>sessionStorage1</title>
   </head>
   <body>
+    <style>
+      .box {
+        margin-bottom: 20px;
+        border: 1px dashed #e6ebff;
+      }
+      a,
+      button {
+        margin: 0 10px 10px 0;
+        color: #0c38ff;
+        cursor: pointer;
+        height: 26px;
+        line-height: 26px;
+        font-size: 14px;
+        padding: 2px;
+        border-radius: 4px;
+        display: inline-block;
+      }
+      a {
+        /* text-decoration: none; */
+      }
+      button {
+        background: #e6ebff;
+        border: 1px solid #0c38ff;
+      }
+    </style>
     <!-- 
       sessionStorage
       1.面会话在浏览器打开期间一直保持，并且重新加载或恢复页面仍会保持原来的会话
@@ -15,12 +40,20 @@
 
       总结：多窗口之间 sessionStorage 不可以共享状态，但是在某些场景下新开的页面会复制之前页面的 sessionStorage，相互之间无关联
     -->
-    <p2>sessionStorage1</p2>
-    <button class="btn">打开同源页面</button>
-    <a href="./storage_index2.html" target="_blank" rel="noopener">a标签 打开同源页面</a>
-    <a href="./storage_index2.html" target="_blank" rel="opener">
-      a标签 opener 打开同源页面
-    </a>
+    <h2>sessionStorage1</h2>
+    <div class="box">
+      <button class="btn">打开同源页面</button>
+    </div>
+    <div class="box">
+      <a href="./storage_index2.html" target="_blank" rel="noopener">
+        a标签 打开同源页面
+      </a>
+    </div>
+    <div class="box">
+      <a href="./storage_index2.html" target="_blank" rel="opener">
+        a标签 opener 打开同源页面
+      </a>
+    </div>
     <script>
       window.sessionStorage.setItem('sessionStorage_page1', 11)
       window.localStorage.setItem('localStorage_page1', 22)

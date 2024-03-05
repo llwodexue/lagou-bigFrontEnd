@@ -1,3 +1,5 @@
+# Fetch API
+
 > [Fetch API 教程](http://www.ruanyifeng.com/blog/2020/12/fetch-tutorial.html)
 
 `fetch()` 是 XMLHttpRequest 的升级版，用于在 JavaScript 脚本里发出 HTTP 请求
@@ -251,7 +253,7 @@ fetch('http://site.com/file', {
 
 ## 浏览器关闭的时候发送请求
 
-> [如何处理页面关闭时发送HTTP请求？](https://juejin.cn/user/2348212566362270/posts)[](https://juejin.cn/post/7113192304482975780)
+> [如何处理页面关闭时发送HTTP请求？](https://juejin.cn/post/7113192304482975780)
 
 ### onbeforeunload
 
