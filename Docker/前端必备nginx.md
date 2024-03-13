@@ -127,6 +127,17 @@ location ~* ^/api/ {
 }
 ```
 
+**location 优先级**
+
+| 匹配规则 | 含义                   | 示例                     | 优先级（1最高） |
+| -------- | ---------------------- | ------------------------ | --------------- |
+| =        | 精确匹配               | location = /pic/         | 1               |
+| ^~       | 匹配到即停止搜索       | location ^~ /pic/        | 2               |
+| ~        | 正则匹配，区分大小写   | location ~ \.(Jpg\|gif)# | 3               |
+| ~*       | 正则匹配，不区分大小写 | location ~ \.(Jpg\|gif)$ | 4               |
+| 无符号   |                        | location /               | 5               |
+| @        | 内部跳转               | location @errorpage      |                 |
+
 #### 四层反向代理
 
 Nginx 有 Stream 模块，这个模块就是做四层代理的，也就是 TCP、UDP 的代理与负载均衡
@@ -365,6 +376,33 @@ http{
   gzip_static on;
 }
 ```
+
+**Gzip压缩原理**
+
+gzip 的核心是 Deflate，在 [RFC 1951](https://link.zhihu.com/?target=https%3A//tools.ietf.org/html/rfc1951) 中被标准化。Defalte 是一个同时使用 LZ77 与 Huffman Coding 的算法
+
+- LZ77
+
+  LZ77 的核心思路是如果一个串中有两个重复的串，**那么只需要知道第一个串的内容和后面串相对于第一个串起始位置的距离 + 串的长度**
+
+- Huffman Coding
+
+  核心思路是通过构造 Huffman Tree 方式给字符重新编码，以保证出现频率最高的字符占用的字节越少
+
+gzip工作原理：
+
+1. 浏览器请求 url，并在 request header 中设置属性 `Accept-Encoding: gzip`。表明浏览器支持 gzip
+2. 服务器收到浏览器发送的请求之后，判断浏览器是否支持 gzip，如果支持 gzip，则向浏览器传送压缩过的内容，不支持则向浏览器发送未经压缩的内容。一般情况下，浏览器和服务器都支持 gzip，response headers 返回包含 `Content-Encoding: gzip`
+3. 浏览器接收到服务器的响应之后判断内容是否被压缩，如果被压缩则解压缩显示页面内容
+
+![image-20240312144433773](https://gitee.com/lilyn/pic/raw/master/md-img/image-20240312144433773.png)
+
+**Brotli**
+
+brotli 比 gzip 更高效，它通过变种 LZ77 算法、Huffman 编码以及二阶文本建模等方式进行数据压缩，帮我们更高效的压缩网页中的各类文件大小，提高加载速度
+
+- brotli 只在 https 下生效，因为 http 请求 request header 里的 Accept-Encoding 是没有 br 的，只有 gzip、deflate
+- 并且 brotli 和 gzip 是可以共存的，无需关闭 gzip，客户端可以根据其能力选择最合适的压缩算法
 
 ### fastcgi
 
