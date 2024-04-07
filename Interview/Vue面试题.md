@@ -190,6 +190,16 @@ component: () => import('@/components/HelloWorld')
 
 
 
+### 开发浏览器兼容性
+
+一个默认的 Vue Cli 项目会使用 `@vue/babel-preset-app`，它通过 `@babel/preset-env` 和 `browserslist` 配置来解决一定项目需要的 polyfill
+
+默认情况下，它会把 `useBuiltIns: 'usage'` 传递给 `@babel/preset-env`，这样它会根据源代码中出现的语言特性自动检测需要的 polyfill。这确保了最终包里 polyfill 数量的最小化。然而，这也意味着其中一个依赖需要特殊的 polyfill，默认情况下 Babel 无法将其检测出来
+
+如果有依赖需要 polyfill，你有几种选择：
+
+如果该依赖基于一个目标检测环境不支持的 ES 版本撰写：将其添加到 vue.config.js 中的 transpileDependencies 选项。这会为该依赖同时开启语法转换和根据使用情况检测 polyfill
+
 ## Vue 理解
 
 ### diff 理解
@@ -303,7 +313,29 @@ vue3 diff 算法采用的是 去头尾的最长递增子序列算法。patchKeye
 3. **地址栏修改**：如果用户直接在地址栏中输入新的 URL 并按下回车键，`popstate` 事件同样不会被触发。因为这种方式也不会改变浏览器的历史记录
 
 
-### 导航守卫实现原理
+
+### 导航守卫执行顺序
+
+1. 【组件】前一个组件的 beforeRouteLeave
+2. 【全局】全局的 router.beforeEach
+3. 【配置文件】route 配置文件，下一个 beforeEnter
+4. 【组件】组件内部声明的 beforeRouteEnter
+5. 【全局】全局的 router.afterEach
+
+
+
+### vue-router记住前一个页面滚动条的位置
+
+手动点击浏览器返回或者前进按钮会记住滚动条位置，基于 history，go、back、forward。点击 router-link 是不会记住滚动条位置
+
+scrollBehavior 生效条件：
+
+1. 浏览器支持 history api
+2. 页面间的交互是通过 go、forward、back 或者浏览器前进/返回按钮
+
+
+
+### 导航守卫执行原理
 
 为什么我需要在每个导航中提供 next 函数来进行到下一个守卫？
 
@@ -569,4 +601,4 @@ Watcher 观察者对象，实例分为：render watcher、computed watcher、use
 
    用来监测组件中的 rendering 函数是否需要重新执行。当组件中的状态发生变化时，render watcher 就会通知组件重新渲染，更新视图。beforeUpdate、updated 
 
-   
+
