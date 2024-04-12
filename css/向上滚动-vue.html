@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>向上滚动-vue</title>
+    <style>
+      @keyframes moveToBottom {
+        0% {
+          transform: translateY(-47px);
+        }
+
+        100% {
+          transform: translateY(0);
+        }
+      }
+      .moveToBottom {
+        animation: moveToBottom 500ms ease-in-out forwards;
+      }
+      @keyframes fadeInFromTop {
+        0% {
+          opacity: 0;
+          transform: translateY(-47px);
+        }
+
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+          color: #683bd6;
+        }
+      }
+      .show {
+        animation: fadeInFromTop 500ms ease-in-out forwards;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div
+        v-for="(item, index) in animationData"
+        :key="item"
+        :class="[{ moveToBottom: animationActive }, { show: animationActive && index === 0 }]"
+      >
+        {{item}}
+      </div>
+    </div>
+  </body>
+</html>
+<script src="./vue3.js"></script>
+<script type="module">
+  const { createApp, ref } = Vue
+
+  // 假设这是接口请求的10条最新数据
+  const allCarouseData = ref([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+  // 需要轮播的数据
+  const animationData = ref([])
+  // 是否开启动画
+  const animationActive = ref(true)
+  const app = createApp({
+    setup() {
+      // 定时器
+      const animationTimerMeta = {
+        timer: null,
+        // 这个函数负责设置轮播数据的更新逻辑
+        timeFuc() {
+          let setTimeoutId = null
+          if (this.timer) return
+          this.timer = setInterval(() => {
+            // 取轮播数据的第一条id
+            let firstId = animationData.value[0]
+            // 为轮播数据添加最新的第一项数据
+            let index = allCarouseData.value.findIndex(res => res === firstId)
+            let addIndex = index - 1 < 0 ? allCarouseData.value.length - 1 : index - 1
+            animationData.value.unshift(allCarouseData.value[addIndex])
+            setTimeout(() => {
+              // 删除数组的最后一项
+              animationData.value.pop()
+            }, 1000)
+          }, 1500)
+        }
+      }
+      animationData.value = allCarouseData.value.slice(-5)
+      animationTimerMeta.timeFuc()
+
+      return { animationData, animationActive }
+    }
+  })
+
+  app.mount('#app')
+</script>

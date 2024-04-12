@@ -6,20 +6,14 @@ class Node<T> {
     this.data = value
   }
 }
-class Product {
-  constructor(public name: string, public price: number) {}
-  valueOf() {
-    return this.price
-  }
-}
-export class TreeNode<T> extends Node<T> implements PrintableNode {
+
+export class TreeNode<T> extends Node<T> {
   left: TreeNode<T> | null = null
   right: TreeNode<T> | null = null
-  get value() {
-    const data = this.data as Product
-    return `${data.name}-${data.price}`
-  }
   parent: TreeNode<T> | null = null
+  get value() {
+    return this.data
+  }
   get isLeft(): boolean {
     return !!(this.parent && this.parent.left === this)
   }
@@ -27,7 +21,8 @@ export class TreeNode<T> extends Node<T> implements PrintableNode {
     return !!(this.parent && this.parent.right === this)
   }
 }
-class BSTree<T> {
+
+export class BSTree<T> {
   private root: TreeNode<T> | null = null
   print() {
     btPrint(this.root)
@@ -294,5 +289,3 @@ class BSTree<T> {
     return true
   }
 }
-
-export default BSTree

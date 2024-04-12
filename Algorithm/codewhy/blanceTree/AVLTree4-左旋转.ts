@@ -60,19 +60,43 @@ class AVLTreeNode<T> extends TreeNode<T> {
     }
     return pivot
   }
+  /** 旋转操作：左旋转 */
+  leftRotation() {
+    const isLeft = this.isLeft
+    const isRight = this.isRight
+    // 1.处理pivot
+    const pivot = this.right!
+    pivot.parent = this.parent
+    // 2.处理pivot的left
+    this.right = pivot.left
+    if (pivot.left) {
+      pivot.left.parent = this
+    }
+    // 3.处理root
+    pivot.left = this
+    this.parent = pivot
+    // 4.挂载pivot
+    if (!pivot.parent) {
+      return pivot
+    } else if (isLeft) {
+      pivot.parent.left = pivot
+    } else if (isRight) {
+      pivot.parent.right = pivot
+    }
+    return pivot
+  }
 }
 
 const avlNode = new AVLTreeNode(10)
-avlNode.left = new AVLTreeNode(8)
-avlNode.left.parent = avlNode
-avlNode.left.left = new AVLTreeNode(5)
-avlNode.left.left.parent = avlNode.left
-const parent = new AVLTreeNode(12)
+avlNode.right = new AVLTreeNode(15)
+avlNode.right.parent = avlNode
+avlNode.right.right = new AVLTreeNode(20)
+avlNode.right.right.parent = avlNode.right
+const parent = new AVLTreeNode(6)
 avlNode.parent = parent
-parent.left = avlNode
+parent.right = avlNode
 btPrint(parent)
-avlNode.rightRotation()
+avlNode.leftRotation()
 btPrint(parent)
-
 
 export {}

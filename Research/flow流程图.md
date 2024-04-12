@@ -34,6 +34,10 @@ bpmn-js是一个用于在前端渲染和编辑BPMN（业务流程建模与标记
 
 ![image-20240305111800625](https://gitee.com/lilyn/pic/raw/master/md-img/image-20240305111800625.png)
 
+项目案例：
+
+- [http://dashboard.yudao.iocoder.cn/bpm/manager/model](http://dashboard.yudao.iocoder.cn/bpm/manager/model)
+
 
 
 ## 蚂蚁

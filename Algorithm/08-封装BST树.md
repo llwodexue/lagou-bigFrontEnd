@@ -770,3 +770,97 @@ class BSTree<T> {
 }
 ```
 
+## 自动补全和搜索建议
+
+常用的数据结构包括前缀树（Trie）和哈希表
+
+- 前缀树用于存储和快速查找具有相同前缀的单词，适用于实现搜索建议的自动补全功能
+- 哈希表则常用于存储搜索建议的数据源，提供快速的检索和访问
+
+字符串比较是按照字典次序对单个字符或字符串进行比较大小的操作，一般都是以 ASCII 码值的大小作为字符比较的标准。对两个字符串进行比较时，要注意以下几点：
+
+1. 两个不同长度的字符串进行比较时，不是唱的字符串就一定大。比如：`abcd` 与 `acd` 比较，第一个字符相同，继续比较第二个字符，由于 `c > b` ，所以不再继续比较，结果就是 `acd` 大
+2. 当字符串有空格时，空格也参加比较。比如：`c at` 与 `cat` 比较，空格的 ASCII 码是 32，a 的 ASCII 码是 97，所以 `cat > c at`
+3. 大小写字母的 ASCII 码值是有区别的。比如：A 的 ASCII 码是 64，a 的 ASCII 码是 97，所以 `angle > Angle`
+
+```html
+<body>
+  <input type="text" id="searchInput" placeholder="Search" />
+  <div id="suggestions"></div>
+</body>
+
+<script>
+  class Node {
+    constructor(value) {
+      this.value = value
+      this.left = null
+      this.right = null
+    }
+  }
+
+  class BST {
+    constructor() {
+      this.root = null
+    }
+    insert(value) {
+      const newNode = new Node(value)
+      if (!this.root) {
+        this.root = newNode
+      } else {
+        this.insertNode(this.root, newNode)
+      }
+    }
+    insertNode(node, newNode) {
+      if (newNode.value < node.value) {
+        if (!node.left) {
+          node.left = newNode
+        } else {
+          this.insertNode(node.left, newNode)
+        }
+      } else {
+        if (!node.right) {
+          node.right = newNode
+        } else {
+          this.insertNode(node.right, newNode)
+        }
+      }
+    }
+    searchSuggestions(prefix) {
+      let suggestions = []
+      this.searchNode(this.root, prefix, suggestions)
+      return suggestions
+    }
+    searchNode(node, prefix, suggestions) {
+      if (!node) return
+      if (node.value.startsWith(prefix)) {
+        suggestions.push(node.value)
+      }
+      if (prefix < node.value) {
+        this.searchNode(node.left, prefix, suggestions)
+      } else {
+        this.searchNode(node.right, prefix, suggestions)
+      }
+    }
+  }
+
+  const bst = new BST()
+  bst.insert('banana')
+  bst.insert('apple')
+  bst.insert('grape')
+  bst.insert('orange')
+  bst.insert('cherry')
+  const searchInput = document.getElementById('searchInput')
+  const suggestionsElement = document.getElementById('suggestions')
+  searchInput.addEventListener('input', () => {
+    const prefix = searchInput.value
+    const suggestions = bst.searchSuggestions(prefix)
+    suggestionsElement.innerHTML = ''
+    suggestions.forEach(suggestion => {
+      const suggestionDiv = document.createElement('div')
+      suggestionDiv.textContent = suggestion
+      suggestionsElement.appendChild(suggestionDiv)
+    })
+  })
+</script>
+```
+

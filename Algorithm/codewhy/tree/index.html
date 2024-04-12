@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>自动补全和搜索建议</title>
+  </head>
+  <body>
+    <input type="text" id="searchInput" placeholder="Search" />
+    <div id="suggestions"></div>
+  </body>
+
+  <script>
+    class Node {
+      constructor(value) {
+        this.value = value
+        this.left = null
+        this.right = null
+      }
+    }
+
+    class BST {
+      constructor() {
+        this.root = null
+      }
+      insert(value) {
+        const newNode = new Node(value)
+        if (!this.root) {
+          this.root = newNode
+        } else {
+          this.insertNode(this.root, newNode)
+        }
+      }
+      insertNode(node, newNode) {
+        if (newNode.value < node.value) {
+          if (!node.left) {
+            node.left = newNode
+          } else {
+            this.insertNode(node.left, newNode)
+          }
+        } else {
+          if (!node.right) {
+            node.right = newNode
+          } else {
+            this.insertNode(node.right, newNode)
+          }
+        }
+      }
+      searchSuggestions(prefix) {
+        let suggestions = []
+        this.searchNode(this.root, prefix, suggestions)
+        return suggestions
+      }
+      searchNode(node, prefix, suggestions) {
+        if (!node) return
+        if (node.value.startsWith(prefix)) {
+          suggestions.push(node.value)
+        }
+        if (prefix < node.value) {
+          this.searchNode(node.left, prefix, suggestions)
+        } else {
+          this.searchNode(node.right, prefix, suggestions)
+        }
+      }
+    }
+
+    // 创建一个BST用于存储搜索建议
+    const bst = new BST()
+    bst.insert('banana')
+    bst.insert('apple')
+    bst.insert('grape')
+    bst.insert('orange')
+    bst.insert('cherry')
+    console.log(bst)
+
+    const searchInput = document.getElementById('searchInput')
+    const suggestionsElement = document.getElementById('suggestions')
+
+    searchInput.addEventListener('input', () => {
+      const prefix = searchInput.value
+      const suggestions = bst.searchSuggestions(prefix)
+
+      suggestionsElement.innerHTML = ''
+      suggestions.forEach(suggestion => {
+        const suggestionDiv = document.createElement('div')
+        suggestionDiv.textContent = suggestion
+        suggestionsElement.appendChild(suggestionDiv)
+      })
+    })
+  </script>
+
+  <script>
+    class Trie {}
+  </script>
+</html>
