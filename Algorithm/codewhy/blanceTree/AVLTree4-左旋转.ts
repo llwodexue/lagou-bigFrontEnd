@@ -1,7 +1,7 @@
 import { TreeNode } from './TreeNode'
-import { btPrint } from 'hy-algokit'
+// import { btPrint } from 'hy-algokit'
 
-class AVLTreeNode<T> extends TreeNode<T> {
+export default class AVLTreeNode<T> extends TreeNode<T> {
   left: AVLTreeNode<T> | null = null
   right: AVLTreeNode<T> | null = null
   parent: AVLTreeNode<T> | null = null
@@ -87,16 +87,14 @@ class AVLTreeNode<T> extends TreeNode<T> {
   }
 }
 
-const avlNode = new AVLTreeNode(10)
-avlNode.right = new AVLTreeNode(15)
-avlNode.right.parent = avlNode
-avlNode.right.right = new AVLTreeNode(20)
-avlNode.right.right.parent = avlNode.right
-const parent = new AVLTreeNode(6)
-avlNode.parent = parent
-parent.right = avlNode
-btPrint(parent)
-avlNode.leftRotation()
-btPrint(parent)
-
-export {}
+// const avlNode = new AVLTreeNode(10)
+// avlNode.right = new AVLTreeNode(15)
+// avlNode.right.parent = avlNode
+// avlNode.right.right = new AVLTreeNode(20)
+// avlNode.right.right.parent = avlNode.right
+// const parent = new AVLTreeNode(6)
+// avlNode.parent = parent
+// parent.right = avlNode
+// btPrint(parent)
+// avlNode.leftRotation()
+// btPrint(parent)

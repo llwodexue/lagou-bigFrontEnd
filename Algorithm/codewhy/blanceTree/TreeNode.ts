@@ -1,12 +1,11 @@
-import { btPrint, PrintableNode } from 'hy-algokit'
+import { btPrint } from 'hy-algokit'
 
-class Node<T> {
+export class Node<T> {
   data: T
   constructor(value: T) {
     this.data = value
   }
 }
-
 export class TreeNode<T> extends Node<T> {
   left: TreeNode<T> | null = null
   right: TreeNode<T> | null = null
@@ -23,7 +22,7 @@ export class TreeNode<T> extends Node<T> {
 }
 
 export class BSTree<T> {
-  private root: TreeNode<T> | null = null
+  protected root: TreeNode<T> | null = null
   print() {
     btPrint(this.root)
   }
@@ -42,10 +41,14 @@ export class BSTree<T> {
     }
     return null
   }
+  protected createNode(value: T): TreeNode<T> {
+    return new TreeNode(value)
+  }
+  protected checkBalance(node: TreeNode<T>, isAdd?: boolean) {}
   /** 插入数据的操作 */
   insert(value: T) {
     // 1.根据传入value创建Node(TreeNode)节点
-    const newNode = new TreeNode(value)
+    const newNode = this.createNode(value)
     // 2.判断当前是否已经有了根节点
     if (!this.root) {
       // 当前树为空
@@ -54,12 +57,15 @@ export class BSTree<T> {
       // 树中已经有其他值
       this.insertNode(this.root, newNode)
     }
+    // 3.检查树是否平衡
+    this.checkBalance(newNode)
   }
   private insertNode(node: TreeNode<T>, newNode: TreeNode<T>) {
     if (newNode.data < node.data) {
       // 去左边继续查找空白位置
       if (node.left === null) {
         node.left = newNode
+        newNode.parent = node
       } else {
         this.insertNode(node.left, newNode)
       }
@@ -67,6 +73,7 @@ export class BSTree<T> {
       // 去右边继续查找空白位置
       if (node.right === null) {
         node.right = newNode
+        newNode.parent = node
       } else {
         this.insertNode(node.right, newNode)
       }
@@ -235,57 +242,59 @@ export class BSTree<T> {
     if (successor !== delNode.right) {
       successor!.parent!.left = successor!.right
       successor!.right = delNode.right
+      if (successor?.right) {
+        successor.right.parent = successor.parent
+      }
+    } else {
+      delNode.right = successor!.right
+      if (successor!.right) {
+        successor!.right.parent = delNode
+      }
     }
 
     // 将删除节点的 left，赋值给后继节点的 left
     successor!.left = delNode.left
-    return successor
+    return successor!
   }
   remove(value: T): boolean {
     // 1.搜索当前是否有这个value
     const current = this.searchNode(value)
     if (!current) return false
+
+    let delNode: TreeNode<T> = current
     // 2.获取到三个东西：当前节点/父节点是否属于父节点的左子节点还是右子节点
+    let replaceNode: TreeNode<T> | null = null
     if (current.left === null && current.right === null) {
       // 2.1.如果删除的是叶子节点
-      if (current === this.root) {
-        // 根节点
-        this.root = null
-      } else if (current.isLeft) {
-        // 父节点的左子节点
-        current.parent!.left = null
-      } else {
-        current.parent!.right = null
-      }
+      replaceNode = null
     } else if (current.right === null) {
       // 2.2.只有一个子节点，只有左子节点
-      if (current === this.root) {
-        this.root = current.left
-      } else if (current.isLeft) {
-        current.parent!.left = current.left
-      } else {
-        current.parent!.right = current.left
-      }
+      replaceNode = current.left
     } else if (current.left === null) {
       // 2.3.只有一个子节点，只有右子节点
-      if (current === this.root) {
-        this.root = current.right
-      } else if (current.isLeft) {
-        current.parent!.left = current.right
-      } else {
-        current.parent!.right = current.right
-      }
+      replaceNode = current.right
     } else {
       // 2.4.两个子节点
       const successor = this.getSuccessor(current)
-      if (current === this.root) {
-        this.root = successor
-      } else if (current.isLeft) {
-        current.parent!.left = successor
-      } else {
-        current.parent!.right = successor
-      }
+      // replaceNode = successor
+      current.data = successor.data
+      delNode = successor
+      replaceNode = current
+      this.checkBalance(delNode)
+      return true
     }
+    if (current === this.root) {
+      this.root = replaceNode
+    } else if (current.isLeft) {
+      current.parent!.left = replaceNode
+    } else {
+      current.parent!.right = replaceNode
+    }
+    if (replaceNode && current.parent) {
+      replaceNode.parent = current.parent
+    }
+    // 删除完成后，检测数是否平衡(传入的节点是那个真正从二叉树被移除的节点)
+    this.checkBalance(delNode, false)
     return true
   }
 }
