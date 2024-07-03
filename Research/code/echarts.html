@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>ECharts 绘制地图路线示例</title>
+    <!-- 引入 ECharts -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.3.0/echarts.min.js"></script>
+    <!-- 引入 ECharts 地图扩展 -->
+    <script src="./js/map/china.js"></script>
+  </head>
+  <body>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="width: 100%; height: 600px"></div>
+    <script type="text/javascript">
+      // 基于准备好的dom，初始化echarts实例
+      var myChart = echarts.init(document.getElementById('main'))
+
+      // 指定图表的配置项和数据
+      var option = {
+        tooltip: {},
+        visualMap: {
+          show: false,
+          min: 0,
+          max: 100,
+          inRange: {
+            color: [
+              '#313695',
+              '#4575b4',
+              '#74add1',
+              '#abd9e9',
+              '#e0f3f8',
+              '#ffffbf',
+              '#fee090',
+              '#fdae61',
+              '#f46d43',
+              '#d73027',
+              '#a50026'
+            ]
+          }
+        },
+        series: [
+          {
+            type: 'lines',
+            coordinateSystem: 'geo',
+            data: [
+              // 从北京到北京南
+              [
+                {
+                  coords: [116.404, 39.915], // 北京中心点，实际应用中应使用具体位置的经纬度
+                  value: 10
+                },
+                {
+                  coords: [116.395, 39.882], // 北京南站的近似经纬度
+                  value: 10
+                }
+              ],
+              // 从北京南到北京西
+              [
+                {
+                  coords: [116.395, 39.882],
+                  value: 10
+                },
+                {
+                  coords: [116.315, 39.912], // 北京西站的近似经纬度
+                  value: 10
+                }
+              ]
+            ],
+            lineStyle: {
+              normal: {
+                width: 1,
+                opacity: 0.5,
+                curveness: 0.2
+              }
+            }
+          },
+          // 地图系列
+          {
+            type: 'map',
+            map: 'china',
+            geoIndex: 0
+          }
+        ],
+        geo: {
+          map: 'china',
+          label: {
+            emphasis: {
+              show: false
+            }
+          },
+          roam: true
+        }
+      }
+
+      // 使用刚指定的配置项和数据显示图表。
+      myChart.setOption(option)
+    </script>
+  </body>
+</html>

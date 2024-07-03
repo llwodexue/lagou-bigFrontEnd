@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>地图画多条线示例</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+      #mapid {
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="mapid"></div>
+
+    <script>
+      // 初始化地图
+      var map = L.map('mapid').setView([39.9042, 116.4074], 10) // 北京市中心作为起始视图
+      // 添加地图图块层
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+      }).addTo(map)
+      // 定义线路的坐标路径
+      var line1Coordinates = [
+        [39.9042, 116.4074], // 假设的北京坐标
+        [39.8779, 116.3925] // 假设的北京南站坐标
+      ]
+      var line2Coordinates = [
+        [39.8779, 116.3925], // 继续从北京南站出发
+        [39.896, 116.3292] // 假设的北京西站坐标
+      ]
+      // 创建并添加第一条线到地图
+      var line1 = L.polyline(line1Coordinates, { color: 'blue' }).addTo(map)
+      // 创建并添加第二条线到地图
+      var line2 = L.polyline(line2Coordinates, { color: 'green' }).addTo(map)
+    </script>
+  </body>
+</html>
