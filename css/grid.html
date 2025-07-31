@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Responsive Form</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"
+    />
+    <style>
+      .form-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-item {
+        background-color: #e0e0e0;
+        padding: 20px;
+        border-radius: 5px;
+        text-align: center;
+      }
+
+      .fixed-item {
+        grid-column: -1 / -1;
+      }
+
+      @media (min-width: 768px) {
+        .form-container {
+          grid-template-columns: repeat(6, 1fr);
+        }
+      }
+
+      @media (max-width: 767px) {
+        .form-container {
+          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <el-form class="form-container">
+        <el-form-item class="form-item" label="Field 1">
+          <el-input placeholder="Field 1"></el-input>
+        </el-form-item>
+        <el-form-item class="form-item" label="Field 2">
+          <el-input placeholder="Field 2"></el-input>
+        </el-form-item>
+        <el-form-item class="form-item" label="Field 3">
+          <el-input placeholder="Field 3"></el-input>
+        </el-form-item>
+        <el-form-item class="form-item" label="Field 4">
+          <el-input placeholder="Field 4"></el-input>
+        </el-form-item>
+        <el-form-item class="form-item" label="Field 5">
+          <el-input placeholder="Field 5"></el-input>
+        </el-form-item>
+        <el-form-item class="form-item" label="Field 6">
+          <el-input placeholder="Field 6"></el-input>
+        </el-form-item>
+        <el-form-item class="form-item" label="Field 7">
+          <el-input placeholder="Field 7"></el-input>
+        </el-form-item>
+        <el-form-item class="form-item" label="Field 8">
+          <el-input placeholder="Field 8"></el-input>
+        </el-form-item>
+        <el-form-item class="form-item" label="Field 9">
+          <el-input placeholder="Field 9"></el-input>
+        </el-form-item>
+        <el-form-item class="form-item" label="Field 10">
+          <el-input placeholder="Field 10"></el-input>
+        </el-form-item>
+        <el-form-item class="form-item fixed-item" label="Fixed Field">
+          <el-input placeholder="Fixed Field"></el-input>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <script src="https://unpkg.com/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <script>
+      new Vue({
+        el: '#app'
+      })
+    </script>
+  </body>
+</html>

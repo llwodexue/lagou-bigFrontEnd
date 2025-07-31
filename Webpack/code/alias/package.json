@@ -1,0 +1,21 @@
+{
+  "name": "alias",
+  "version": "0.1.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "test": "vitest",
+    "build": "rollup -c rollup.config.js"
+  },
+  "keywords": [],
+  "author": "lyn",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^12.1.2",
+    "rollup": "^4.40.0",
+    "tslib": "^2.8.1",
+    "vitest": "^3.1.1"
+  }
+}
