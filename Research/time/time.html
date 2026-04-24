@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>简化版 Web Worker 时间显示器</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'Segoe UI', system-ui, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      .time-display {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        padding: 2rem;
+        max-width: 500px;
+        width: 100%;
+        text-align: center;
+      }
+      h1 {
+        color: #2d3748;
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+      }
+      .time-main {
+        margin: 2rem 0;
+      }
+      .time-text {
+        font-size: 3.5rem;
+        font-weight: 300;
+        color: #2d3748;
+        letter-spacing: 2px;
+        margin-bottom: 0.5rem;
+      }
+      .date-text {
+        font-size: 1.2rem;
+        color: #718096;
+        margin-bottom: 0.5rem;
+      }
+      .timezone {
+        display: inline-block;
+        background: #e2e8f0;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        color: #4a5568;
+      }
+      .controls {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        margin: 2rem 0;
+        flex-wrap: wrap;
+      }
+      button {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 500;
+      }
+      .start-btn {
+        background: #48bb78;
+        color: white;
+      }
+      .start-btn:hover {
+        background: #38a169;
+        transform: translateY(-2px);
+      }
+      .stop-btn {
+        background: #f56565;
+        color: white;
+      }
+      .stop-btn:hover {
+        background: #e53e3e;
+        transform: translateY(-2px);
+      }
+      .format-select {
+        padding: 0.75rem;
+        border: 1px solid #cbd5e0;
+        border-radius: 8px;
+        font-size: 1rem;
+        background: white;
+        color: #2d3748;
+      }
+      .status {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin-top: 1.5rem;
+        color: #718096;
+      }
+      .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+      }
+      .status-running {
+        background: #48bb78;
+        animation: pulse 1.5s infinite;
+      }
+      .status-stopped {
+        background: #cbd5e0;
+      }
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      .error {
+        background: #fed7d7;
+        color: #c53030;
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+      }
+      .loading {
+        color: #718096;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <div class="time-display">
+        <h1>⏰ Web Worker 时间显示器</h1>
+
+        <div v-if="error" class="error">
+          {{ error }}
+          <button
+            @click="initWorker"
+            class="retry-btn"
+            style="
+              margin-left: 10px;
+              background: #f56565;
+              color: white;
+              padding: 5px 10px;
+              border: none;
+              border-radius: 4px;
+            "
+          >
+            重试
+          </button>
+        </div>
+
+        <div v-else>
+          <div class="time-main">
+            <div class="time-text">{{ displayTime }}</div>
+            <div class="date-text">{{ displayDate }}</div>
+            <span class="timezone">{{ timezone }}</span>
+          </div>
+
+          <div class="controls">
+            <button v-if="!isRunning" @click="startWorker" class="start-btn">
+              ▶ 开始
+            </button>
+            <button v-else @click="stopWorker" class="stop-btn">⏸ 停止</button>
+
+            <select v-model="timeFormat" @change="onFormatChange" class="format-select">
+              <option value="24h">24小时制</option>
+              <option value="12h">12小时制</option>
+              <option value="date">仅日期</option>
+            </select>
+          </div>
+
+          <div class="status">
+            <span
+              class="status-dot"
+              :class="isRunning ? 'status-running' : 'status-stopped'"
+            ></span>
+            <span>{{ statusText }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const { createApp, ref, computed, onMounted, onUnmounted } = Vue
+
+      // 创建内联 Worker
+      const createTimeWorker = () => {
+        const workerCode = `
+                let timer = null;
+                let isRunning = false;
+                
+                self.onmessage = function(e) {
+                    const { type, payload } = e.data;
+                    
+                    if (type === 'START') {
+                        if (isRunning) return;
+                        
+                        isRunning = true;
+                        const interval = payload?.interval || 1000;
+                        
+                        // 立即发送一次时间
+                        sendTime();
+                        
+                        // 设置定时器
+                        timer = setInterval(() => {
+                            sendTime();
+                        }, interval);
+                    }
+                    else if (type === 'STOP') {
+                        if (timer) {
+                            clearInterval(timer);
+                            timer = null;
+                        }
+                        isRunning = false;
+                    }
+                    else if (type === 'FORMAT_CHANGE') {
+                        // 如果正在运行，立即发送新格式的时间
+                        if (isRunning) {
+                            sendTime(payload.format);
+                        }
+                    }
+                };
+                
+                function sendTime(format = '24h') {
+                    const now = new Date();
+                    let formattedTime = '';
+                    
+                    if (format === '24h') {
+                        formattedTime = now.toLocaleTimeString('zh-CN', { 
+                            hour12: false,
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit'
+                        });
+                    } 
+                    else if (format === '12h') {
+                        formattedTime = now.toLocaleTimeString('zh-CN', { 
+                            hour12: true,
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit'
+                        });
+                    }
+                    else if (format === 'date') {
+                        formattedTime = now.toLocaleDateString('zh-CN', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                            weekday: 'long'
+                        });
+                    }
+                    
+                    self.postMessage({
+                        type: 'TIME_UPDATE',
+                        payload: {
+                            timestamp: now.getTime(),
+                            formatted: formattedTime,
+                            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+                        }
+                    });
+                }
+            `
+
+        const blob = new Blob([workerCode], { type: 'application/javascript' })
+        return new Worker(URL.createObjectURL(blob))
+      }
+
+      createApp({
+        setup() {
+          // 响应式数据
+          const currentTime = ref(null)
+          const isRunning = ref(false)
+          const error = ref(null)
+          const timeFormat = ref('24h')
+          const worker = ref(null)
+
+          // 计算属性
+          const displayTime = computed(() => {
+            return currentTime.value?.formatted || '--:--:--'
+          })
+
+          const displayDate = computed(() => {
+            if (!currentTime.value) return '加载中...'
+            const date = new Date(currentTime.value.timestamp)
+            return date.toLocaleDateString('zh-CN', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              weekday: 'long'
+            })
+          })
+
+          const timezone = computed(() => {
+            return currentTime.value?.timezone || '未知时区'
+          })
+
+          const statusText = computed(() => {
+            return isRunning.value ? '实时更新中' : '已暂停'
+          })
+
+          // 方法
+          const initWorker = () => {
+            try {
+              error.value = null
+              worker.value = createTimeWorker()
+
+              worker.value.onmessage = e => {
+                const { type, payload } = e.data
+                if (type === 'TIME_UPDATE') {
+                  currentTime.value = payload
+                }
+              }
+
+              worker.value.onerror = err => {
+                error.value = `Worker 错误: ${err.message}`
+                console.error('Worker 错误:', err)
+              }
+            } catch (err) {
+              error.value = `初始化 Worker 失败: ${err.message}`
+              console.error('初始化 Worker 失败:', err)
+            }
+          }
+
+          const startWorker = () => {
+            if (!worker.value) {
+              initWorker()
+            }
+
+            worker.value.postMessage({
+              type: 'START',
+              payload: { format: timeFormat.value }
+            })
+
+            isRunning.value = true
+          }
+
+          const stopWorker = () => {
+            if (worker.value) {
+              worker.value.postMessage({ type: 'STOP' })
+              isRunning.value = false
+            }
+          }
+
+          const onFormatChange = () => {
+            if (worker.value && isRunning.value) {
+              worker.value.postMessage({
+                type: 'FORMAT_CHANGE',
+                payload: { format: timeFormat.value }
+              })
+            } else if (currentTime.value) {
+              // 如果不是运行中，直接更新显示
+              const now = new Date()
+              let formattedTime = ''
+
+              if (timeFormat.value === '24h') {
+                formattedTime = now.toLocaleTimeString('zh-CN', {
+                  hour12: false,
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit'
+                })
+              } else if (timeFormat.value === '12h') {
+                formattedTime = now.toLocaleTimeString('zh-CN', {
+                  hour12: true,
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit'
+                })
+              } else if (timeFormat.value === 'date') {
+                formattedTime = now.toLocaleDateString('zh-CN', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  weekday: 'long'
+                })
+              }
+
+              currentTime.value = {
+                ...currentTime.value,
+                formatted: formattedTime
+              }
+            }
+          }
+
+          // 生命周期
+          onMounted(() => {
+            initWorker()
+          })
+
+          onUnmounted(() => {
+            if (worker.value) {
+              worker.value.terminate()
+            }
+          })
+
+          return {
+            // 数据
+            currentTime,
+            isRunning,
+            error,
+            timeFormat,
+
+            // 计算属性
+            displayTime,
+            displayDate,
+            timezone,
+            statusText,
+
+            // 方法
+            initWorker,
+            startWorker,
+            stopWorker,
+            onFormatChange
+          }
+        }
+      }).mount('#app')
+    </script>
+  </body>
+</html>
