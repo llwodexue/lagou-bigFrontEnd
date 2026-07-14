@@ -1,295 +1,90 @@
-## React 18 核心更新
+## React18更新
 
-### 自动批处理 (Automatic Batching)
+1. setState 自动批处理
 
-- React 17 及以前：仅在 React 合成事件内的多次 `setState` 会批处理
-- React 18：Promise、setTimeout、原生事件、异步回调中的多次 `setState` 统一批处理，减少不必要的重渲染
+   - 在 react17 中，只有 react 事件会进行批处理，原生 js 事件、promise，setTimeout、setInterval 不会
+   - react18，将所有事件都进行批处理，即多次 setState 会被合并为 1 次执行，提高了性能，在数据层，将多个状态更新合并成一次处理
 
-```jsx
-// React 18 中以下更新会被合并为一次渲染
-fetch('/api').then(() => {
-  setCount(c => c + 1)
-  setFlag(f => !f) // 只触发一次 re-render
-})
-```
+2. 引入了新的 root API，支持 new concurrent renderer(并发模式的渲染)
 
-### createRoot 与并发渲染
+3. 去掉了对 IE 浏览器的支持，react18 引入的新特性全部基于现代浏览器，如需支持需要退回到 react17 版本
 
-```jsx
-// React 17
-ReactDOM.render(<App />, document.getElementById('root'))
+4. flushSync
 
-// React 18 — 启用并发特性
-import { createRoot } from 'react-dom/client'
-const root = createRoot(document.getElementById('root'))
-root.render(<App />)
-```
+   批量更新是一个破坏性的更新，如果想退出批量更新，可以使用 flushSync
 
-### flushSync — 强制同步刷新
+5. react 组件返回值更新
 
-```jsx
-import { flushSync } from 'react-dom'
+   - 在 react17 中，返回空组件只能返回 null，显式返回 undefined 会报错
+   - 在 react18 中，支持 null 和 undefined 返回
 
-flushSync(() => setCount(c => c + 1)) // 立即更新 DOM
-flushSync(() => setFlag(f => !f))     // 再次立即更新 DOM
-// 两次独立的渲染，用于需要精确 DOM 状态的场景（如聚焦、滚动定位）
-```
+6. strict mode 更新
 
-### StrictMode 双重渲染
+   - 当你使用严格模式时，React 会对每个组件返回两次渲染，以便你观察一些意想不到的结果。在 react17 中去掉了一次渲染的控制台日志，以便让日志容易阅读
+   - react18 取消了这个限制，第二次渲染会以浅灰色出现在控制台日志
 
-开发环境下每个组件会渲染两次，用于检测不纯的渲染逻辑（副作用、非幂等操作）：
-- 第一次渲染：正常执行
-- 第二次渲染：立即撤销并重新执行，暴露副作用问题
+7. Suspense 不再需要 fallback 捕获
 
-```jsx
-// ❌ 不安全的初始化 — StrictMode 下会执行两次
-useEffect(() => {
-  const sub = api.subscribe() // 订阅两次！
-  return () => sub.unsubscribe()
-})
-```
+8. 支持 useId
 
-### Concurrent Mode 核心概念
+   在服务器和客户端生成相同的唯一一个 id，避免 hydrating 的不兼容
 
-React 18 默认启用。核心能力：
-- **可中断渲染**：高优先级任务可打断低优先级渲染
-- **时间切片 (Time Slicing)**：将渲染拆分为多个时间片，保持 UI 响应
-- **优先级调度**：用户交互 > 动画 > 数据获取 > 低优先级更新
+9. Concurrent Mode
 
-```jsx
-// startTransition — 标记低优先级更新
-import { startTransition } from 'react'
+   它可以帮助应用保持响应，根据用户的设备性能和网速进行调整，它通过渲染可中断来修复阻塞渲染机制。在 **concurrent模式** 中，React 可以同时更新多个状态
 
-setSearchInput(input) // 高优先级：立即更新输入框
-
-startTransition(() => {
-  setSearchQuery(input) // 低优先级：搜索结果可被中断
-})
-```
-
-## React 19 新特性
-
-### 1. React Server Components (RSC) 稳定发布
-
-服务端组件直接在服务器渲染，不发送 JS 到客户端，减少包体积。
-
-```jsx
-// ServerComponent.jsx — 运行在服务端，无法使用 hooks/state
-async function ServerComponent({ id }) {
-  const data = await db.post.findById(id) // 直接访问数据库
-  return <ClientComponent data={data} /> // 传递序列化数据给客户端组件
-}
-
-// 'use client' — 标记客户端组件
-'use client'
-function ClientComponent({ data }) {
-  const [count, setCount] = useState(0) // 可以使用 hooks
-  return <div>{data.title} - {count}</div>
-}
-```
-
-**RSC 优势：**
-- 零包体积：服务端组件代码不发往客户端
-- 直接访问后端资源：数据库、文件系统、API
-- 自动代码分割：客户端组件按需加载
-- 流式传输 + Suspense：渐进式渲染
-
-### 2. Actions — 服务端动作
-
-```jsx
-// 服务端 Action
-async function createAction(formData) {
-  'use server'
-  const item = await db.create({ name: formData.get('name') })
-  revalidatePath('/items') // 重新验证数据
-  redirect(`/items/${item.id}`)
-}
-
-// 客户端使用
-<form action={createAction}>
-  <input name="name" />
-  <button type="submit">Create</button>
-</form>
-```
-
-### 3. use 钩子
-
-可以在渲染阶段读取 Promise、Context 和 other usable values。
-
-```jsx
-import { use } from 'react'
-
-function Profile({ promise }) {
-  const user = use(promise) // 替代 Suspense + Promise 模式
-  return <div>{user.name}</div>
-}
-
-// 用于 Context
-function Theme() {
-  const theme = use(ThemeContext)
-  return <div className={theme}>...</div>
-}
-```
-
-### 4. 新的 Ref 语义
-
-React 19 中 ref 赋值变为同步操作，不再需要 useEffect 等待 ref。
-
-```jsx
-// React 18 — ref 在 useEffect 中才可用
-useEffect(() => {
-  console.log(inputRef.current) // 可用
-})
-
-// React 19 — ref 在渲染结束后可直接用
-function FocusInput({ focus }) {
-  const ref = useRef(null)
-  if (focus && ref.current) { // 可直接使用
-    ref.current.focus()
-  }
-  return <input ref={ref} />
-}
-```
-
-### 5. 改进的 Suspense
-
-- `Suspense` 支持嵌套加载状态
-- `pending` 组件模式，更细粒度的加载反馈
-
-```jsx
-<Suspense fallback={<Spinner />}>
-  <Suspense fallback={<TextFallback />}>
-    <HeavyComponent />
-  </Suspense>
-</Suspense>
-```
-
-### 6. Document Metadata
-
-服务端组件可直接返回 `<title>`、`<meta>`、`<link>` 等标签。
-
-```jsx
-function Page() {
-  return (
-    <>
-      <title>My Page</title>
-      <meta name="description" content="..." />
-      <h1>Hello</h1>
-    </>
-  )
-}
-```
-
-## React Compiler (React 新编译器)
-
-React 团队推出的编译时优化方案，自动处理 memoization，无需手动使用 `useMemo`/`useCallback`。
-
-```jsx
-// 无需 useMemo/useCallback，编译器自动优化
-function Component({ items }) {
-  const filtered = items.filter(i => i.active) // 自动 memoize
-  const onClick = () => console.log('clicked') // 自动稳定引用
-  return (
-    <ul>
-      {filtered.map(item => (
-        <li key={item.id} onClick={onClick}>{item.name}</li>
-      ))}
-    </ul>
-  )
-}
-```
-
-**编译器优化规则：**
-1. 组件内推导的值自动缓存，依赖变化时重新计算
-2. 事件处理器自动稳定，避免子组件不必要的重渲染
-3. 跨渲染边界自动追踪依赖关系
-4. 遵循 Hooks 规则，编译后仍保持 React 语义
-
-**限制：**
-- 不能修改传入的 props 或 state
-- 不能在条件分支中调用 Hooks
-- 不能将 state 赋值给新变量后修改
+   区别就是使**同步不可中断更新**变成了**异步可中断更新**
 
 ## 基础原理
 
-### setState 更新机制
+### setState 同步还是异步
 
-**React 17 及以前：**
-- React 合成事件内：批量更新（"异步"，实际是收集变更统一处理）
-- setTimeout/Promise/原生事件：立即更新（"同步"）
+什么时候是同步？什么时候是异步？
 
-**React 18：** 默认全部自动批处理，无论同步/异步上下文。可通过 `flushSync` 强制同步刷新。
+- 这里说的异步不是说异步代码实现，而是说 React 会收集变更，然后统一更新
 
-```jsx
-// useState 函数式更新 — 解决闭包陷阱
-setCount(c => c + 1) // 基于最新状态计算
-```
+在 React 中，如果是由 React 引起的事件处理，调用 setState 不会同步更新 this.state，除此之外的 setState 调用会同步执行 this.state
 
-### JSX 编译原理
+- 除此之外指的是，绕过 React 通过 addEventListener 直接添加的事件处理函数，还有通过 setTimeout/setInterval 产生的异步调用
 
-JSX → `React.createElement` → `React.element` 对象
+在 React 18 之前，在 setTimeout、Promise.then、原生 DOM 事件 中更新，是同步操作。其余在生命周期或 React 合成事件中更新，是异步操作
 
-```jsx
-// JSX
-<div className="app"><span>Hello</span></div>
+在 React 18 之后，默认所有的操作都放到了批处理中
 
-// 编译后
-React.createElement('div', { className: 'app' }, React.createElement('span', null, 'Hello'))
+### JSX 原理
 
-// 最终产物
-{
-  type: 'div',
-  props: { className: 'app', children: { type: 'span', props: { children: 'Hello' } } }
-}
-```
+JSX 仅仅只是 `React.createElement(component, props, ...children)` 函数的语法糖
 
-**首字母规则：** 小写 → 原生 DOM 标签（type 为字符串），大写 → 组件（type 为函数/class）。
+`React.createElement(component, props, ...children)`的第一个参数 component的类型是 string/ReactClass type
 
-### Diff 算法三大假设
+- string 类型 React会当做原生的DOM节点进行解析
+- ReactClass type 类型 自定义组件
 
-React 通过以下假设将 diff 复杂度从 O(n³) 降到 O(n)：
+简而言之，babel在编译过程中会判断 JSX 组件的首字母，如果是小写，则当做原生的DOM标签解析，就编译成字符串。如果是大写，则认为是自定义组件，编译成对象
 
-1. **两个不同类型的元素/组件产生不同的树** — 直接销毁重建，不递归比较
-2. **同一层级的节点通过 key 区分** — key 帮助识别节点是否移动/新增/删除
-3. **开发者可通过 key 提示哪些子节点稳定** — 没有 key 时默认按索引匹配
+### diff 算法
 
-```jsx
-// ❌ 用 index 做 key — 列表 reorder 时导致不必要的 DOM 操作
-{items.map((item, i) => <Item key={i} {...item} />)}
+如何从 O(n ^ 3) 变成 O(n)
 
-// ✅ 用唯一标识
-{items.map(item => <Item key={item.id} {...item} />)}
-```
-
-**Diff 过程：**
-- **Element 类型不同**：直接卸载旧树，挂载新树
-- **Element 类型相同**：复用 DOM，只更新变化的 attributes
-- **子节点列表**：双端 diff + key map，识别移动/新增/删除
+1. 两个相同的组件产生类似的 DOM 结构，不同的组件产生不同的 DOM 结构
+2. 同一层级的一组节点，它们可以通过唯一的 id 进行区分
 
 ### React 事件机制
 
-**事件委托：** React 不在每个 DOM 节点上绑定事件，而是在根节点（document）统一监听，通过事件冒泡分发到对应组件。
+React基于浏览器的事件机制实现了一套自身的事件机制，它符合 W3C 规范，包括事件触发、事件冒泡、事件捕获、事件合成和事件派发等
 
-```jsx
-// React 17 之前：事件委托到 document
-// React 17+：事件委托到 root 容器（支持多 root 共存）
-```
+React事件的设计动机(作用)：
 
-**合成事件 (SyntheticEvent)：** 跨浏览器兼容的事件对象，池化复用减少 GC 压力。
+- 在底层磨平不同浏览器的差异，React实现了统一的事件机制，我们不再需要处理浏览器事件机制方面的兼容问题，在上层面向开发者暴露稳定、统一的、与原生事件相同的事件接口
+- React 把握了事件机制的主动权，实现了对所有事件的中心化管控
+- React 引入事件池避免垃圾回收，在事件池中获取或释放事件对象，避免频繁的创建和销毁
 
-```jsx
-// 在异步中访问事件对象需要 persist()
-handleClick(e) {
-  e.persist() // 防止事件对象被回收
-  setTimeout(() => console.log(e.target), 100)
-}
-```
+事件机制
 
-**React 17+ 事件委托到 Root：** 解决了多版本 React 共存时的事件冲突问题。
-
-### React 18 事件系统变化
-
-React 18 废弃了事件池（event pooling），合成事件对象不再被复用。这意味着在异步回调中可以直接访问事件属性，无需 `persist()`。
+- React 事件使用驼峰命名，而不是纯小写
+- 通过 JSX，传递一个函数作为事件处理程序
+- 在React中，你不能通过返回 false 的方式阻止默认行为，必须显式的使用  `preventDefault`
+- 回调函数是直接调用的，如果不手动绑定 this，获取到的 this 为 undefined
 
 ## Fiber
 

@@ -1,131 +1,81 @@
+# Vue 面试题
+
 ## Vue2 与 Vue3 对比
-
-vue 是通过 vnode 去生成 dom 树，如果数据去更新，vnode 之间的对比有了解过吗
-
-**diff 算法**
-
-- 传统 diff 算法是通过循环递归节点进行依次对比，目的是追求完全对比和最小修改，算法复杂度达到 O(N^3)
-
-  Vue 放弃了完全对比及最小修改，才实现 O(N^3 -> N)
-
-- vue2 diff 算法采用了 **双端比较算法**：头尾相互比较，一共有4种比较方式，如果4种都没匹配，如果设置了 key，就用 key 比较
-
-
-**vnode**
-
-- vue2 虚拟 dom 是全量对比，当页面数据发生变化，会遍历判断虚拟 DOM 所有节点有没有发生变化
-
-  vue3 中，在模板编译会在动态标签末尾加上 patchFlag，在这个基础上进行 diff 算法
-
-  对于不参与更新的元素，做静态标记并提升 hoistStatic，只有在初始化的时候被创建一次，再次调用 render 无需创建直接复用
-
-**响应式原理**
-
-- Object.defineProperty
-- Proxy
-
-**CompositionAPI**
-
-- ref 返回响应式 Ref 对象，reactive 返回响应式代理对象
-
-  ref 返回响应式数据在 JS 的使用上需要加上 .value 才能访问其值，在视图中使用会自动脱 ref，不需要 .value
-
-  ref 内部依然是使用 reactive 实现响应式
-
-  reactive 内部如果接收 Ref 对象会自动脱 ref
-
-  使用展开运算符展开 reactive 响应式对象会使其失去响应式
-
-  reactive 使用 Proxy 代理传入对象并拦截各种操作，实现响应式。ref 内部封装了一个 RefImpl 类，并设置了 getter setter，拦截用户对值的访问，从而实现响应式
-
-- watchEffect 立即运行一个函数，然后被动地追踪它的依赖。watch 侦测一个或多个响应式数据源并在数据源发生变化时调用一个回调函数
-
-  watchEffect 在使用时，传入的函数会立刻执行一次。watch 默认情况下并不会执行回调函数，除非我们手动设置 immediate 选项
-
-watchEffect 相当于将 watch 的依赖源和回调函数合并，当任何你有用到的响应式依赖更新时，该函数便会重新执行，不同于 watch，watchEffect 的回调函数会被立刻执行（`{ immediate: true }`）
-
-- 推荐大部分时候用 watch 显式指定依赖以避免不必要的重复触发，也避免在后续代码修改或重构时不小心引入新的依赖
-- watchEffect 适用于一些逻辑相对简单，依赖源和逻辑强相关的场景
-
-### 响应式原理
-
-> vue2中的响应式原理：[剖析Vue原理&实现双向绑定MVVM](https://www.cnblogs.com/chuaWeb/articles/13554465.html)
-
-![Vue2响应式原理的基本使用流程](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/831429-20200910180025951-1785345503.png)
-
-> 注意：以上图片链接来自第三方图床，如果无法显示请查看原图链接
-
-- Vue2 Observer 负责通过 defineProperty 劫持数据 Data，每个被劫持的 Data都在各自闭包中维护一个 Dep 实例，用于收集依赖它的 Watcher（观察者），被收集的 Watcher 存入 Dep 实例的 subs 数组中。如果 Data 是对象，则递归收集
-- Dep 维护一个公共的 Target 属性，在触发劫持前，将 Target 设置为当前 Watcher，然后触发 getter 将 Target（Watcher）收集到 subs 中，然后再将 Target 置为 null
-- Data 数据变更的时候触发 setter，然后从 Data 维护的 Dep 实例的 subs 数组中将 Watcher 取出来，执行其 update 方法，如果变更的值是对象，再劫持之
-
-这样其实是有问题的
-
-1. 如果 Watcher 使用的 Data 是对象类型，那么 Data 中所有的子属性都要递归将 Watcher 收集，这个是个资源浪费
-2. 数据劫持和依赖收集是强耦合关系
-3. 对数组劫持也没有做好，部分操作不是响应式的
-
-为了解决 vue2 的问题，依赖收集（添加观察者、通知观察者）模块单独出来，就是现在的 effect，用来生成、处理、追踪 reactiveEffect 数据，主要是收集数据依赖（观察者）和通知收集的依赖（观察者）。提供了是三个主要函数：
-
-- effect：将传入的函数转换为 reactiveEffect 格式的函数
-- track：将 reactiveEffect 添加为 target[key] 的观察者
-- trigger：通知 target[key] 的观察者
-
-## vue 优化
 
 ### diff 算法
 
-vue2 采用了 **双端 diff 算法**，核心方法是 **updateChildren**，通过 **新前与旧前、新后与旧后、新后与旧前、新前与旧后、暴力对比** 5 种查找
+- 传统 diff 算法通过循环递归逐节点对比，复杂度 O(N^3)。Vue 放弃完全对比，实现 O(N)
+- Vue2 采用**双端比较算法**：头尾相互比较，4 种匹配方式，未匹配时用 key 查找
+- Vue3 在模板编译时给动态节点添加 `patchFlag`，基于标记进行精准 diff，跳过静态节点
 
-- 新前与旧前对比，如果相同，新老开始下标都往后移动一格。如果不相同会进入新后与旧后对比
-- 新后与旧后对比，如果相同，新老结束下标都往前移动一格。如果不相同会进入新后与旧前对比
-- 新后与旧前对比，如果相同，老开始节点移动到老结束节点后面，老开始下标往后移动一格，新的结束下标往前移动一格。如果不相同会进入新前与旧后对比
-- 新前与旧后对比，如果相同，老结束节点移动到老开始节点前面，新开始下标往后移动一格，老结束下标往前移动一格。如果不相同会进入暴力比对（乱序）
-- 暴力比对，首先我们需要循环 oldChildren 生成一个 key 和 index 的映射表 `{ 'a': 0, 'b': 1 }`，然后我们用新的开始节点的 key 去映射表中查找，如果找到就把该节点移动到最前面，原来的位置用 undefined 占位，避免数组塌陷，防止老节点移动走了之后破坏了初始映射表位置，如果没有找到直接把新节点插入
-  - 如果新节点有剩余，newChildren 还有剩余的节点还没有处理，我们需要循环这些节点，逐个插入
-  - 如果老节点有剩余，oldChildren 还有剩余的节点还没有处理，我们需循环这些节点，逐个删除
+### vnode 优化
 
-vue2 虚拟 dom 是进行全量的对比，在运行时会对所有节点生成一个虚拟节点树，当页面数据发生变化时，会遍历判断虚拟 DOM 所有节点有没有发生变化。vue3 在 diff 算法中相比 vue2 增加了静态标记，在模板编译时，编译器会在动态标签上加上 patchFlag
+- Vue2 全量对比：数据变化时遍历所有虚拟节点
+- Vue3 编译时优化：
+  - `patchFlag`：标记动态节点，diff 只对比带标记的节点
+  - `hoistStatic`：静态节点提升，只创建一次，复用引用
+  - `cacheHandler`：事件处理器缓存，避免不必要的更新
+
+### 响应式原理
+
+- Vue2：`Object.defineProperty`，无法检测对象新增/删除属性，数组需特殊处理
+- Vue3：`Proxy`，可拦截 13 种操作，支持动态属性、Map、Set 等
+
+### Composition API
+
+- `ref`：返回 `Ref` 对象，JS 中通过 `.value` 访问，模板自动解包。内部用 `reactive({ value })` 实现
+- `reactive`：返回 Proxy 代理对象。内部遇到 `Ref` 自动解包。展开运算符会丢失响应式
+- `watchEffect`：立即执行函数，自动追踪依赖，依赖变化时重新执行
+- `watch`：显式指定依赖源，惰性执行（默认不立即触发），可获取新旧值
+- 推荐优先使用 `watch` 显式指定依赖，避免隐式依赖带来的意外触发
+
+### 响应式原理深度
+
+Vue2 流程：
+1. `Observer` 通过 `defineProperty` 劫持数据，每个属性维护一个 `Dep` 实例
+2. `Dep` 通过全局 `Target` 收集依赖它的 `Watcher`
+3. 数据变更触发 `setter`，通知 `Dep.subs` 中的 `Watcher` 执行 `update`
+
+Vue2 问题：
+1. 对象类型需递归劫持所有子属性，资源浪费
+2. 数据劫持与依赖收集强耦合
+3. 数组部分操作非响应式
+
+Vue3 改进：依赖收集模块独立为 `effect`
+- `effect`：将函数转为响应式副作用函数
+- `track`：收集当前 `effect` 为 `target[key]` 的依赖
+- `trigger`：通知 `target[key]` 的所有依赖执行
+
+---
+
+## Vue 优化
 
 ### v-if 和 v-show
 
-- v-if 是真正的条件渲染，因为它会确保在切换过程中条件块内的事件监听和子组件适当地被销毁和重建，也是**惰性的**；如果在初始化渲染时条件为假，则什么也不做，一直到条件第一次变为真时，才会开始渲染条件块
-- v-show 就简单得多，不管初始条件是什么，元素总会被渲染，并且只是简单地基于 CSS 的 display 属性进行切换
+- `v-if`：真正条件渲染，惰性地创建/销毁元素和事件监听。适合运行时少变动的场景
+- `v-show`：始终渲染，仅通过 CSS `display` 切换。适合频繁切换的场景
 
-所以，v-if 适用于在运行时很少改变条件，不需要频繁切换条件的场景，v-show 则适用于非常频繁切换条件的场景
+### 计算属性
 
-### 多使用计算属性
+- `computed` 依赖其他响应式数据，结果有缓存，仅依赖变化时重新计算
+- 方法每次调用都执行，无缓存；计算属性不可传参
+- 可配合 `v-model` 使用，需实现 `getter` 和 `setter`
 
-- computed 是计算属性，依赖其它属性值，并且 computed 的值有缓存，只有它依赖的属性值发生改变，下一次获取 computed 的值才会重新计算 computed 的值
+### v-for 与 v-if 避免同用
 
-当我们需要进行数值计算，并且依赖于其它数据时
-
-1. 使用方式
-   - 方法需要调用，可以传参
-   - 计算属性不能调用，不可传参
-2. 缓存
-   - 方法没有缓存
-   - 计算属性默认会有缓存计算结果
-
-计算属性就是可以写逻辑的 data，还可以结合 v-model 使用，需要实现 getter 和 setter 方法
-
-### v-for 遍历同时使用 v-if
-
-vue2 v-for 优先级其实是比 v-if 高，所以两个指令出现在一个 DOM 中，那么 v-for 渲染的当前列表，每一次都需要进行 v-if 的判断。而相应的列表也会重新变化，这个看起来是非常不合理的。因此当你需要进行同步指令的时候，进行使用计算属性，先将 v-if 不需要的值先过滤掉
+Vue2 中 `v-for` 优先级高于 `v-if`，每项都会执行条件判断。应使用计算属性预先过滤：
 
 ```vue
 <template>
   <ul>
-    <li v-for="item in filterList" :key="item.id">
-      {{ item.name }}
-    </li>
+    <li v-for="item in filterList" :key="item.id">{{ item.name }}</li>
   </ul>
 </template>
 <script>
 export default {
   computed: {
     filterList() {
-      return this.showData.filter(data => data.isShow)
+      return this.showData.filter(d => d.isShow)
     }
   }
 }
@@ -134,285 +84,875 @@ export default {
 
 ### v-for key
 
-在列表数据进行遍历渲染时，需要为每一项 item 设置唯一值 key 值，方便 Vue.js 内部机制精准找到该列表数据。当 state 更新时，新的状态值和旧的状态值对比，较快地定位到 diff
-
-并且 v-for 并不推荐使用 index 下标作为 key 的值，这个是一个非常好理解的知识点。当 index 作为标识的时候，插入一条数据的时候，列表中它后面的 key 都发生了变化，那么 v-for都会对 key 变化的 Element 重新渲染，但是其实它们除了插入的 Element 数据都没有发生改变，这就导致了没有必要的开销。所以，尽量不要用 index 作为标识，而去采用数据中的唯一值，如 id 字段
+- key 帮助 Vue 精准定位列表项，优化 diff 效率
+- 禁止使用 index 作为 key：插入/删除数据时后续 key 全部变化，导致不必要的重渲染
+- 使用数据唯一标识（如 id）
 
 ### 长列表性能优化
 
-Vue 会通过 Object.defineProperty 对数据进行劫持，来实现视图响应数据的变化，然而有时候我们封装的组件就是纯粹的数据展示，不会有任何改变，我们就不需要 Vue 来劫持我们的数据，在大量数据展示的情况下，这能够很明显减少组件初始化的时间，那如何禁止 Vue 劫持我们的数据呢？
-
-- 可以通过 Object.freeze 方法来冻结一个对象，一旦被冻结的对象就再也不能被修改了
-
-**优化无限列表性能**
-
-项目当中，会设计到非常多的长列表场景，区别于普通的分页来说，大部分想的多一点的就是做一个分页，滚动到底部的时候我们就继续请求 API。随着数据的加载，DOM 会越来越多，这样就导致了性能开销问题，当页面上 DOM 太多的时候，难免给我们的客户端造成一定的压力，所以对于长列表渲染的时候，建议将 DOM 移除掉，类似于图片懒加载的模式，只有出现在视图上的 DOM 才是重要的 DOM。网络上有一些好的解决方案，比如：vue-virtual-scroller、ve-virtual-scroll-list
-
-- 可以采用分页方式获取，渲染大量数据
-- vue-virtual-scroller 滚动方案，只渲染视口范围内的数据
-- 如果不需要更新，使用 v-once 只渲染一次
-- v-memo 可以缓存结果，结合 v-for 使用，避免数据变化时不必要的 vnode 创建
-- 采用懒加载方式，在用户需要的时候再加载数据
-
-IntersectionObserver 接口 (从属于 Intersection Observer API) 提供了一种异步观察目标元素与其祖先元素或顶级文档视窗 (viewport) 交叉状态的方法。祖先元素与视窗 (viewport) 被称为根 (root)
+- `Object.freeze`：冻结不需要响应式的静态数据，减少初始化开销
+- 虚拟滚动：`vue-virtual-scroller`，只渲染视口内 DOM
+- `v-once`：一次性渲染，不再更新
+- `v-memo`：缓存 DOM 子树，依赖不变时跳过创建
+- 分页加载 + 懒加载
 
 ### 图片资源优化
 
-在网页中，往往存在大量的图片资源，这些资源或大或小。当我们页面中的 DOM 中存在大量的图片时，难免会碰到一些加载缓慢的问题，甚至加载失败的问题
-
-- 小图标使用 svg 或者字体图标，或者制作雪碧图
-- 通过 base64 和 webp 的方式加载小型图片
-- 能通过 cdn 加速的大图尽量使用 cdn
-- 对图片资源进行懒加载
-- 压缩图片大小
-  - 如果是纯静态图片，建议使用统一的工具进行压缩 tinypng
-  - 注意：不建议用 webpack 构建压缩图片，会严重影响打包时间
-  - 如果是动态图片，比如用户创建的文章中的图片，建议由后端来压缩
+- 小图标用 SVG / 字体图标 / 雪碧图
+- 小图使用 base64 或 WebP 格式
+- 大图使用 CDN 加速
+- 图片懒加载（IntersectionObserver）
+- 静态图片用 tinypng 压缩，动态图片由后端压缩
 
 ### 路由懒加载
 
-vue 是单页面应用，可能会有很多的路由引入，这样使用 webpack 打包后的文件很大，当进入首页时，加载的资源过多，页面会出现白屏的情况，不利于用户体验，如果我们能把不同路由对应的组件分割成不同的代码块，然后当路由被访问时候才加载对应的组件，这样就更高效了。这样会大大提高首屏显示的速度，但是可能其他的页面的速度就会降下来
-
-- 注意：懒加载的路由太多的话会导致打包性能下降。路由懒加载就是异步组件，异步组件不宜太多，否则会有打包性能问题
-
 ```js
-// require 语法
-component: resolve => (require(['@/components/HelloWorld'], resolve))
-
-// import 语法
+// import 语法（推荐）
 component: () => import('@/components/HelloWorld')
+
+// require 语法
+component: resolve => require(['@/components/HelloWorld'], resolve)
 ```
+
+注意：懒加载路由过多会影响打包性能，异步组件不宜太多。
 
 ### 首屏渲染优化
 
-- 预渲染，没什么动态数据的页面直接预渲染成静态页面
+- 预渲染：静态页面预渲染为 HTML
 - 路由懒加载
-- 在首页加入 loading 动画，骨架屏
-- 权限方案：服务端渲染，如果仅仅是因为首屏渲染慢，其实也不建议引入服务端渲染方案，因为成本还是比较高的，除非你要解决 SEO，这时你就不得不上服务端渲染了
+- Loading 动画 / 骨架屏
+- SEO 需求才考虑 SSR，否则成本过高
 
+### 浏览器兼容性
 
+`@vue/babel-preset-app` 通过 `@babel/preset-env` + `browserslist` 自动注入 polyfill。依赖需要 polyfill 时，在 `vue.config.js` 的 `transpileDependencies` 中添加。
 
-### 开发浏览器兼容性
-
-一个默认的 Vue Cli 项目会使用 `@vue/babel-preset-app`，它通过 `@babel/preset-env` 和 `browserslist` 配置来解决一定项目需要的 polyfill
-
-默认情况下，它会把 `useBuiltIns: 'usage'` 传递给 `@babel/preset-env`，这样它会根据源代码中出现的语言特性自动检测需要的 polyfill。这确保了最终包里 polyfill 数量的最小化。然而，这也意味着其中一个依赖需要特殊的 polyfill，默认情况下 Babel 无法将其检测出来
-
-如果有依赖需要 polyfill，你有几种选择：
-
-如果该依赖基于一个目标检测环境不支持的 ES 版本撰写：将其添加到 vue.config.js 中的 transpileDependencies 选项。这会为该依赖同时开启语法转换和根据使用情况检测 polyfill
+---
 
 ## Vue 理解
 
 ### diff 理解
 
-- diff 算法是虚拟 dom 技术的必然产物：通过新旧虚拟 dom 做对比（diff），将变化的地方更新在真实 DOM 上；另外，也需要 diff 高效的执行对比过程，从而降低时间复杂度为 O(n)
-- vue2.x 中为了降低 watcher 粒度，每个组件只有一个 watcher 与之对应，只有引入 diff 才能精确找到发生变化的地方
-- vue 中 diff 执行的时刻是组件实例执行其更新函数时，它会上一次渲染结果 oldVnode 和新的渲染结果 newVnode，此过程称为 patch
-- diff 过程遵循深度优先、同层比较的策略；两个节点之间比较会根据它们是否拥有子节点或者文本节点做不同操作；比较两组子节点是算法的重点，首先假设头尾节点可能相同做 4 次对比尝试，如果没有找到相同节点才按照通用方式遍历查找，查找结束再按情况处理剩下的节点，借助 key 通常可以非常精确找到相同节点，因此整个 patch 过程非常高效
-
-
+- diff 是虚拟 DOM 的必然产物：对比新旧 vnode，将差异更新到真实 DOM，时间复杂度 O(n)
+- Vue2 每个组件一个 watcher，必须引入 diff 精确定位变化
+- diff 时机：组件执行更新函数时，对比 `oldVnode` 和 `newVnode`（patch 过程）
+- 策略：深度优先、同层比较。子节点对比先尝试头尾 4 次匹配，未命中再用 key 遍历查找
 
 ### 组件化理解
 
-- 组件是独立和可复用的代码组织单元，组件系统是 Vue 核心特性，它使开发者使用小型、独立和通常可复用的逻辑构建大型应用
-- 组件化开发能大幅提高应用开发效率、测试性、复用性等
-- 组件使用按分类有：页面组件、业务组件、通用组件
-- vue 组件是基于配置的，我们通常编写的组件是组件配置而非组件，框架后续会生成器构造函数，它们基于 VueComponent，扩展于 Vue
+- 组件是独立、可复用的代码单元，是 Vue 核心特性
+- 分类：页面组件、业务组件、通用组件
+- Vue 组件基于配置，框架内部生成构造函数 `VueComponent` 继承自 `Vue`
 
-
+---
 
 ## React 与 Vue 对比
 
-### Hooks 与 Composition API 区别
+### Hooks 与 Composition API
 
-都是解决代码组织性问题
+共同点：解决逻辑组织问题，按功能拆分代码，避免命名冲突。
 
-- React 用 class 或 Vue 用 Options API，逻辑是混在一起的，共享一个 data，很难对代码进行一个拆分
-- 继承方面，React 用 class 或 Vue 用 extend，同样放在 this 上面会有命名冲突、污染问题需要考虑
-- React Hooks 或 Vue Composition API 可以让代码按照功能进行区分，做一个纯函数的调用
-
-区别
-
-- 比如做 reactive 的 state，React useState 把值和更新的方法做了区分，值是一个字面量，每一次执行 Hook 都会得到一个新的值。Vue 把 get 和 set 合到一起，形成一个 ref
-- Vue 的 setup 函数只执行一次，根据数据变化执行 computed 或 watch。React Hooks 底层基于链表实现，每次组件被 render 会按顺序执行所有的 hooks
-
-> 注意：Hooks与Composition API对比图（原图链接：https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20230426180407661.png）
-
-
+区别：
+- `useState` 将值和更新方法分离，每次 render 返回新值；`ref` 将 get/set 合一
+- `setup` 只执行一次；React Hooks 基于链表，每次 render 按顺序执行
+- Vue 响应式基于 Proxy，React 基于不可变数据对比
 
 ### 虚拟 DOM 区别
 
-- vue3.0 通过 Proxy 响应式 + 组件内部 dom + 静态标记，把任务颗粒度控制的足够细致
-
-  - 事件缓存：将事件缓存（静态）
-  - 添加静态标记：vue2 是全量 diff，vue3 是静态标记 + 非全量 diff
-  - 静态提升：创建静态节点时保存，后续直接复用
-  - 使用最长递增子序列优化对比流程
-
-  block Tree，其实就是把哪些 DOM 结构可能发生改变的地方作为一个动态节点进行收集。
-
-- React 通过把 vdom 微观变成了链表，利用浏览器空闲时间来做 diff，如果超过 16ms 或有动画用户交互任务，就把主进程还给浏览器，等空闲了继续
-
-
+- Vue3：Proxy 响应式 + 静态标记 + 静态提升 + 事件缓存 + 最长递增子序列优化 diff
+- React：vdom 转为链表，利用浏览器空闲时间做 diff（时间切片），超过 16ms 让出主线程
 
 ### diff 算法区别
 
-> [深入浅出虚拟 DOM 和 Diff 算法，及 Vue2 与 Vue3 中的区别](https://juejin.cn/post/7010594233253888013#heading-6)
+Vue2：双端比较（头-头、尾-尾、头-尾、尾-头、key 查找）
+Vue3：去头尾后使用最长递增子序列算法决定移动/添加/删除
 
-diff 算法优化
+### 核心思想区别
 
-1. 只比较同一层级，不跨级比较
-2. 比较标签名
-3. 比较 key
+| | Vue | React |
+|---|---|---|
+| 数据流 | 双向绑定 | 单向数据流 |
+| 模板 | template | JSX |
+| 优化策略 | 编译时优化 | 运行时优化 |
 
-vue2 diff 算法采用的是 双端比较算法。updateChildren 会进行
+---
 
-- 头和头比较
-- 尾和尾比较
-- 头和尾比较
-- 尾和头比较
-- 都没有命中的对比
+## Vue3 新特性深度
 
-vue3 diff 算法采用的是 去头尾的最长递增子序列算法。patchKeyedChildren 会进行
+### Fragment、Teleport、Suspense
 
-- 头和头比较
-- 尾和尾比较
-- 基于最长递增子序列进行移动/添加/删除
+**Fragment**：允许组件模板有多个根节点，无需包裹 div。
 
+```vue
+<template>
+  <Header />
+  <Main />
+  <Footer />
+</template>
+```
 
+**Teleport**：将组件渲染到 DOM 树中任意位置，不改变组件层级关系。
 
+```vue
+<template>
+  <Teleport to="body">
+    <div class="modal">弹窗内容</div>
+  </Teleport>
+  <button @click="show = true">打开弹窗</button>
+</template>
+```
 
+**Suspense**：处理异步组件的加载状态，配合 `async setup` 使用。
 
-### 核心开发思想区别
+```vue
+<template>
+  <Suspense>
+    <template #default>
+      <AsyncComponent />
+    </template>
+    <template #fallback>
+      <div>加载中...</div>
+    </template>
+  </Suspense>
+</template>
+```
 
-- 核心开发思想
-  - vue 双向数据绑定
-  
-    vue 在编译期做了很多优化
-  
-  - react 单向数据绑定
-  
-    react 编译只用了 babel 做了个简单的 jsx 编译。始终走的是运行时进行优化，react16.8 有很多黑科技，比如：任务调度（有高优先级、低优先级），定义 userBlock 优先级
-  
-- 模板使用
+### 响应式系统深度
 
-  - vue 使用 template
-  - react 使用 jsx
+**shallowRef / shallowReactive**
 
-
-
-## 路由原理
-
-### history 原理
-
-在 History 模式下，Vue Router 使用 `history.pushState()` 方法来修改浏览器的历史记录，并使用 `popstate` 事件来监听历史记录的变化
-
-`history` 对象和 `popstate` 事件无法监听到以下几种情况：
-
-1. **页面刷新**：当用户刷新页面时，`popstate` 事件不会被触发。因为刷新页面并不会改变浏览器的历史记录。
-2. **链接点击**：当用户通过点击链接跳转到其他页面时，`popstate` 事件也不会被触发。这是因为 `popstate` 事件只会在通过前进或后退按钮、`history.back()`、`history.forward()`、`history.pushState()`、`history.replaceState()` 或 `history.go()` 方法导致历史记录发生变化时触发
-3. **地址栏修改**：如果用户直接在地址栏中输入新的 URL 并按下回车键，`popstate` 事件同样不会被触发。因为这种方式也不会改变浏览器的历史记录
-
-
-
-### 导航守卫执行顺序
-
-1. 【组件】前一个组件的 beforeRouteLeave
-2. 【全局】全局的 router.beforeEach
-3. 【配置文件】route 配置文件，下一个 beforeEnter
-4. 【组件】组件内部声明的 beforeRouteEnter
-5. 【全局】全局的 router.afterEach
-
-
-
-### vue-router记住前一个页面滚动条的位置
-
-手动点击浏览器返回或者前进按钮会记住滚动条位置，基于 history，go、back、forward。点击 router-link 是不会记住滚动条位置
-
-scrollBehavior 生效条件：
-
-1. 浏览器支持 history api
-2. 页面间的交互是通过 go、forward、back 或者浏览器前进/返回按钮
-
-
-
-### 导航守卫执行原理
-
-为什么我需要在每个导航中提供 next 函数来进行到下一个守卫？
-
-
-
-vue router 的守卫执行过程本质上就是执行一个异步队列，实现异步队列的方法有很多种：callback、promise、generator、async/await
-
-runQueue 按照队列顺序自己执行，在必要的时候可以终止队列的执行
+只追踪 `.value`（shallowRef）或第一层属性（shallowReactive）的变化，深层嵌套不做响应式处理，适合大数据量场景。
 
 ```js
-function runQueue(queue, fn, cb) {
-  const step = (index) => {
-    if (index >= queue.length) {
-      cb()
-    } else {
-      if (queue[index]) {
-        fn(queue[index], () => {
-          step(index + 1)
-        })
-      } else {
-        step(index + 1)
-      }
+import { shallowRef, shallowReactive } from 'vue'
+
+// 只追踪 .value 变化，内部对象不代理
+const state = shallowRef({ user: { name: 'foo', list: [] } })
+
+// 只追踪第一层属性变化
+const state2 = shallowReactive({ user: { name: 'foo' } })
+```
+
+**triggerRef**：手动触发 `shallowRef` 的更新（当修改了内部嵌套数据时）。
+
+```js
+const state = shallowRef({ count: 0 })
+
+function increment() {
+  state.value.count++
+  triggerRef(state) // shallowRef 不会追踪内部变化，需手动触发
+}
+```
+
+**markRaw / toRaw**
+
+```js
+import { markRaw, toRaw, reactive } from 'vue'
+
+// markRaw：标记对象永远不被转为代理
+const rawObj = markRaw({ data: '不会被代理' })
+const proxy = reactive(rawObj) // proxy === rawObj，不会被代理
+
+// toRaw：从代理对象获取原始对象
+const obj = reactive({ count: 0 })
+const raw = toRaw(obj) // 获取原始对象，读取/修改不会触发响应式
+```
+
+**toRef vs toRefs**
+
+```js
+import { toRef, toRefs, reactive } from 'vue'
+
+const state = reactive({ count: 0, name: 'vue' })
+
+// toRef：为响应式对象的某个属性创建 ref
+const countRef = toRef(state, 'count')
+countRef.value++ // 会同步到 state.count
+
+// toRefs：将响应式对象的所有属性转为 ref（解构时保持响应式）
+const { count: countRef2, name: nameRef } = toRefs(state)
+countRef2.value++ // 会同步到 state.count
+```
+
+- `toRef`：单个属性 → ref，用于向子组件传递单个响应式属性
+- `toRefs`：整个对象 → 全部 ref，用于解构 reactive 对象时保持响应式
+
+### provide / inject 响应式问题
+
+```js
+// Provider
+import { provide, reactive } from 'vue'
+
+const state = reactive({ count: 0 })
+provide('state', state) // 传递响应式对象，子组件可以响应变化
+
+// 如果传递基本类型，需用 ref
+provide('count', ref(0))
+
+// Consumer
+import { inject } from 'vue'
+
+const state = inject('state')
+const count = inject('count')
+```
+
+- 传递 `reactive` 对象或 `ref`，子组件可以响应变化
+- 传递基本类型值，子组件无法响应变化
+- Vue3 中 `inject` 支持第三个参数 `customizer` 对注入值做转换
+
+### 编译时优化
+
+**patchFlag**：编译时为动态节点添加标记，diff 时跳过静态节点。
+
+```vue
+<!-- 编译后 -->
+<!-- <span>静态文本</span> 无 patchFlag，直接跳过 -->
+<!-- <span>{{ dynamic }}</span> patchFlag=TEXT_CONTENT，只需更新文本 -->
+<!-- <div class="static">静态</div> 被 hoistStatic 提升，复用引用 -->
+```
+
+常见 patchFlag：
+- `TEXT_CONTENT`：文本内容动态
+- `CLASS`：class 动态绑定
+- `STYLE`：style 动态绑定
+- `PROPS`：属性动态绑定
+- `FULL_REACTIVE`：数据完全响应式，无法优化
+
+**动态参数绑定优化**：Vue3 对 `v-bind`、`v-on` 等指令做了缓存，只有依赖变化时才重新计算。
+
+---
+
+## Vue 生命周期
+
+### Vue2 生命周期
+
+```
+beforeCreate → created → beforeMount → mounted → beforeUpdate → updated → beforeDestroy → destroyed
+```
+
+- `beforeCreate`：数据观测和事件配置之前，无法访问 data/methods
+- `created`：数据观测完成，可访问 data/methods，DOM 未生成，适合发起异步请求
+- `beforeMount`：模板编译完成，DOM 未挂载
+- `mounted`：DOM 挂载完成，可操作 DOM
+- `beforeUpdate`：数据更新，DOM 尚未重新渲染
+- `updated`：DOM 重新渲染完成
+- `beforeDestroy`：实例销毁前，可清理定时器/订阅
+- `destroyed`：实例销毁，所有指令解绑，事件监听器移除
+
+### Vue3 生命周期
+
+```
+setup() → onBeforeMount → onMounted → onBeforeUpdate → onUpdated → onBeforeUnmount → onUnmounted
+```
+
+```js
+import {
+  onBeforeMount,
+  onMounted,
+  onBeforeUpdate,
+  onUpdated,
+  onBeforeUnmount,
+  onUnmounted,
+  onActivated,
+  onDeactivated,
+  onErrorCaptured
+} from 'vue'
+
+export default {
+  setup() {
+    onMounted(() => {
+      console.log('组件已挂载')
+    })
+
+    onUnmounted(() => {
+      console.log('组件已卸载')
+    })
+
+    return {}
+  }
+}
+```
+
+- `setup` 中调用生命周期钩子，钩子函数会自动绑定当前组件实例
+- `onActivated` / `onDeactivated`：配合 `<keep-alive>` 使用
+- `onErrorCaptured`：捕获后代组件错误
+
+### 父子组件生命周期执行顺序
+
+**挂载阶段**：
+```
+父 beforeMount → 子 beforeMount → 子 mounted → 父 mounted
+```
+
+**更新阶段**：
+```
+父 beforeUpdate → 子 beforeUpdate → 子 updated → 父 updated
+```
+
+**销毁阶段**：
+```
+父 beforeUnmount → 子 beforeUnmount → 子 unmounted → 父 unmounted
+```
+
+总结：**挂载由外到内，更新和销毁由内到外**。
+
+---
+
+## 自定义指令
+
+### 指令钩子函数
+
+```js
+const myDirective = {
+  // 绑定到元素时（只调用一次）
+  mounted(el, binding, vnode) {},
+  // 所在组件的 VNode 更新时
+  updated(el, binding, vnode) {},
+  // 绑定从元素上解绑时（只调用一次）
+  unmounted(el, binding, vnode) {},
+  // 元素插入 DOM 前（Vue3 新增）
+  beforeMount(el, binding, vnode) {},
+  // 元素插入 DOM 后
+  mounted(el, binding, vnode) {},
+  // 组件更新前
+  beforeUpdate(el, binding, vnode, prevVnode) {},
+  // 组件及子组件 VNode 全部更新后
+  updated(el, binding, vnode, prevVnode) {}
+}
+```
+
+`binding` 对象属性：`value`、`oldValue`、`arg`、`modifiers`、`instance`。
+
+### 使用场景
+
+**v-focus：自动聚焦**
+
+```js
+const vFocus = {
+  mounted(el) {
+    el.focus()
+  }
+}
+```
+
+**v-permission：权限控制**
+
+```js
+const vPermission = {
+  mounted(el, binding) {
+    const required = binding.value
+    if (!hasPermission(required)) {
+      el.parentNode?.removeChild(el)
     }
   }
-  step(0)
 }
 ```
 
-iterator 方法用于迭代我们的守卫钩子
+**v-lazy：图片懒加载**
 
 ```js
-const iterator = (hook, next) => {
-  try {
-    // 这个地方的 hook 就相当于我们自己定义的路由守卫
-    // NavigationGuard(to, from, next)
-    hook(route, current, (to) => {
-      next(to)
-    })
-  } catch (error) {
-    console.log(error)
+const vLazy = {
+  mounted(el, binding) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          el.src = binding.value
+          observer.unobserve(el)
+        }
+      })
+    }, { rootMargin: '50px' })
+    observer.observe(el)
+    el.dataset.src = binding.value
+    el.src = binding.modifiers.placeholder ? binding.modifiers.placeholder : ''
+  },
+  unmounted(el) {
+    // 清理
   }
 }
 ```
 
+---
 
+## Vue 组件通信
+
+### props / emit
+
+```vue
+<!-- 父组件 -->
+<Child :msg="parentMsg" @update="handleUpdate" />
+
+<!-- 子组件 -->
+<script setup>
+defineProps({ msg: String })
+const emit = defineEmits(['update'])
+emit('update', 'new value')
+</script>
+```
+
+### v-model
+
+Vue3 支持多个 v-model，底层是 `modelValue` + `update:modelValue`。
+
+```vue
+<!-- 父组件 -->
+<Child v-model="text" v-model:title="title" />
+
+<!-- 子组件 -->
+<script setup>
+const props = defineProps({
+  modelValue: String,  // v-model 默认对应
+  title: String        // v-model:title 对应
+})
+const emit = defineEmits(['update:modelValue', 'update:title'])
+</script>
+```
+
+### ref / $parent
+
+```js
+// 父组件通过 ref 访问子组件实例和方法
+const childRef = ref(null)
+childRef.value.childMethod()
+
+// 子组件通过 $parent 访问父组件（不推荐，耦合度高）
+this.$parent.parentData
+```
+
+### provide / inject
+
+```js
+// 祖先组件
+provide('theme', reactive({ mode: 'dark' }))
+
+// 后代组件
+const theme = inject('theme', { mode: 'light' }) // 第二个参数为默认值
+```
+
+### EventBus vs mitt
+
+```js
+// Vue2：EventBus（基于 Vue 实例的 $on/$emit）
+const bus = new Vue()
+bus.$emit('event', data)
+bus.$on('event', handler)
+
+// Vue3：mitt（轻量级事件总线，Vue3 移除了 $on/$emit）
+import mitt from 'mitt'
+const emitter = mitt()
+emitter.on('event', handler)
+emitter.emit('event', data)
+emitter.off('event', handler)
+```
+
+### $attrs / $listeners
+
+- `$attrs`：包含父作用域中不作为 prop 传递的 attribute 和 event（class 和 style 除外）
+- Vue3 中 `$listeners` 合并到 `$attrs` 中
+
+```js
+// 子组件
+const attrs = useAttrs()
+// 通过 v-bind="$attrs" 透传给内部组件
+```
+
+`inheritAttrs: false` 可关闭自动继承，配合 `v-bind="$attrs"` 手动控制绑定位置。
+
+---
+
+## Vue Router 深度
+
+### hash vs history 原理
+
+**hash 模式**：
+- URL 格式：`example.com/#/path`
+- 利用 `hashchange` 事件监听路由变化
+- `#` 后面的内容不会发送到服务器，兼容性好
+
+**history 模式**：
+- URL 格式：`example.com/path`
+- 利用 `pushState` / `replaceState` 修改 URL，`popstate` 监听前进/后退
+- 需要服务器配置：所有路由都返回 `index.html`
+
+```js
+// popstate 只能监听到浏览器前进/后退，不能监听 pushState
+window.addEventListener('popstate', handler)
+
+// 需重写 pushState/replaceState 来拦截
+const _pushState = history.pushState
+history.pushState = function (...args) {
+  _pushState.apply(this, args)
+  window.dispatchEvent(new PopStateEvent('popstate'))
+}
+```
+
+### 路由守卫完整流程
+
+```
+1. 导航触发
+2. 离开组件 beforeRouteLeave
+3. 解析异步路由组件
+4. 复用组件 beforeRouteUpdate
+5. 路由配置 beforeEnter
+6. 全局 beforeEach
+7. 渲染组件创建，调用 beforeRouteEnter
+8. 导航确认
+9. 全局 afterEach
+10. DOM 更新，beforeRouteEnter 的 next 回调执行
+```
+
+```js
+router.beforeEach((to, from) => {
+  // 返回 false 取消导航
+  // 返回路由地址进行重定向
+  // 调用 next() 继续
+})
+```
+
+### 路由元信息
+
+```js
+const routes = [
+  {
+    path: '/admin',
+    meta: { requiresAuth: true, roles: ['admin'] },
+    component: Admin
+  }
+]
+
+// 守卫中读取
+router.beforeEach((to) => {
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    return '/login'
+  }
+})
+```
+
+### 路由过渡动画
+
+```vue
+<router-view v-slot="{ Component }">
+  <transition name="fade" mode="out-in">
+    <component :is="Component" />
+  </transition>
+</router-view>
+```
+
+### 路由懒加载优化
+
+```js
+// 基础懒加载
+const Home = () => import(/* webpackChunkName: "home" */ '@/views/Home.vue')
+
+// 路由分组，同一组的组件打包到一个 chunk
+const User = () => import(/* webpackChunkName: "user-group" */ '@/views/User.vue')
+const Settings = () => import(/* webpackChunkName: "user-group" */ '@/views/Settings.vue')
+```
+
+---
+
+## Vue 生态
+
+### Pinia vs Vuex
+
+| | Vuex | Pinia |
+|---|---|---|
+| 状态管理 | state | state（函数式） |
+| 计算属性 | getters | getters（computed） |
+| 修改状态 | mutations（同步） + actions（异步） | actions（同步+异步均可） |
+| TypeScript | 支持差，需额外配置 | 原生支持 TS |
+| 体积 | ~20KB | ~1KB |
+| 模块化 | 需要 modules 嵌套 | 多个独立 store，扁平化 |
+| DevTools | 支持 | 支持 |
+
+**为什么 Pinia 是官方推荐**：
+1. 移除 mutations，API 更简洁
+2. 更好的 TypeScript 支持
+3. 体积更小，Tree-shaking 友好
+4. 扁平化 store 设计，无需嵌套 modules
+5. 支持 SSR
+
+### Pinia 核心概念
+
+```js
+import { defineStore } from 'pinia'
+
+export const useCounterStore = defineStore('counter', {
+  // state：返回初始状态的函数
+  state: () => ({
+    count: 0,
+    name: 'pinia'
+  }),
+
+  // getters：计算属性
+  getters: {
+    doubleCount: (state) => state.count * 2,
+    // 访问其他 getter
+    doublePlusOne: (state) => this.doubleCount + 1
+  },
+
+  // actions：业务逻辑，可同步或异步
+  actions: {
+    increment() {
+      this.count++
+    },
+    async fetchCount() {
+      const res = await fetch('/api/count')
+      this.count = await res.json()
+    }
+  }
+})
+
+// 使用
+const store = useCounterStore()
+store.count++
+store.increment()
+```
+
+**Setup 语法（推荐）**：
+
+```js
+export const useCounterStore = defineStore('counter', () => {
+  const count = ref(0)
+  const doubleCount = computed(() => count.value * 2)
+
+  function increment() {
+    count.value++
+  }
+
+  return { count, doubleCount, increment }
+})
+```
+
+### VueUse 常用 composable
+
+```js
+import { useWindowSize, useDark, useToggle, useLocalStorage } from '@vueuse/core'
+
+// 窗口尺寸
+const { width, height } = useWindowSize()
+
+// 暗黑模式
+const isDark = useDark()
+
+// 布尔值切换
+const on = ref(false)
+const toggle = useToggle(on)
+
+// 本地存储
+const saved = useLocalStorage('key', 'default')
+```
+
+---
+
+## Vue 服务端渲染
+
+### Nuxt.js：SSR vs SSG
+
+- **SSR（服务端渲染）**：每次请求都服务端渲染，数据实时，适合动态内容
+- **SSG（静态站点生成）**：构建时生成静态 HTML，性能好，适合内容变更少的站点
+
+```js
+// nuxt.config.ts
+export default defineNuxtConfig({
+  ssr: true,  // true: SSR, false: SPA
+  // target: 'static'  // SSG 模式
+})
+```
+
+### useAsyncData / useFetch
+
+```js
+// useAsyncData：通用异步数据获取
+const { data, pending, error, refresh } = await useAsyncData(
+  'posts',
+  () => $fetch('/api/posts'),
+  { lazy: true } // 非阻塞渲染
+)
+
+// useFetch：封装了 $fetch 的简写
+const { data } = await useFetch('/api/posts')
+```
+
+- `useFetch` 是 `useAsyncData` + `$fetch` 的组合
+- 返回 `data`（ref）、`pending`、`error`、`refresh`
+- `key` 参数用于缓存和去重
+
+### SSR hydration 过程
+
+1. 服务端渲染 HTML 返回给浏览器
+2. 浏览器解析 HTML 显示页面（首屏快）
+3. 客户端 JS 加载，Vue 实例化
+4. **hydration**：Vue 将服务端渲染的 DOM 与客户端状态"激活"绑定，添加事件监听
+5. 之后变为正常的客户端渲染模式
+
+### SSR 常见问题和解决方案
+
+| 问题 | 原因 | 解决方案 |
+|---|---|---|
+| Hydration 不匹配 | 服务端和客户端渲染结果不一致 | 使用 `v-if="process.client"` 区分环境 |
+| 浏览器 API 报错 | `window`/`document` 在服务端不存在 | 使用 `process.client` 判断，或放在 `onMounted` 中 |
+| 全局状态污染 | 多个请求共用同一实例 | Pinia 使用 `pinia-plugin-server-state` 或 Nuxt 自动处理 |
+| 首屏后性能 | hydration 耗时 | 使用 `lazy` 选项延迟 hydration，或选择性 hydration |
+
+```js
+// 仅在客户端执行
+if (process.client) {
+  console.log(window.innerWidth)
+}
+
+// 或放在 onMounted 中
+onMounted(() => {
+  console.log(window.innerWidth)
+})
+```
+
+---
+
+## Vue 源码理解
+
+### Vue 初始化流程
+
+```
+new Vue()
+  → initMixin：初始化状态、事件、生命周期
+  → stateMixin：初始化 data、props、methods、computed、watch
+  → renderMixin：初始化 _render、_update
+  → $mount()
+    → compile：模板编译为 render function
+    → mountComponent：创建渲染 watcher
+      → callHook('beforeMount')
+      → watcher.get() → 触发 _render() 生成 vnode
+      → patch：vnode → 真实 DOM
+      → callHook('mounted')
+```
+
+### 模板编译过程
+
+```
+template → AST（抽象语法树） → optimize（优化静态节点） → codegen（生成代码） → render function
+```
+
+1. **parse**：将模板字符串解析为 AST 树
+2. **optimize**：标记静态节点和静态根节点，渲染时跳过 diff
+3. **codegen**：将 AST 转换为 render function 字符串
+
+```js
+// 模板
+// <div id="app">{{ msg }}</div>
+
+// 编译后的 render function
+render(h) {
+  return h('div', { attrs: { id: 'app' } }, this.msg)
+}
+```
+
+### Vue3 编译优化原理
+
+1. **静态提升（hoistStatic）**：静态节点编译为常量，复用引用，不参与 diff
+2. **静态标记（patchFlag）**：动态节点添加标记，diff 时只对比带标记节点
+3. **事件缓存（cacheHandler）**：没有引用响应式数据的事件处理器会被缓存
+4. **Block Tree**：将动态节点组织为 block，子树中只有动态节点参与 diff
+
+```js
+// Vue2：全量 diff，所有节点都需要比较
+// Vue3：只比较带 patchFlag 的节点，静态节点直接复用
+// 编译优化使得 Vue3 在大多数场景下几乎不需要 diff
+```
+
+---
+
+## 其他原理
+
+### nextTick 原理
+
+- 回调推入 `callbacks` 队列，通过 `pending` 标记合并多次调用
+- 异步策略优先级：`Promise` > `MutationObserver` > `setImmediate` > `setTimeout`
+- 同一 tick 内多次 `nextTick` 会被合并为一次执行
+
+```js
+const callbacks = []
+let pending = false
+
+function flushCallbacks() {
+  pending = false
+  const copies = callbacks.slice(0)
+  callbacks.length = 0
+  for (let i = 0; i < copies.length; i++) {
+    copies[i]()
+  }
+}
+
+// 优先使用 Promise
+const timerFunc = typeof Promise !== 'undefined'
+  ? () => Promise.resolve().then(flushCallbacks)
+  : typeof MutationObserver !== 'undefined'
+    ? () => { /* MutationObserver */ }
+    : () => setTimeout(flushCallbacks, 0)
+
+function nextTick(cb) {
+  callbacks.push(cb)
+  if (!pending) {
+    pending = true
+    timerFunc()
+  }
+  return new Promise(resolve => {
+    callbacks.push(resolve)
+  })
+}
+```
+
+### scoped 原理
+
+通过 PostCSS 为每个组件生成唯一标识，编译时：
+1. 模板元素添加属性：`<div data-v-xxx>`
+2. 样式选择器追加属性选择器：`.example[data-v-xxx]`
+
+```html
+<!-- 编译前 -->
+<style scoped>
+.example { color: red; }
+</style>
+<template>
+  <div class="example">hi</div>
+</template>
+
+<!-- 编译后 -->
+<style>
+.example[data-v-f3f3eg9] { color: red; }
+</style>
+<template>
+  <div class="example" data-v-f3f3eg9>hi</div>
+</template>
+```
+
+样式穿透：`::v-deep`、`:deep()`（Vue3）、`/deep/`（已废弃）。
+
+### computed 原理
+
+- computed 本质是惰性 `Watcher`，通过 `dirty` 标记是否需要重新求值
+- 依赖变化时通知 computed watcher，有订阅者则重新计算并对比新旧值
+- 无订阅者时仅标记 `dirty = true`，下次读取时再计算（lazy 特性）
+
+**Watcher 分类**：
+1. `computed watcher`：计算属性，依赖变化时重新计算并缓存
+2. `user watcher`：`$watch` / `watch` 选项，数据变化时执行回调
+3. `render watcher`：监测组件是否需要重新渲染
+
+**computed vs watch**：
+- computed：被动计算，有缓存，适合派生数据
+- watch：主动监听，无缓存，适合副作用操作（请求、DOM 操作等）
 
 ### keep-alive 原理
 
-keep-alive 组件的作用就是缓存已经创建过的 vnode
+1. 根据 `include`/`exclude` 判断是否缓存组件
+2. 命中缓存：从 `this.cache` 取出实例，更新 LRU 位置
+3. 未命中：缓存实例，超过 `max` 时按 LRU 策略淘汰最久未使用的实例
+4. `abstract: true`：抽象组件，不渲染 DOM，不出现在父组件链中
 
-1. 判断当前组件是否要被缓存
-
-   获取 keep-alive 包裹的第一个子组件对象及其组件名，根据设置的 include/exclude 进行条件匹配，决定是否缓存。如果不匹配，则直接返回组件实例
-
-2. 命中缓存则直接获取，同时更新 key 的位置
-
-   根据组件 id 和 tag 生成缓存 key，并在缓存对象中查找是否已缓存过该组件实例对象，如果存在，直接取出缓存值并更新该 key 在 this.keys 中的位置
-
-3. 不命中缓存则设置进缓存，同时检查缓存的实例数量是否超过 max
-
-   在 this.cache 对象中存储该组件实例并保存 key 值，之后检查缓存的实例数量是否超过 max 的设置值，超过 max 的设置值，根据 LRU 置换策略删除最近最久未使用的实例（下标为 0 的那个 key）
-
-4. 当前组件实例的 keepAlive 属性设置为 true，这个在缓存选中过程中会用到
-
-keep-alive `abstract: true`：是一个抽象组件，它不会渲染一个 DOM 元素，也不会出现在父组件链中
-
-
-
-**LRU 缓存策略（Least recently used，最近最少使用）**
-
-使用一个链表保存缓存数据，根据历史记录访问记录来进行淘汰数据（如果数据最近被访问过，那么将来被访问的几率也更高）
-
-1. 新数据插入到链表头部
-2. 每当缓存命中（被访问），则将数据移到链表头部
-3. 链表满时，将链表尾部的数据丢弃
+**LRU 策略**：
+- 新数据插入链表头部
+- 缓存命中时移到头部
+- 链表满时淘汰尾部数据
 
 ```js
 class LRUCache {
@@ -424,183 +964,155 @@ class LRUCache {
 
   get(key) {
     if (this.cache.has(key)) {
-      // 如果缓存有这个键，就将它移到最后面
       this.keys.delete(key)
       this.keys.add(key)
-      // 返回对应的缓存数据
       return this.cache.get(key)
-    } else {
-      return -1
     }
+    return undefined
   }
 
   set(key, value) {
     if (this.cache.has(key)) {
-      // 缓存中有这个键，就先给它移除
       this.keys.delete(key)
-    } else {
-      // 缓存没有这个键，判断缓存是否已满
-      if (this.keys.size >= this.max) {
-        // 缓存已满，取出最近最少使用的键
-        const leastUsedKey = this.keys.values().next().value
-        this.cache.delete(leastUsedKey)
-        this.keys.delete(leastUsedKey)
-      }
+    } else if (this.keys.size >= this.max) {
+      const leastUsed = this.keys.values().next().value
+      this.cache.delete(leastUsed)
+      this.keys.delete(leastUsed)
     }
-    // 添加新的缓存策略
     this.cache.set(key, value)
     this.keys.add(key)
   }
 }
 ```
 
+### 路由守卫执行原理
 
-
-## 其他原理
-
-### nextTick 原理
-
-1. nextTick 接收一个回调函数时，传入的回调函数会在 callbacks 中存起来，根据一个标记状态 pending 来判断当前是否要执行 timerFunc()
-2. timerFunc() 是根据当前环境判断使用哪种方式实现，按照 Promise.then 和 MutationObserver 以及 setImmediate 的优先级来判断，支持哪个就用哪个，如果执行环境不支持，会采用 setTimeout(fn, 0) 代替
-3. timerFunc() 函数中会执行 flushCalbacks 函数，flushCallbacks 函数作用就是对所有 callback 进行遍历，然后指向相应的回调函数
-
-Promise > MutationObserver > setImmediate > setTimeout
-
-
-
-nextTick 内部采用了异步任务进行了包装（多个 nextTick 调用会被合成一次，内部会合并回调）
+路由守卫本质是异步队列执行：
 
 ```js
-const callbacks = []
-let pending = false
-let timerFunc
-
-function flushCallbacks() {
-  pending = false
-  const copies = callbacks.slice(0)
-  callbacks.length = 0
-  for (let i = 0; i < copies.length; i++) {
-    copies[i]()
+function runQueue(queue, iterator, cb) {
+  const step = (index) => {
+    if (index >= queue.length) {
+      cb()
+    } else if (queue[index]) {
+      iterator(queue[index], () => step(index + 1))
+    } else {
+      step(index + 1)
+    }
   }
+  step(0)
 }
 
-if (typeof Promise !== 'undefined') {
-  const p = Promise.resolve()
-  timerFunc = () => {
-    p.then(flushCallbacks)
-  }
-} else if (typeof MutationObserver !== 'undefined') {
-  let counter = 1
-  const observer = new MutationObserver(flushCallbacks)
-  const textNode = document.createTextNode(String(counter))
-  observer.observe(textNode, {
-    characterData: true
-  })
-  timerFunc = () => {
-    counter = (counter + 1) % 2
-    textNode.data = String(counter)
-  }
-} else if (typeof setInterval !== 'undefined') {
-  timerFunc = () => {
-    setInterval(flushCallbacks)
-  }
-} else {
-  timerFunc = () => {
-    setTimeout(flushCallbacks, 0)
-  }
-}
-
-function nextTick(cb, ...args) {
-  let _resolve
-  callbacks.push(() => {
-    cb && cb(...args)
-    _resolve && _resolve(...args)
-  })
-
-  if (!pending) {
-    pending = true
-    timerFunc()
-  }
-  return new Promise(resolve => {
-    _resolve = resolve
-  })
+// 守卫迭代器
+const iterator = (hook, next) => {
+  hook(to, from, (to) => next(to))
 }
 ```
 
+`next` 用于控制导航流程：继续、取消、重定向。
 
+---
 
-### scoped 原理
+## Vue 3.4+ 新特性
 
-当 style 标签有 scoped 属性时，它通过 postcss 对其进行如下转换
+### defineModel — 简化 v-model
 
-```html
-<style scoped>
-.example {
-  color: red;
-}
-</style>
+Vue 3.4 引入 `defineModel`，简化父子组件 v-model 双向绑定。
+
+```vue
+<!-- 子组件 -->
+<script setup>
+const model = defineModel() // 默认对应 modelValue
+const titleModel = defineModel('title') // 对应 v-model:title
+
+model.value = 'new value' // 自动触发 update:modelValue
+</script>
+
 <template>
-  <div class="example">hi</div>
+  <input v-model="model" />
+  <input v-model="titleModel" />
 </template>
 
-<style>
-.example[data-v-f3f3eg9] {
-  color: red;
-}
-</style>
+<!-- 父组件 -->
+<Child v-model="text" v-model:title="title" />
+```
+
+**带修饰符和默认值：**
+
+```js
+const count = defineModel({
+  default: 0,
+  setter: (v) => Number(v), // 自定义转换逻辑
+})
+
+// 访问修饰符
+const model = defineModel()
+const { modifiers } = model
+if (modifiers.lazy) { /* 使用 lazy 修饰符 */ }
+```
+
+### 编译器宏
+
+```js
+// defineOptions — 在 <script setup> 中定义组件选项
+defineOptions({
+  inheritAttrs: false,
+  name: 'MyComponent'
+})
+
+// defineSlots — 类型安全的 slots 定义（仅 TS）
+const slots = defineSlots<{
+  default(props: { item: string }): any
+  header(): any
+}>()
+
+// defineExpose — 控制 <script setup> 组件暴露给父组件的属性和方法
+const count = ref(0)
+const increment = () => count.value++
+defineExpose({ count, increment }) // 父组件通过 ref 访问
+```
+
+### useTemplateRef — 类型安全的模板引用
+
+```vue
+<script setup>
+import { useTemplateRef, onMounted } from 'vue'
+
+const inputRef = useTemplateRef('input') // Vue 3.5+ 推荐方式
+
+onMounted(() => {
+  inputRef.value?.focus()
+})
+</script>
+
 <template>
-  <div class="example" data-v-f3f3eg9>hi</div>
+  <input ref="input" />
 </template>
 ```
 
-1. 为组件实例生成一个唯一标识，给组件的每个标签对应的 DOM 元素添加一个标签属性，data-xxx
+### render 函数改进
 
-2. 给 style scoped 中的每个选择器的最后一个选择器添加一个属性选择器，原选择器 `[data-v-xxx]`，如：原选择器为 `.container #id div`，则更改后选择器为 `.container #id div[data-v-xxx]`
+Vue 3.4 引入了 `h()` 函数的新语法，支持类 JSX 写法：
 
-3. 对于同一个选择器，父子组件加 scoped　标签，样式互不影响
+```js
+import { render, h, resolveComponent } from 'vue'
 
-4. 对于同一个选择器，父子组件不加 scoped　标签，父组件优先级会高于子组件
+// 新版 render 语法
+const Comp = () => {
+  return h('div', { class: 'app' }, [
+    h('h1', {}, 'Hello'),
+    h(resolveComponent('Child'), { msg: 'world' })
+  ])
+}
+```
 
-   因为 vue 会先对子组件进行加载，子组件都加载完，父组件才会加载完，CSS 是层叠样式，父组件加载的样式在后面
+### v-memo 指令
 
-样式穿透：>>>、/deep/、::v-deep
+缓存 DOM 子树和组件实例，依赖数组不变时跳过更新。
 
-- scoped 后选择器最后默认会加上当前组件的一个标识，比如：`[data-v-xxx]`
-- 用了样式穿透后，在 deep 之后的选择器就不会加上标识
-
-
-
-### computed 原理
-
-computed 本质是一个惰性求值的观察者 computed watcher，其内部通过 this.dirty 属性标记计算属性是否需要重新求值
-
-- 当 computed 的依赖状态发生改变时，就会通知这个惰性 watcher，computed watcher 通过 this.dep.subs.length 判断有没有订阅者
-- 有的话，会重新计算，然后对比新旧值，如果变化了，会重新渲染（Vue 想确保不仅仅是计算属性依赖的值发生变化，而是当计算属性最终计算的值发生变化时才会触发渲染 watcher 重新渲染）
-- 没有的话，仅仅把 this.dirty=true（当计算属性依赖于其他数据时，属性并不会立即重新计算，只有之后其他地方需要读取属性的时候，才会真正计算，即具备 lazy 特性）
-
-watch 没有缓存性，更多的是观察的作用，可以监听某些数据执行回调，当我们需要深度监听对象中的属性时，可以打开 deep: true 选项，这样便会对对象中的每一项进行监听。这样会带来性能问题，优化的话可以使用字符串形式监听
-
-- computed 是一种被动数据计算方式，当它所依赖的数据发生变化时才会重新计算。它适用于需要根据其它属性计算得到的属性值，并且这些属性值没有直接绑定到 DOM 上
-  - 根据列表长度计算出当前页码数
-  - 根据用户评分计算出星级评分显示
-  - 根据输入框内容进行搜索过滤
-- watch 是一种主动的监听数据变化方式，当它监测的数据发生变化时就会执行回调函数
-  - 监听表单输入框的值变化并校验它是否符合规则
-  - 监听数据变化并及时保存到服务器端
-  - 监听路由变化并根据路由参数展示不同的页面
-
-Watcher 观察者对象，实例分为：render watcher、computed watcher、user watcher
-
-1. computed watcher
-
-   通过计算属性实现 Watcher，它会依赖被计算所使用到的所有 reactive 属性，    当这些 reactive 属性发生变化时，就会通知 computed watcher 去重新执行计算属性的方法，并缓存结果
-
-2. user watcher
-
-   在组件使用 $watch API 或 watch 选项定义的函数都会创建一个 user watcher，可以监听任何你指定的数据源，当数据源变化时，就会执行回调函数
-
-3. render watcher
-
-   用来监测组件中的 rendering 函数是否需要重新执行。当组件中的状态发生变化时，render watcher 就会通知组件重新渲染，更新视图。beforeUpdate、updated 
-
-
+```vue
+<li v-for="item in list" :key="item.id" v-memo="[item.id, item.isActive]">
+  {{ item.name }}
+</li>
+<!-- 只有 id 或 isActive 变化时才更新对应项 -->
+```
