@@ -160,7 +160,7 @@ function escape(str) {
   str = str.replace(/&/g, '&amp;')
   str = str.replace(/</g, '&lt;')
   str = str.replace(/>/g, '&gt;')
-  str = str.replace(/"/g, '&quto;')
+  str = str.replace(/"/g, '&quot;')
   str = str.replace(/'/g, '&#39;')
   str = str.replace(/`/g, '&#96;')
   str = str.replace(/\//g, '&#x2F;')
@@ -228,7 +228,7 @@ eval("UNTRUSTED")
 
 ## CSRF
 
-CSRF（Cross Site Request Forgery），即跨站请求伪造，是一种常见 Web 攻击，它利用用户已登录的身份，在用户毫不知情的情况下，已用户的名义完成非法操作
+CSRF（Cross Site Request Forgery），即跨站请求伪造，是一种常见 Web 攻击，它利用用户已登录的身份，在用户毫不知情的情况下，以用户的名义完成非法操作
 
 CSRF 攻击流程：
 
@@ -289,7 +289,7 @@ cookie 的应用场景：
 
   HTTP 协议头中有一个字段叫 referer，记录了该 HTTP 请求的来源地址
 
-  Https 不发生 referer
+   从 HTTPS 页面跳转到 HTTP 页面时，浏览器不会发送 Referer
 
   ```js
   app.use(async (ctx, next) => {
@@ -352,7 +352,7 @@ Cookies.set('lang', lang, {
 
   改响应头有三个值可选，分别是：
 
-  - `DENT` ：页面不允许通过 iframe 的方式展示
+   - `DENY` ：页面不允许通过 iframe 的方式展示
   - `SAMEORIGIN` ：页面可以在相同域名下通过 iframe 的方式展示
   - `ALLOW-FROM` ：页面可以在指定来源的 iframe 中展示
 
@@ -385,20 +385,20 @@ AND password = 1'or'1'='1
 
 - 严格限制 Web 应用的数据库的操作权限，给此用户提供仅仅能够满足其工作的最低权限，从而最大限度的减少注入攻击对数据库的危害
 - 后端代码检查输入的数据是否符合预期，严格限制变量的类型，例如使用正则表达式进行一些匹配处理
-- 对进入数据库的特殊字符（`'、"、\、<、>、&、*、;` 等），或编码转换。基本上所有的后端语言都有对字符串进行转义处理的 方法，比如 lodash 的 `lodash._escapehtmlchar` 
+- 对进入数据库的特殊字符（`'、"、\、<、>、&、*、;` 等）进行转义处理，或使用参数化查询。推荐使用参数化查询（如 mysql2 的 `?` 占位符），由数据库驱动自动处理转义，从根本上防止 SQL 注入
 
 ```js
+const mysql = require('mysql2/promise')
 router.post('/login', async (ctx) => {
     const { username, password } = ctx.request.body
-    const sql = `
-    SELECT *
-    FROM test.user
-    WHERE username = ?
-    AND password = ?
-    `
-    res = await query(sql, [username, password])
-    }
-});
+    const connection = await mysql.createConnection({ host: 'localhost', user: 'root', database: 'test' })
+    const [rows] = await connection.execute(
+      'SELECT * FROM user WHERE username = ? AND password = ?',
+      [username, password]
+    )
+    await connection.end()
+    ctx.body = rows
+})
 ```
 
 ## 其他注入

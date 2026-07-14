@@ -77,7 +77,7 @@ nvm use ...
 - **切换淘宝源**
 
 ```bash
-npm config set registry https://registry.npm.taobao.org
+npm config set registry https://registry.npmmirror.com
 # 查看下载镜像源
 npm config get registry
 ```

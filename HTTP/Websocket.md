@@ -23,7 +23,7 @@ HTTP 是 **半双工** 通信协议（同一时刻信息流向只能是单向）
 - **长轮询（long polling）：** 客户端想服务器请信息，在设定时间内会保持连接，直到服务器有新消息响应或连接超时。又称 **挂起 GET** 或 **搁置 POST** 。长轮询非常占用服务器资源
 - **流化技术：** 客户端发送一个请求，服务器发送并维护一个持续更新和保持打开的开放响应（连接一直建立）。每当服务器有需要交付给客户端的信息时，就更新响应，所以每一次都是一个长久连接非常耗费资源（它是建立在 HTTP 基础上）。代理和防火墙可能会缓存响应，导致信息有偏差、不稳定
 
-这几种方涉及 HTTP 请求和响应首标，包含了许多附加和不必要的首标数据与延迟。此外，在每一种情况下，客户端都必须等待请求返回，才能发出后续的请求，而这显著地增加了延退。同时也极大地增加了服务器的压
+这几种方式都涉及 HTTP 请求和响应首部，包含了许多附加和不必要的首部数据与延迟。此外，在每一种情况下，客户端都必须等待请求返回，才能发出后续的请求，而这显著地增加了延迟。同时也极大地增加了服务器的压力
 
 ### 什么是 WebSocket
 
@@ -322,9 +322,9 @@ WebSocket 是 HTML5 一种新的协议，它实现了浏览器与服务器全双
 WebSocket 报文是分段（分帧）传输，有 `control frames` 和 `data frames` 两种
 
 - `control frames`：`opcode` 最高位为 1 都是 `control frames`，协议级别的控制报文帧，目前有 `close frame`、`ping frame` 和 `pong frame`
-  - `close frame`：连接任一端想关闭 WebSocket，就发送一个 `close frame` 给对端，对端收到该 `iframe`，若之前没有发过 `close frame`，则必须回复一个 `close frame`
+  - `close frame`：连接任一端想关闭 WebSocket，就发送一个 `close frame` 给对端，对端收到该 `frame`，若之前没有发过 `close frame`，则必须回复一个 `close frame`
   - `ping frame`：用来心跳检测和判断对端是否 `alive`，连接建立后任一端都可以发送 `ping frame`
-  - `pong frame`：如果收到 `ping frame` 的一段必须回复 `pong frame`（前提是该端未发送 `close frame`）
+  - `pong frame`：如果收到 `ping frame` 的一端必须回复 `pong frame`（前提是该端未发送 `close frame`）
 - `data frames`：`opcode` 最高位为 0 都是 `data frame`，应用级的数据传输帧，目前有 `text frame` 和 `binary frame`
 
 ![](https://gitee.com/lilyn/pic/raw/master/jslearn-img/WebSocket报文格式.png.crdownload)
@@ -340,7 +340,7 @@ WebSocket 报文是分段（分帧）传输，有 `control frames` 和 `data fra
   - 0x3 - 0x7：保留，`for non-control frame`
   - 0x8：`close frame`
   - 0x9：`ping frame`
-  - 0xA：`close frame`
+  - 0xA：`pong frame`
   - 0xB - 0xF：保留，`for control frame`
 - **MASK：** 表示 `payload data` 是否被 `masked`
 - **Payload length：** 7 bit 或 7 + 16 bits 或 7 + 64 bits

@@ -1,5 +1,5 @@
-const module = {
+const moduleData = {
   value: 'moduleValue'
 }
 
-export default module
+export default moduleData

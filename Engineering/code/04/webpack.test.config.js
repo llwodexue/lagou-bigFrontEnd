@@ -1,6 +1,6 @@
 const baseConfig = require("./webpack.config.base.js");
 const devConfig = require("./webpack.config.dev.js");
-const proConfig = require("./webpack.config.pro.js");
+const proConfig = require("./webpack.config.prod.js");
 const merge = require("webpack-merge");
 
 console.log(process.env.NODE_ENV);

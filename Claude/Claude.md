@@ -78,4 +78,4 @@ CLAUDE.md 注意事项
    需要执行几十个重复任务(比如批量生成文档章节)用脚本式用法:
    1.把任务按行写入TASK.md(一行一个任务);
    2.运行命令:
-   cat TASK.md I while IFS= read -r line; do echo $line; claude -p "$line" --debug; done1可加timeout 防止单个任务卡死，同时用 --allowedTools“Edit”限制权限，避免意外操作。注意不要并发执行，否则可能触发限额封禁。
+   cat TASK.md | while IFS= read -r line; do echo $line; claude -p "$line" --debug; done # 可加timeout 防止单个任务卡死，同时用 --allowedTools "Edit" 限制权限，避免意外操作。注意不要并发执行，否则可能触发限额封禁。

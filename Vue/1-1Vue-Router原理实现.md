@@ -5,7 +5,7 @@
 1. 创建组件视图
 2. 注册插件（`Vue.use(VueRouter)`）
 3. 创建 router 对象并制定相应规则
-4. 使用 `route-view` 占位，当路由匹配成功会把 `route-view` 替换掉
+4. 使用 `router-view` 占位，当路由匹配成功会把 `router-view` 替换掉
 
 **动态路由传参**
 
@@ -52,7 +52,7 @@ const routes = [
 
 ### 基础使用
 
-不管那种模式都是客户端实现的方式，也就是路径方式变化不向服务器发生请求，是根据 JS 监听变化根据不同的地址渲染不同内容
+不管哪种模式都是客户端实现的方式，也就是路径方式变化不向服务器发生请求，是根据 JS 监听变化根据不同的地址渲染不同内容
 
 - Hash 模式
 
@@ -194,7 +194,7 @@ VueRouter 有五个方法：
 - `init()`：会调用如下三个方法
 - `initEvent()`：注册 `popState` 事件，监听浏览器历史变化
 - `createRouteMap()`：初始化 `routemap` 属性，把构造函数中传递的路由规则转换成键值对存到 `routemap` 里
-- `initComponents(Vue)`：创建 `route-view` 和 `route-link` 组件的
+- `initComponents(Vue)`：创建 `router-view` 和 `router-link` 组件
 
 
 

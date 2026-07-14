@@ -19,9 +19,9 @@ export class WxAccountInfo {
     private static getVersion(): string {
         try {
             if (uni.getAccountInfoSync) {
-                const accontInfo: AccountInfo = (uni.getAccountInfoSync() as unknown) as AccountInfo;
+                const accountInfo: AccountInfo = (uni.getAccountInfoSync() as unknown) as AccountInfo;
                 this.privateVersion =
-                    accontInfo.miniProgram.version ||
+                    accountInfo.miniProgram.version ||
                     WxAccountInfo.DEFAULT_VERSION;
             } else {
                 this.privateVersion = WxAccountInfo.DEFAULT_VERSION;

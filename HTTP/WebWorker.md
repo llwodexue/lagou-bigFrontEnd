@@ -14,11 +14,11 @@ Web Worker 有一下几个使用注意点：
 
 1. 同源限制
 
-   分配给 Worker 线程运行的脚本问及那，必须与主线程的脚本文件同源
+   分配给 Worker 线程运行的脚本文件，必须与主线程的脚本文件同源
 
 2. DOM 限制
 
-   Worker 线程所在的全局对象，与主线程不一样，无法读取主线程所在网页的 DOM 对象，也无法私用 `document`、`window`、`parent `这些对象。但是，Worker 线程可以使用 `navigator`、`location` 对象
+   Worker 线程所在的全局对象，与主线程不一样，无法读取主线程所在网页的 DOM 对象，也无法使用 `document`、`window`、`parent` 这些对象。但是，Worker 线程可以使用 `navigator`、`location` 对象
 
 3. 通信联系
 

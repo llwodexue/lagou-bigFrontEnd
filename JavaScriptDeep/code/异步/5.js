@@ -29,7 +29,7 @@ console.log(promise === promise2) // false
 
 ajax('/api/users.json').then(
   function onFulfilled(value) {
-    return ajax('onFulfilled', value)
+    return ajax('/api/posts.json')
   },
   function onRejected(error) {
     console.log('onRejected', error)

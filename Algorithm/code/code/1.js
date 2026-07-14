@@ -20,7 +20,7 @@ class Stack {
     return this.count === 0
   }
   top() {
-    if (this.isEmpty) {
+    if (this.isEmpty()) {
       console.log('栈为空！')
       return
     }

@@ -143,7 +143,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { title, imgURL, href, isActive, objStyle } = this.state
+    const { title, href, isActive, objStyle } = this.state
 
     // 需求: isActive: true -> active
     // 1.class绑定的写法一: 字符串的拼接

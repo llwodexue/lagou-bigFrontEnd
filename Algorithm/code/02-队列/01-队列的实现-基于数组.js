@@ -16,7 +16,6 @@ class Queue {
     // 删除 queue 的第一个元素
     // delete this.queue[0]
     // 利用 shift() 移除数组的第一个元素
-    this.count--
     return this.queue.shift()
   }
   isEmpty() {
@@ -33,8 +32,7 @@ class Queue {
     return this.count
   }
   clear() {
-    // this.queue = []
-    this.length = 0
+    this.queue = []
     this.count = 0
   }
 }

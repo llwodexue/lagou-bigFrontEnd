@@ -2,7 +2,7 @@
     <view>
         <view class="current-date"> 当前时间: {{ getCurrentDate() }} </view>
 
-        <view class="countdown-ontainer">
+        <view class="countdown-container">
             <view class="countdown-circle">
                 <view class="value">{{ days }}</view>
 
@@ -14,7 +14,7 @@
                 <view class="label">时</view>
             </view>
             <view class="countdown-circle">
-                <view class="value">{{ miniutes }}</view>
+                <view class="value">{{ minutes }}</view>
 
                 <view class="label">分</view>
             </view>
@@ -38,7 +38,7 @@ export default class Countdown extends Vue {
 
     days: string = "";
     hours: string = "";
-    miniutes: string = "";
+    minutes: string = "";
     seconds: string = "";
     timer: any = null;
 
@@ -81,13 +81,13 @@ export default class Countdown extends Vue {
         const t = Math.max(timeSeconds, 0);
         this.days = DateFormat.toTwoDigit(Math.floor(t / 60 / 60 / 24));
         this.hours = DateFormat.toTwoDigit(Math.floor((t / 60 / 60) % 24));
-        this.miniutes = DateFormat.toTwoDigit(Math.floor((t / 60) % 60));
+        this.minutes = DateFormat.toTwoDigit(Math.floor((t / 60) % 60));
         this.seconds = DateFormat.toTwoDigit(Math.floor(t % 60));
     }
 
     beforeDestroy() {
         if (this.timer) {
-            clearInterval(this.timer);
+            clearTimeout(this.timer);
         }
     }
 }
@@ -98,7 +98,7 @@ export default class Countdown extends Vue {
     font-weight: bold;
 }
 
-.countdown-ontainer {
+.countdown-container {
     width: 100%;
     margin: 50upx 0;
 

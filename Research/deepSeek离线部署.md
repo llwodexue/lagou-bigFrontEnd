@@ -54,7 +54,7 @@
 
 ![image-20250217145816442](https://gitee.com/lilyn/pic/raw/master/md-img/image-20250217145816442.png)
 
-注意：大语言模型存放位置必须符合 LM Stdudio 存放模型目录的要求，这里需要创建两级目录
+注意：大语言模型存放位置必须符合 LM Studio 存放模型目录的要求，这里需要创建两级目录
 
 - 第一级目录是发布者，比如是：`deepseek`
 - 第二级目录是模型名，比如是：`DeepSeek-R1-Distill-Llama-8B-Q4_K_M`

@@ -49,7 +49,7 @@ class Stack {
   }
   // clear() 清空栈
   clear() {
-    this.data = []
+    this.data = {}
     this.count = 0
   }
 }

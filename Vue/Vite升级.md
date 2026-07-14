@@ -11,7 +11,7 @@
 
 sass 升级到 1.80 以上会报如下几个错误：
 
-1. scss 1.80 引入了模块系统，通过 `@use` 和 `@forward` 规则来更好的管理样式文件之间的依赖关系，取代了以前的 `@import` 语句，提供了更严格的控制和性能优化
+1. Sass 1.73+ 开始默认警告废弃 `@import`，推荐使用模块系统（通过 `@use` 和 `@forward` 规则来更好的管理样式文件之间的依赖关系），提供了更严格的控制和性能优化。注意：Sass 模块系统早在 1.23 版本引入
 
    ```bash
    Deprecation Warning [import]: Sass @import rules are deprecated and will be removed in Dart Sass 3.0.0.

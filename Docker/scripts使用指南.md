@@ -2,7 +2,7 @@
 
 ## npm 脚本
 
-npm 允许在 `package.json` 文化中，使用 `scripts` 定义脚本命令
+npm 允许在 `package.json` 文件中，使用 `scripts` 定义脚本命令
 
 ```json
 "scripts": {
@@ -31,7 +31,7 @@ $ node build.js
 "test": "./node_modules/.bin/mocha test"
 ```
 
-npm 脚本唯一要求就是可以在 shell 执行，因此它不一定是 node 脚本，任何可执行文集那都可以写在里面。npm 脚本的退出码，也遵循 shell 脚本规则，如果退出码不是 0，npm 救人位这个脚本执行失败
+npm 脚本唯一要求就是可以在 shell 执行，因此它不一定是 node 脚本，任何可执行文件都可以写在里面。npm 脚本的退出码，也遵循 shell 脚本规则，如果退出码不是 0，npm 就认为这个脚本执行失败
 
 ![image-20230914162316946](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20230914162316946.png)
 
@@ -86,7 +86,7 @@ $ npm run script1.js && npm run script2.js
 一般来说，npm 脚本由用户提供。但是，npm 对两个脚本提供了默认值。也就是说，这两个脚本不用定义，就可以直接使用
 
 ```json
-"start": "node server.js"，
+"start": "node server.js",
 "install": "node-gyp rebuild"
 ```
 
@@ -95,7 +95,7 @@ $ npm run script1.js && npm run script2.js
 
 ## 钩子
 
-npm 脚本由 `pre` 和 `post` 两个钩子。举例来说，`build`脚本命令的钩子就是`prebuild`和`postbuild`
+npm 脚本有 `pre` 和 `post` 两个钩子。举例来说，`build`脚本命令的钩子就是`prebuild`和`postbuild`
 
 ```json
 "prebuild": "echo I run before the build script",
@@ -118,7 +118,7 @@ npm 默认提供下面这些钩子
 - pretest，posttest
 - prestop，poststop
 - prestart，poststart
-- prerestart，postrestar
+- prerestart，postrestart
 
 自定义的脚本命令也可以加上 `pre` 和 `post` 钩子
 
@@ -144,14 +144,14 @@ if (TARGET === 'posttest') {
 }
 ```
 
-注意：`prepublish` 这个钩子不仅会在 `npm publish` 命令之前执行，还会在 `npm install`（不带任何参数）命令之前允许
+注意：`prepublish` 这个钩子不仅会在 `npm publish` 命令之前执行，还会在 `npm install`（不带任何参数）命令之前运行
 
 - 这种行为很容易让用户感到困惑，所以 npm 4 引入了一个新的钩子 `prepare`，行为等同于 `prepublish`
 - 而从 npm5 开始，`prepublish` 将只在 `npm publish` 命令之前运行
 
 ## 简写形式
 
-四个常用的 npm 脚本由简写形式
+四个常用的 npm 脚本有简写形式
 
 - `npm start` 是 `npm run start`
 - `npm stop` 是 `npm run stop` 的简写

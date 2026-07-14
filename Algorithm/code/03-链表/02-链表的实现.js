@@ -56,7 +56,7 @@ class LinkedList {
   }
   // 添加节点（根据索引）
   addAtIndex(value, index) {
-    if (this.count === 0 || index >= this.count) {
+    if (index < 0 || index > this.count) {
       return
     }
     // 如果 index <= 0，都添加到头部即可

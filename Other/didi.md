@@ -8,7 +8,7 @@
   - `cache.set('my-cache-key', { id:'xxx', name:'Hello' })`
 - 通过缓存的key访问数据：
   - `cache.get('my-cache-key')`
-- 如果设置新的 key 时，cache 中已经缓存了条不⼀样的 key，需要删除⼀条数据，删除的逻辑是：删除最近⼩时内通过 get ⽅法访问次数最少的 key（只统计在设置新 key 时的时间 T与 T-24 ⼩时内的访问次数）
+- 如果设置新的 key 时，cache 中已经缓存了 10 条不一样的 key，需要删除⼀条数据，删除的逻辑是：删除最近⼩时内通过 get ⽅法访问次数最少的 key（只统计在设置新 key 时的时间 T与 T-24 ⼩时内的访问次数）
 
 ```js
 class Cache {
@@ -22,8 +22,8 @@ class Cache {
     let key = this.idxMap[0]
     let delIdx = 0
     for (let i = 1; i < this.idxMap.length; i++) {
-      const fTimes = this.map.get(key).times.filter(i => i < this.times)
-      const bTimes = this.map.get(this.idxMap[i]).times.filter(i => i < this.times)
+      const fTimes = this.map.get(key).times.filter(i => Date.now() - i < this.times)
+      const bTimes = this.map.get(this.idxMap[i]).times.filter(i => Date.now() - i < this.times)
       if (fTimes.length > bTimes.length) {
         key = this.idxMap[i]
         delIdx = i
@@ -60,7 +60,7 @@ class Cache {
       return null
     } else {
       const item = this.map.get(key)
-      item.times.push(new Date().getTime() - item.time)
+      item.times.push(Date.now())
       return item.data
     }
   }
@@ -137,7 +137,7 @@ function getEndPos(startPos, direction, box, obstacle) {
 
   const sp = [...startPos]
   let vx = 1
-  let vy = direction.reduce((pre, cur) => cur[1] - pre[1] / cur[0] - pre[0])
+  let vy = direction.reduce((pre, cur) => (cur[1] - pre[1]) / (cur[0] - pre[0]))
 
   function directionPath() {
     sp[0] = sp[0] + vx
@@ -167,7 +167,7 @@ function getEndPos(startPos, direction, box, obstacle) {
     min = Math.min(obstacle[3], obstacle[1])
   }
   while (true) {
-    const path = directionPath(sp)
+    const path = directionPath()
     if (dir) {
       if (path[1] === obstacle[1] && max >= path[1] && path[1] >= min) {
         return path

@@ -79,14 +79,3 @@ function pack(graph) {
   return iifeBundler
 }
 
-const iifeBundler = `(function(modules){
-  const require = id => {
-    const {factory, map} = modules[id];
-    const localRequire = requireDeclarationName => require(map[requireDeclarationName]); 
-    const module = {exports: {}};
-    factory(module.exports, localRequire); 
-    return module.exports; 
-  } 
-  require(0);
-})({${moduleArgArr.join()}})
-`

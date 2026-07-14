@@ -24,9 +24,9 @@ switch (type) {
     case 'page': {
         // pages/test-page/index.vue
         // export default class TestPage
-        const path = `${pagesPath}/${lowerDashedName}/index.vue`;
+        const filePath = `${pagesPath}/${lowerDashedName}/index.vue`;
         const content = PageTemplate(name);
-        generateFile(path, content);
+        generateFile(filePath, content);
         addPageToJson(`pages/${lowerDashedName}/index`);
         break;
     }
@@ -34,9 +34,9 @@ switch (type) {
         // components/test-component.vue
         // export default class TestComponent
 
-        const path = `${componentsPath}/${lowerDashedName}/${lowerDashedName}.vue`;
+        const filePath = `${componentsPath}/${lowerDashedName}/${lowerDashedName}.vue`;
         const content = ComponentTemplate(name);
-        generateFile(path, content);
+        generateFile(filePath, content);
         break;
     }
 }

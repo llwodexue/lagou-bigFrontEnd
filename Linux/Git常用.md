@@ -88,7 +88,7 @@ $ find ./search/ -name *.png -type f | xargs tar -zcvPf ./home/img.tar.gz
 进行文件内容搜索
 
 ```bash
-$ yum install epel-releas -y
+$ yum install epel-release -y
 $ yum install the_silver_searcher -y
 $ ag hello
 如下图

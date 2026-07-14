@@ -180,7 +180,7 @@ const response = fetch(url, {
 })
 ```
 
-**cach**
+**cache**
 
 `cache` 属性指定如何处理缓存
 
@@ -277,14 +277,14 @@ onbeforeunload 事件在即将离开当前页面（刷新或关闭）时触发
 缺点：
 
 1. fetch 和 ajax 都可以发送任意请求，而 sendBeacon 只能发送 POST
-2. fetch 和 ajax 可以传输任意字节数据，而 sendBeacon 只能传送少了数据（64kb 以内）
+2. fetch 和 ajax 可以传输任意字节数据，而 sendBeacon 只能传送少量数据（64kb 以内）
 3. fetch 和 ajax 可以任意请求头，而 sendBeacon 无法自定义请求头
 4. sendBeacon 只能传输 ArrayBuffer、ArrayBufferView、Blob、DOMString、FormData 或 URLSearchParams 类型的数据
-5. 如果处于危险的网络环境，或者开启了广告屏蔽插件，次请求将无效
+5. 如果处于危险的网络环境，或者开启了广告屏蔽插件，此请求将无效
 
 ![image-20230920113355962](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20230920113355962.png)
 
-ping 请求是 html5 新增的，并且是 sendBeacon 特有的 ping 请求，只能携带少了数据，并且不需要等待服务端响应，因此非常适合做埋点统计，以及日志统计相关功能
+ping 请求是 HTML5 新增的，并且是 sendBeacon 特有的 ping 请求，只能携带少量数据，并且不需要等待服务端响应，因此非常适合做埋点统计，以及日志统计相关功能
 
 ## 取消fetch请求
 

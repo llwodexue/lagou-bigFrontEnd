@@ -16,6 +16,7 @@ const smp = new SpeedMeasurePlugin()
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 const HappyPack = require('happypack')
+const os = require('os')
 // const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length });
 
 module.exports = {
@@ -124,7 +125,7 @@ module.exports = {
       maxSize: 0, // 对模块进⾏⼆次分割时使⽤，不推荐使⽤
       minChunks: 1, // 打包⽣成的chunk⽂件最少有⼏个chunk引⽤了这个模块
       maxAsyncRequests: 5, // 最⼤异步请求数，默认5
-      maxInitialRequests: 3, // 最⼤初始化请求书，⼊⼝⽂件同步请求，默认3
+      maxInitialRequests: 3, // 最⼤初始化请求数，⼊⼝⽂件同步请求，默认3
       automaticNameDelimiter: '-', // 打包分割符号
       name: true, // 打包后的名称，除了布尔值，还可以接收⼀个函数function
       cacheGroups: {

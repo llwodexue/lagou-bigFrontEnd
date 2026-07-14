@@ -198,17 +198,24 @@ class TreeNode<T> extends Node<T> {
 
 ```typescript
 class TreeNode<T> extends Node<T> {
-  preOrderTraversalNoRecursion() {
+  postOrderTraversalNoRecursion() {
     let stack: TreeNode<T>[] = []
     let current: TreeNode<T> | null = this.root
+    let prev: TreeNode<T> | null = null
     while (current !== null || stack.length !== 0) {
       while (current !== null) {
-        console.log(current.value)
+        stack.push(current)
         current = current.left
       }
-      current = stack.pop()!
-      stack.push(current)
-      current = current.right
+      current = stack[stack.length - 1]
+      if (current.right === null || current.right === prev) {
+        console.log(current.value)
+        prev = current
+        stack.pop()
+        current = null
+      } else {
+        current = current.right
+      }
     }
   }
 }

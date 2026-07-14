@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "webpack-dev-server --config ./webpack.config.dev.js",
-    "build": "webpack --config ./webpack.config.pro.js",
+    "build": "webpack --config ./webpack.config.prod.js",
     "test:build": "cross-env NODE_ENV=testaaaaaaaaaaaaaaaaaa webpack --env.production --config webpack.test.config.js",
     "test:dev": "webpack-dev-server --config ./webpack.test.config.js",
     "build:dll": "webpack --config ./webpack.config.dll.js"

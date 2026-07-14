@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const webpack = require("webpack");
 
 //
+// OptimizeCSSAssetsPlugin is deprecated in webpack 5, use css-minimizer-webpack-plugin instead
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 
 module.exports = {
@@ -54,7 +55,7 @@ module.exports = {
             outputPath: "images/",
             //推荐使用url-loader 因为url-loader支持limit
             //推荐小体积的图片资源转成base64
-            limit: 12 * 1024, //单位是字节 1024=1kb
+            limit: 12 * 1024, //单位是字节 1024=1KB
           },
         },
       },

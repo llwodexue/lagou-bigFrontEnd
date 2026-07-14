@@ -84,7 +84,7 @@ class MyPromise {
       },
       reason => {
         return MyPromise.resolve(callback()).then(() => {
-          throw reason()
+          throw reason
         })
       }
     )
@@ -106,6 +106,12 @@ class MyPromise {
       for (let i = 0; i < array.length; i++) {
         const current = array[i]
         if (current instanceof MyPromise) {
+          current.then(
+            value => addData(i, value),
+            reason => reject(reason)
+          )
+        } else if (current && typeof current.then === 'function') {
+          // 处理 thenable 对象（非 MyPromise 的 Promise 实例）
           current.then(
             value => addData(i, value),
             reason => reject(reason)

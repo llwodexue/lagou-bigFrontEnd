@@ -68,7 +68,7 @@
 | 计划模式         | Claude 进行复杂的代码更改时，它会进入这一阶段。分析需求并制定执行步骤。不直接动代码。 |
 | Accept Edits模式 | 这是 Claude Code 的“落地”阶段，会执行代码变更的最终确认与写入 |
 
-如果希望CC能一路绿灯执行所有操作，需要输入指令`/exit` 退出重启后，在启动CC时输入以下命令
+如果希望CC能一路绿灯执行所有操作，直接新开终端，使用以下命令启动 Claude Code
 
 ```bash
 claude --dangerously-skip-permissions
@@ -712,7 +712,7 @@ async function executeWithFeedback(
 
 **核心判断标准**：失败时有没有明确的信号（报错信息、空结果）可以用来修正下一次尝试。
 
-### Guardails（护栏）
+### Guardrails（护栏）
 
 有两道防线：输入护栏（拦用户）、输出护栏（拦模型）。
 

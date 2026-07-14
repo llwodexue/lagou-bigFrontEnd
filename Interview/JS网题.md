@@ -7,7 +7,7 @@
 | addEventListener('error')              | √        | √            | ×           | ×         | √        | ×        |
 | addEventListener('unhandledrejection') | ×        | ×            | √           | √         | ×        | ×        |
 
-`try...catch` 不能异步捕获代码错误，因为它本身就是一个同步代码块。所以一下的写法都是有问题的
+`try...catch` 不能异步捕获代码错误，因为它本身就是一个同步代码块。所以下面的写法都是有问题的
 
 ```js
 try {
@@ -50,7 +50,7 @@ async function handleError() {
 handleError()
 ```
 
-如果不使用 `try...catch` 包裹 `async/await`，也可以通过 `windwo.addEventListener` 来捕获到 `async/await` 抛出的错误，并在这个方法的回调中的 `event` 接收这个报错信息
+如果不使用 `try...catch` 包裹 `async/await`，也可以通过 `window.addEventListener` 来捕获到 `async/await` 抛出的错误，并在这个方法的回调中的 `event` 接收这个报错信息
 
 ```js
 window.addEventListener('unhandledrejection', e => {

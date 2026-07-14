@@ -46,16 +46,16 @@ public class LocaleConfig {
 - `https://element.eleme.cn?local=zh-CN/`
 
 ```java
-public class MyLocaleResolver implements localeResolver {
+public class MyLocaleResolver implements LocaleResolver {
   @Override
-  public Local resolveLocale(HttpServletRequest request) {
-    String seq = request.getParameter("local");
+  public Locale resolveLocale(HttpServletRequest request) {
+    String lang = request.getParameter("local");
     Locale locale = Locale.getDefault();
-    if(!StringUtils.isEmpty(seq)){
-      String[] split = seq.split("=");
+    if(!StringUtils.isEmpty(lang)){
+      String[] split = lang.split("-");
       locale = new Locale(split[0], split[1]);
     }
-    return locale
+    return locale;
   }
 }
 ```

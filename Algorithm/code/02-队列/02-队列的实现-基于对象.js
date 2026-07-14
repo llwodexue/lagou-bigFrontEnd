@@ -17,7 +17,6 @@ class Queue {
     const headData = this.queue[this.head]
     delete this.queue[this.head]
     this.head++
-    this.count--
     return headData
   }
   isEmpty() {

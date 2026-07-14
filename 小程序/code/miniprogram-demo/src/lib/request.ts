@@ -47,12 +47,10 @@ function baseRequest<T>(
 ) {
     const queryParams = params!.query
         ? {
-              timestamp: Date.now(),
               ...APPENDED_PARAMS,
               ...params!.query
           }
         : {
-              timestamp: Date.now(),
               ...APPENDED_PARAMS
           };
     url = joinParams(url, queryParams);

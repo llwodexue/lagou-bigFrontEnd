@@ -1,6 +1,6 @@
 function compose(...args) {
   return function (value) {
-    return args.reverse().reduce((acc, fn) => fn(acc), value)
+    return [...args].reduceRight((acc, fn) => fn(acc), value)
   }
 }
 

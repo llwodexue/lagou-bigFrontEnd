@@ -4,9 +4,9 @@
 >
 > [axios如何利用promise无痛刷新token（二）](https://segmentfault.com/a/1190000020986592)
 
-前端登录后，后端返回 `token` 和 token 有效时间段 `tokenExprieIn`，当 token 过期时间到了，前端需要主动用旧 token 去获取一个新的 token，做到用户无感知地去刷新 token
+前端登录后，后端返回 `token` 和 token 有效时间段 `tokenExpiresIn`，当 token 过期时间到了，前端需要主动用旧 token 去获取一个新的 token，做到用户无感知地去刷新 token
 
-后端返回 token 的有效事件，有两种方法：
+后端返回 token 的有效时间，有两种方法：
 
 1. 在请求发起前拦截每个请求，判断 token 的有效时间是否已经过期，若已过期，则将请求挂起，先刷新 token 后再继续请求
 2. 不在请求前拦截，而是拦截返回后的数据。先发起请求，接口返回过期后，先刷新 token，再进行一次重试

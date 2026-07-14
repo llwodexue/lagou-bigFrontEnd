@@ -5,7 +5,7 @@ function co(generator) {
   function handleResult(result) {
     // 生成器函数结束
     if (result.done) return
-    result.value.then(
+    Promise.resolve(result.value).then(
       data => {
         handleResult(g.next(data))
       },

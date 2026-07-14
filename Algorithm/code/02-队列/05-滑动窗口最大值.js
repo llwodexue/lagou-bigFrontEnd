@@ -10,6 +10,9 @@ var maxSlidingWindow = function (nums, k) {
   const result = []
   const deque = []
   // 1 将窗口第一个位置的数据添加到 deque 中，保持递减
+  while (deque.length && nums[0] > deque[deque.length - 1]) {
+    deque.pop()
+  }
   deque.push(nums[0])
   let i = 1
   for (; i < k; i++) {

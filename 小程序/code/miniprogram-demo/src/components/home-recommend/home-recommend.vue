@@ -9,7 +9,7 @@
                 :class="{ 'recommend-hover': index === activeIndex }"
                 @click="onClick(index)"
             >
-                <img :src="item.image" />
+                <image :src="item.image" />
                 <view>{{ item.text }}</view>
             </view>
         </view>

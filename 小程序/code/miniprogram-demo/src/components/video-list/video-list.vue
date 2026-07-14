@@ -14,7 +14,7 @@
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
 @Component
-export default class Banner extends Vue {
+export default class VideoList extends Vue {
     videoList = [
         "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4",
         "http://vjs.zencdn.net/v/oceans.mp4",

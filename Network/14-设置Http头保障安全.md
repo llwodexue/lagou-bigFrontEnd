@@ -27,7 +27,7 @@ Content-Security-Policy: default-src 'self';base-uri 'self';font-src 'self' http
 
 > [X-Content-Type-Options](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/X-Content-Type-Options)
 
-X-Content-Type-Options：被服务器用来提示客户端一定要遵循在 Content-Type 首部中对 MIME 类型 的设定，而不能对其进行修改。这就禁用了客户端的 MIME 类型嗅探行
+X-Content-Type-Options：被服务器用来提示客户端一定要遵循在 Content-Type 首部中对 MIME 类型 的设定，而不能对其进行修改。这就禁用了客户端的 MIME 类型嗅探行为
 
 ```http
 X-Content-Type-Options: nosniff
@@ -56,7 +56,7 @@ X-Download-Options: noopen
 
 > [X-Frame-Options](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/X-Frame-Options)
 
-X-Frame-Options：用来给浏览器指示允许一个页面可否在 `<frame>`, `<iframe>`、`embed` 或者 `< object>` 中展现的标记。网站可以使用此功能，来确保自己网站的内容没有被嵌到别人的网站中去，也从而避免了点击劫持（clickjacking）的攻击
+X-Frame-Options：用来给浏览器指示允许一个页面可否在 `<frame>`, `<iframe>`、`<embed>` 或者 `<object>` 中展现的标记。网站可以使用此功能，来确保自己网站的内容没有被嵌到别人的网站中去，也从而避免了点击劫持（clickjacking）的攻击
 
 ```http
 X-Frame-Options: SAMEORIGIN

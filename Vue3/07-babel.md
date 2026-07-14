@@ -4,7 +4,7 @@
 
 开发中，我们想要使用 ES6+ 的语法，想要使用 TypeScript，开发 React 项目，它们都是离不开 Babel 的
 
-- Babel 是一个 **工具链**，主要用于旧浏览器或者环节中将 ECMAScript2015+ 代码转换为向后兼容版本的 JavaScript
+- Babel 是一个 **工具链**，主要用于旧浏览器或者环境中将 ECMAScript2015+ 代码转换为向后兼容版本的 JavaScript
 - 包括：语法转换、源代码转换等
 
 ### 命令行使用
@@ -41,7 +41,7 @@ npx babel src --out-dir dist --plugins=@babel/plugin-transform-arrow-functions
 查看转换后的结果，我们会发现 const 并没有转成 var：
 
 - 因为 `plugin-transform-arrow-functions`，并没有提供这样的功能
-- 们需要使用 `plugin-transform-block-scoping` 来完成这样的功能
+- 我们需要使用 `plugin-transform-block-scoping` 来完成这样的功能
 
 ```bash
 npm install @babel/plugin-transform-block-scoping -D 

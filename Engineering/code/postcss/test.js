@@ -6,4 +6,14 @@ const groups = {
   G01: ['C01', 'C02']
 }
 
-postcss([require('./postcss-theme-colors')({ colors, groups })]).process(css)
+const postcss = require('postcss')
+
+const css = `
+  .btn {
+    color: cc(G01);
+  }
+`
+
+postcss([require('./postcss-theme-colors')({ colors, groups })]).process(css, { from: undefined }).then(result => {
+  console.log(result.css)
+})

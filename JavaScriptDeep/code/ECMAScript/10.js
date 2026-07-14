@@ -52,12 +52,7 @@ for (const item of todos) {
 }
  */
 
-/* function* foo() {
-  console.log('zce')
-  return 100
-}
-
-// 生成器对象也实现了iterator接口
+/* // 生成器对象也实现了iterator接口
 function* foo() {
   yield 100
   // yield不会结束方法的执行  yield值作为next结果返回

@@ -132,20 +132,6 @@ export default class VirtualList extends Vue {
     padding: 20upx;
     margin-top: 30upx;
 }
-
-.list-item {
-    background: white;
-    box-shadow: 0 0 20upx rgba(144, 144, 144, 0.15);
-    height: 200upx;
-    border-radius: 10upx;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20upx;
-    margin-top: 30upx;
-}
-
 .left-section {
     width: 140upx;
     height: 140upx;

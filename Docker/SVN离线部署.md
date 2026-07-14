@@ -1,4 +1,4 @@
-# SYN离线部署
+# SVN离线部署
 
 下载必须文件以及依赖文件：
 
@@ -76,7 +76,7 @@ $ ./configure --prefix=/home/svn/software/zlib-1.2.11
 
 安装 subversion 
 
-- 安装之前需要将 aqlite 包 移到 subversion 目录
+- 安装之前需要将 sqlite 包 移到 subversion 目录
 
 ```bash
 $ mkdir subversion-1.14.3/sqlite-amalgamation
@@ -167,7 +167,7 @@ other = other123
 
 - `groups`：用户组配置，该配置的格式为组名等于用户名列表，每个用户需要用逗号隔开，每一行表示一个用户组
 - `[/]`：指定根目录配置用户组权限：
-  - 读（r）：在客户端可以跟新服务器上的代码到本地
+  - 读（r）：在客户端可以更新服务器上的代码到本地
   - 写（w）：在客户端可以提交代码到服务器
 
 ```bash

@@ -26,7 +26,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class ${componentName} extends Vue {
-onAttach() {}
+mounted() {}
 }
 </script>
 

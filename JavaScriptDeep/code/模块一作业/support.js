@@ -10,9 +10,9 @@ class Container {
     return Container.of(fn(this._value))
   }
 }
-class Maybe {
+class MayBe {
   static of(x) {
-    return new Maybe(x)
+    return new MayBe(x)
   }
   isNothing() {
     return this._value === null || this._value === undefined
@@ -21,7 +21,7 @@ class Maybe {
     this._value = x
   }
   map(fn) {
-    return this.isNothing() ? this : Maybe.of(fn(this._value))
+    return this.isNothing() ? this : MayBe.of(fn(this._value))
   }
 }
-module.exports = { Maybe, Container }
+module.exports = { MayBe, Container }

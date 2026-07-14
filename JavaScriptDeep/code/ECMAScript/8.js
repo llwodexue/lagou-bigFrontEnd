@@ -29,7 +29,7 @@ console.log(Symbol.for(true) === Symbol.for('true')) // true
 const obj = {
   [Symbol.toStringTag]: 'XObject'
 }
-// 如果直接从写toString可能会重复（其他地方用了 也会被影响），可以用symbol重写
+// 如果直接重写toString可能会重复（其他地方用了 也会被影响），可以用symbol重写
 console.log(obj.toString()) // [object XObject]
 // 只能获取symbol属性名
 console.log(Object.getOwnPropertySymbols(obj)) // [ Symbol(Symbol.toStringTag) ]

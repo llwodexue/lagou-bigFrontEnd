@@ -1,4 +1,4 @@
-# Vuex
+﻿# Vuex
 
 ## 状态管理
 
@@ -40,9 +40,9 @@ JavaScript开发的应用程序，已经变得越来越复杂了：
 
 因此，我们是否可以考虑将组件的内部状态抽离出来，以一个全局单例的方式来管理呢？
 
-- 在这种模式下，我们的组件树构成了一个巨大的 “试图View”
+- 在这种模式下，我们的组件树构成了一个巨大的 “视图View”
 - 不管在树的哪个位置，任何组件都能获取状态或者触发行为
-- 通过定义和隔离状态管理中的各个概念，并通过强制性的规则来维护视图和状态间的独立性，我们的代码边会变得更加结构化和易于维护、跟踪
+- 通过定义和隔离状态管理中的各个概念，并通过强制性的规则来维护视图和状态间的独立性，我们的代码会变得更加结构化和易于维护、跟踪
 - 这就是 Vuex 背后的基本思想，它借鉴了 Flux、Redux、Elm（纯函数语言，redux 有借鉴它的思想）：
 
 在软件工程里，Actions 相当于增加一层，解决异步问题，主要是帮我们生成快照
@@ -93,7 +93,7 @@ Vuex 和单纯的全局对象有什么区别呢？
 - 第一：Vuex 的状态存储是响应式的
   - 当 Vue 组件从 store 中读取状态的时候，若 store 中的状态发生变化，那么相应的组件也会被更新
 - 第二：你不能直接改变 store 中的状态
-  - 改变store中的状态的唯一途径就显示提交 (commit) mutation
+  - 改变store中的状态的唯一途径就是显式提交 (commit) mutation
   - 这样使得我们可以方便的跟踪每一个状态的变化，从而让我们能够通过一些工具帮助我们更好的管理应用的状态
 
 使用步骤：
@@ -724,6 +724,7 @@ export default {
 import { useState, useGetters } from '../hooks'
 const { mapMutations, mapActions } = createNamespacedHelpers('home')
 export default {
+  setup() {
     const state = useState('home', ['homeCounter'])
     const getters = useGetters('home', ['doubleHomeCounter'])
     const mutations = mapMutations(['increment'])
@@ -789,7 +790,7 @@ export function useMapper(mapper, mapFn) {
 
      ```js
      // vuex index.js
-     import appModule from './modules/app
+      import appModule from './modules/app'
      const store = createStore({
        modules: {
          appModule
@@ -834,7 +835,7 @@ export function useMapper(mapper, mapFn) {
     },
     actions: {
       increment (num) {
-        this.state.count += num
+        this.count += num
       }
     }
   })

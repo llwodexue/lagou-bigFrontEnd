@@ -43,11 +43,11 @@ Expires/Max-Age 指 cookie 过期时间，如果不设的话默认值是 session
 
 HttpOnly 如果设为 true，那么前端不能通过 document.cookie 来访问该 cookie 值，如果前端没有访问 cookie 的必要，建议都加上该属性，避免 cookie 泄露
 
-Secure 如果设为 true，那么前端不能通过 document.cookie 来访问该 cookie 才能 set-cookie 成功（localhost 例外）
+Secure 如果设为 true，那么只有在 HTTPS 协议下才能 set-cookie 成功（localhost 例外）
 
 SameSite 如果不设，默认值为 Lax，也可以设为 Strict 和 None
 
-- Strict：只有请求的发送方和接收方位于同一个 site 时，才会携带 cookie 才能 set-cookie 成功
+- Strict：只有请求的发送方和接收方位于同一个 site 时，才会携带 cookie
 - Lax：在 Strict 基础上，从其它站点导航到当前站点时，发送的当前站点的请求也会携带 cookie，比如从 b.com 通过 a 链接打开 a.com 时，a.com 发的请求如果 cookie 是 Strict 那么不会携带 cookie，如果是 Lax 就会携带 cookie
 - None：跨站时也允许携带 cookie 和 set-cookie。SameSite 设为 None 的话需要 Secure 同时设为 true，否则无效
 

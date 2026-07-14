@@ -1,6 +1,6 @@
 <template>
-    <div class="mask">
-        <div class="spinner">
+    <view class="mask">
+        <view class="spinner">
             <div
                 v-for="item in list"
                 :key="item"
@@ -8,8 +8,8 @@
                     'animation-delay': -1 + item / 10 + 's'
                 }"
             ></div>
-        </div>
-    </div>
+        </view>
+    </view>
 </template>
 
 <script lang="ts">
