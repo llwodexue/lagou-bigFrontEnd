@@ -259,7 +259,7 @@ console.log('Server running: http://localhost:3003')
 
 ### 编译单文件组件
 
-vue 内部通过 `@vue/compiler-sfc` 来解析单文件组件，把组件分成 tmeplate、style、script 三个部分
+vue 内部通过 `@vue/compiler-sfc` 来解析单文件组件，把组件分成 template、style、script 三个部分
 
 - 我们需要做的就是在 node 环境，把 template 内容解析成 render 函数
 - 和 script 的内容组成对象，再返回

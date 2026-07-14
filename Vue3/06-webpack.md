@@ -51,9 +51,9 @@ HTML资源的处理：
 
 ### webpack 安装
 
-webapck 的安装目前分为两个：webpack、webpack-cli
+webpack 的安装目前分为两个：webpack、webpack-cli
 
-- 执行 webapck 命名，会执行 node_modules 下的 .bin 目录下的 webpack
+- 执行 webpack 命名，会执行 node_modules 下的 .bin 目录下的 webpack
 - webpack 在执行时是依赖 webpack-cli 的，如果没有安装就会报错
 - 而 webpack-cli 中代码执行时，才是真正利用 webpack 进行编译和打包的过程
 - 所以在安装 webpack 时，我们需要同时安装 webpack-cli（第三方的脚手架事实上是没有使用 webpack-cli 的，而是类似于自己的 vue-service-cli 的东西）

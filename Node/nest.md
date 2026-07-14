@@ -4,14 +4,14 @@
 
 ### 介绍
 
-Nestjs 是一个用于构建高效可扩展的一个基于 Node js 服务端 应用程序开发框架
+Nestjs 是一个用于构建高效、可扩展的基于 Node.js 的服务端应用程序开发框架
 
 - [https://nestjs.com/](https://nestjs.com/)
 - [https://nestjs.bootcss.com/](https://nestjs.bootcss.com/)
 
 Nestjs 内置框架 express(默认)
 
-Nestjs 唯二内置框架 Fastify
+Nestjs 另一个可选内置框架：Fastify
 
 - 高性能：据我们所知，Fastify 是这一领域中最快的 web 框架之一，另外，取决于代码的复杂性，Fastify 最多可以处理每秒 3 万次的请求
 - 可扩展：Fastify 通过其提供的钩子（hook）、插件和装饰器（decorator）提供完整的可扩展性
@@ -277,7 +277,7 @@ $ nest --help
 
    ![image-20240702163627822](https://gitee.com/lilyn/pic/raw/master/md-img/image-20240702163627822.png)
 
-如果觉得上面的步骤太慢，我们可以直接使用一个命令生成 CURD，一般情况选择 REST API 即可
+如果觉得上面的步骤太繁琐，我们可以直接使用一个命令生成 CRUD，一般情况选择 REST API 即可
 
 ```bash
 $ nest g resource user
@@ -289,7 +289,7 @@ $ nest g resource user
 
 ### RESTful风格设计
 
-RESTful 风格一个接口就会完成增删改差 他是通过不同的请求方式来区分的
+RESTful 风格一个接口就会完成增删改查，它是通过不同的请求方式来区分的
 
 - 查询 GET
 - 提交 POST

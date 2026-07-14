@@ -1,6 +1,6 @@
 1. `<Suspense>`（react） 不能套在 `Provider`（react-redux）外面
 
-   - 比如：折叠面板从 redux 取值部分时候会失效
+   - 比如：折叠面板从 redux 取值的时候可能会失效
 
    ```jsx
    // 错误写法

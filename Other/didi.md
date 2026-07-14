@@ -2,7 +2,7 @@
 
 提供⼀个Cache⽅法，缓存⼩时内访问次数最多的条数据
 
-- cache中只保留最多条数据
+- cache中只保留最多10条数据
   - `const cache = new Cache({ limit: 10 })`
 - 每条数据在设置的时候通过key标识唯⼀
   - `cache.set('my-cache-key', { id:'xxx', name:'Hello' })`
@@ -32,7 +32,7 @@ class Cache {
     return { key, delIdx }
   }
   /**
-   * 获取 key
+   * 设置 key
    * @param {String} key
    * @param {String | { [String]: any }} data
    */
@@ -52,7 +52,7 @@ class Cache {
     })
   }
   /**
-   * 设置 key
+   * 获取 key
    * @param {String} key
    */
   get(key) {

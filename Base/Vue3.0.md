@@ -125,7 +125,7 @@ export default {
 接收一个参数并返回一个响应式且可改变的 ref 对象
 
 - ref 对象拥有一个指向内部值的单一属性 value
-- 当 ref 在模板中使用的时候，它会自动解套，无需再模板内额外书写 value
+- 当 ref 在模板中使用的时候，它会自动解包，无需在模板内额外书写 value
 
 ```html
 <script>
@@ -355,6 +355,8 @@ export default {
 - `updated` -> `onUpdated`
 - `beforeDestroy` -> `onBeforeUnmount`
 - `destroyed` -> `onUnmounted`
+- `activated` -> `onActivated`
+- `deactivated` -> `onDeactivated`
 - `errorCaptured` -> `onErrorCaptured`
 
 ## 细节变化

@@ -89,7 +89,7 @@
    - 查看所有记录 `git reflog``
    - ``git branch -v` 查看所有分支
    - 创建新的分支 `git branch hot_fix`
-   - 切换分支 `git chekout hot_fix`
+   - 切换分支 `git checkout hot_fix`
 
 ### 配置GitHub
 
@@ -113,7 +113,7 @@
 
 2022 年 3 月 15 日之后，github 不再支持 SHA-1 的加密方式了
 
-- 将SHA-1的加密方式修改为`ECDSA`的方式，并把公钥加入到 github 中
+- 将SHA-1的加密方式修改为`ED25519`或`ECDSA`的方式，并把公钥加入到 github 中
 
 ```bash
 ssh-keygen -t ecdsa -b 521 -C "your_email@example.com"
@@ -123,7 +123,7 @@ ssh-keygen -t ecdsa -b 521 -C "your_email@example.com"
 
 ```bash
 # ~/.bashrc
-touch ~/.bashr
+touch ~/.bashrc
 start ~/.bashrc
 echo "echo 'hi'" >> ~/.bashrc
 # 每次进入 Git Bash，就会优先运行 ~/.bashrc 里面的命令
@@ -261,7 +261,7 @@ rm ~/.ssh/known_hosts
   ```yaml
   type: git
   repo: https://github.com/llwodexue/llwodexue.git
-  brach: master
+  branch: master
   ```
 
 - 将现在的文件部署到github中
@@ -285,7 +285,7 @@ yilia主题设置
   git clone https://github.com/litten/hexo-theme-yilia.git themes/yilia
   ```
 
-- 编辑 `_congfig.yml`
+- 编辑 `_config.yml`
 
   ```yaml
   theme: yilia
@@ -297,10 +297,10 @@ Next主题设置
 
 - 下载[next主题](https://github.com/theme-next/hexo-theme-next/blob/master/docs/zh-CN/README.md)
 
-- 编辑 `_congfig.yml`
+- 编辑 `_config.yml`
 
   ```yaml
-  theme:next
+  theme: next
   ```
 
   [Next文档](http://theme-next.iissnan.com/getting-started.html)
@@ -309,7 +309,7 @@ Next主题设置
 
   ```yaml
   language: zh-CN
-  titile: ...
+  title: ...
   author: ...
   ```
 

@@ -87,7 +87,7 @@ npm install parcel-bundler -D
 
 查看 `node_modules\snabbdom\package.json` 中的配置
 
-- `exports` 是 node12 以后支持的，`parcel` 和 `wabpcak4` 都是不支持这个字段，`webpack5` 才开始支持这个字段
+- `exports` 是 node12 以后支持的，`parcel` 和 `webpack4` 都是不支持这个字段，`webpack5` 才开始支持这个字段
 
 ```json
 {

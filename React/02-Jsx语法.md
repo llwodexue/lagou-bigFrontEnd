@@ -6,9 +6,9 @@
 
 **JSX 是什么**
 
-- JSX 是一种 JavaScript 的语法扩展（eXtension），也在很多地方称之为 JavaScript XML，因为看起就是一段XML语法
+- JSX 是一种 JavaScript 的语法扩展（eXtension），也在很多地方称之为 JavaScript XML，因为看起来就是一段XML语法
 - 它用于描述我们的 UI 界面，并且其完成可以和 JavaScript 融合在一起使用
-- 它不同于 Vue 中的模块语法，你不需要专门学习模块语法中的一些指令（比如v-for、v-if、v-else、v-bind）
+- 它不同于 Vue 中的模板语法，你不需要专门学习模板语法中的一些指令（比如v-for、v-if、v-else、v-bind）
 
 React 认为**渲染逻辑**本质上与**其他 UI 逻辑**存在内在耦合
 
@@ -174,10 +174,10 @@ class App extends React.Component {
 
 ### 事件绑定
 
-如果原生 DOM 原生有一个监听事件，我们可以如何操作呢？
+如果原生 DOM 元素有一个监听事件，我们可以如何操作呢？
 
-- 方式一：获取 DOM 原生，添加监听事件
-- 方式二：在 HTML 原生中，直接绑定 onclick
+- 方式一：获取 DOM 元素，添加监听事件
+- 方式二：在 HTML 标签中，直接绑定 onclick
 
 在 React 中是如何操作呢？我们来实现一下 React 中的事件监听，这里主要有两点不同
 
@@ -190,19 +190,19 @@ class App extends React.Component {
 
 为什么是 undefined 呢？
 
-- 原因是 btnClick 函数并不是我们主动调用的，而且当 button 发生改变时，React 内部调用了 btnClick 函数
+- 原因是 btnClick 函数并不是我们主动调用的，而是当 button 被点击时，React 内部调用了 btnClick 函数
 - 而它内部调用时，并不知道要如何绑定正确的 this
 
 this 四种绑定规则：
 
 1. 默认绑定：独立执行 `foo()`
 2. 隐式绑定：被一个对象执行 `obj.foo() -> obj`
-3. 显示绑定：`call/apply/bind foo.call("aaa") -> String("aaa")`
+3. 显式绑定：`call/apply/bind foo.call("aaa") -> String("aaa")`
 4. new 绑定：`new Foo() -> 创建一个新对象，并且赋值给 this`
 
 如何解决 this 的问题呢？
 
-- 方案一：bind 给 btnClick 显示绑定 this
+- 方案一：bind 给 btnClick 显式绑定 this
 - 方案二：使用 ES6 class fields 语法
 - 方案三：事件监听时传入箭头函数（个人推荐）
 
@@ -354,7 +354,7 @@ class App extends React.Component {
 
 ### 列表渲染
 
-在 React 中并没有像 Vue 模块语法中的 v-for 指令，而且需要我们通过 JavaScript 代码的方式组织数据，转成 JSX：
+在 React 中并没有像 Vue 模板语法中的 v-for 指令，而是需要我们通过 JavaScript 代码的方式组织数据，转成 JSX：
 
 - 很多从 Vue 转型到 React 的同学非常不习惯，认为 Vue 的方式更加的简洁明了
 - 但是 React 中的 JSX 正是因为和 JavaScript 无缝的衔接，让它可以更加的灵活

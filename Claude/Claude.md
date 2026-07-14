@@ -70,7 +70,7 @@ CLAUDE.md 注意事项
 
 **资源监控与批量任务**
 
-1. 实时监控tokeh用量
+1. 实时监控token用量
 
    想知道每天/每小时消耗多少资源？运行 `npx ccusage@latest` 查看按天用量，或`npx ccusage blocks --live` 实时监控消耗速度。若速度过快，可手动处理 git commit 等费 token 的操作，避免超额。
 

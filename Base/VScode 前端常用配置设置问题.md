@@ -12,7 +12,7 @@
 
 ![](https://img-blog.csdnimg.cn/img_convert/44b0beb30e83fe54f1f1948ecb00d613.png)
 
-但是这个主题的注释颜色不是很项目，推荐修改 `settings.json` 修改注释颜色
+但是这个主题的注释颜色不是很醒目，推荐修改 `settings.json` 修改注释颜色
 
 ![image-20231109150742174](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231109150742174.png)
 
@@ -41,7 +41,7 @@
 
 ### Material Icon Theme
 
-我最长使用的图标就是这个
+我最常使用的图标就是这个
 
 ![](https://img-blog.csdnimg.cn/img_convert/59234ecb0e2943a88377ea26165825c7.png)
 
@@ -142,7 +142,7 @@ Java 和 python 运行的时候最好设置一下
 
 ![](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/8523c757447f0bb63150699bbdb9a120.png)
 
-键入 `ctrl + shift + p`，输入 language，点击 `Confifure Display Language` 进行语言切换
+键入 `ctrl + shift + p`，输入 language，点击 `Configure Display Language` 进行语言切换
 
 ![image-20231109153654161](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20231109153654161.png)
 
@@ -545,7 +545,7 @@ module.exports = {
 
 你可以在命令面板（Ctrl + Shift + P）输入 `Developer: Startup Performance` 查看各个插件启动时间
 
-可以参考 [那些你应该考虑卸载的 VSCode 扩展](
+可以参考 [那些你应该考虑卸载的 VSCode 扩展](https://juejin.cn/post/6960232244551580429)
 
 ## 其他篇工具篇
 

@@ -4,7 +4,7 @@
 
 2. **Vue2 和 Vue3 都能支持**
 
-   options api 和 compostions api 都支持，维护成本低
+   options api 和 Composition API 都支持，维护成本低
 
 3. **抛弃传统的 Mutation，只有 state, getter 和 action ，简化状态管理库**
 

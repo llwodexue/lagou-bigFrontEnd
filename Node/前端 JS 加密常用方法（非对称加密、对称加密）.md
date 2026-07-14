@@ -8,7 +8,7 @@
 
 node 中有原生 crypto 模块，该模块提供了 hash、hmac、加密解密等一整套封装。因为是 node 中的模块，所以需要使用 `const crypto = require('crypto')` 来引入
 
-MD5、SHA1 也成散列算法
+MD5、SHA1 也称散列算法
 
 ### crypto 进行 MD5 SHA 加密
 
@@ -58,7 +58,7 @@ sha256 a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3
 */
 ```
 
-### * 上面版本的加盐和 hmac 算法
+### 进阶：加盐和 hmac 算法
 
 如果密码安全强度过低，是很容易被彩虹表碰撞上的，所以一般还会做一层加盐加字符串的处理，这样碰撞成功的概率就大大减少了
 
@@ -77,7 +77,7 @@ const salt = Math.random() * 99999 + new Date().getTime()
 encryptPassword(salt, psw) // 5927975bb4e8453b54e244ae4640426f
 ```
 
-crypto 里有 `createHmac()` 方法，hmac 类似加盐版 hash 算法，hmac 是密钥相关的哈希运算消息认证码（Hash-basees Message Authentication Code）
+crypto 里有 `createHmac()` 方法，hmac 类似加盐版 hash 算法，hmac 是密钥相关的哈希运算消息认证码（Hash-based Message Authentication Code）
 
 ```js
 const crypto = require('crypto')
@@ -179,9 +179,9 @@ console.log(crypto.getCiphers())
 ]
 ```
 
-cryoto 模块中提供了 `createCipheriv` 和 `createDecipheriv` 来进行加密和解密的功能，这两个方法都接收 3 个参数：
+crypto 模块中提供了 `createCipheriv` 和 `createDecipheriv` 来进行加密和解密的功能，这两个方法都接收 3 个参数：
 
-1. algorithm 同于指定加密算法
+1. algorithm 用于指定加密算法
 
    `aes-128-cbc`  算法是 128
 
@@ -403,7 +403,7 @@ console.log('解密：', _src)
 */
 ```
 
-#  非对称加密
+# 非对称加密
 
 非对称加密会产生一对密钥（公钥负责加密、私钥负责解密），私钥无法解开说明公钥无效（抗抵赖性）。常见算法 RSA（大质数 ）、Elgamal、背包算法、Rabin、D-H、ECC（椭圆曲线加密算法）
 
@@ -576,7 +576,7 @@ console.log('公钥验证：' + verifyRSA(sign, signature))
 
 到此为止前后端交互通信已经做了加密操作，接下来最重要的就是如何保证加密的 key 不泄露？
 
-- 服务端啊安全性较高，可以存储在数据库文件或配置文件中，前端就很危险了
+- 服务端安全性较高，可以存储在数据库文件或配置文件中，前端就很危险了
 
 下面是动态获取加密 key 的方式：
 

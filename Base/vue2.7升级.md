@@ -90,8 +90,8 @@ reactive(foo) === foo;
 - vue/cli: 5.0.8
 
 ### 升级步骤
-1. 删除 `node_modules`, `pagage-lock.json`,避免依赖包缓存问题
-2. vue升级达到2.7最新版
+1. 删除 `node_modules`, `package-lock.json`,避免依赖包缓存问题
+2. vue升级至2.7最新版
 ```json
 // package.json
 // 查看vue2的最新版本
@@ -110,13 +110,13 @@ npm run dev
 ### 注意事项
 
 #### @vue/composition-api
-如果已经使用了 `@vue/composition-api`，需要跟换导入方式
+如果已经使用了 `@vue/composition-api`，需要更换导入方式
 ```ts
 // import { ref } from '@vue/composition-api'
 import { ref } from 'vue'
 ```
-注意：@vue/composition-api 中有部分特性没有被迁移回2.7，如果有用到这些特性，需要继续使用功能 @vue/composition-api，
-或者使用其他写法替换这些特性统一使用2.7的特性。如 craateApp, setup script 顶层使用await等。
+注意：@vue/composition-api 中有部分特性没有被迁移回2.7，如果有用到这些特性，需要继续使用 @vue/composition-api，
+或者使用其他写法替换这些特性统一使用2.7的特性。如 createApp, setup script 顶层使用 await 等。
 
 #### 使用ESNext语法
 Vue2.7支持在模板表达式中使用ESNext语法，这意味着可以在template里使用可选链
@@ -175,7 +175,7 @@ module.exports = {
 import { useRouter, useRoute } from 'vue-router/composables'
 
 const $router = useRouter()
-$router.push('/home)
+$router.push('/home')
 ```
 
 #### 引入动态组件报错

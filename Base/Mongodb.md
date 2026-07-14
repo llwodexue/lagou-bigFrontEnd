@@ -28,7 +28,7 @@
 
 - 文档对象（document）-> 表记录
 
-  类似与SQL中的记录，一个文档对象 `{}` 就是一条记录
+  类似于SQL中的记录，一个文档对象 `{}` 就是一条记录
 
   文档是数据库的最小单位，我们存储和操作的内容都是文档
 
@@ -309,7 +309,7 @@ db.std.update(
 
 修改符合条件的第一个文档
 
-- `db.<collection>.updatwOne()`
+- `db.<collection>.updateOne()`
 
 替换一个文档
 
@@ -319,7 +319,7 @@ db.std.update(
 
 根据条件删除文档：`remove()` 默认删所有符合的
 
-**注意：** 参数传递方式跟 `find()` 一致，但是 `find()` 可以不传参数，`remove()` 必须穿参数（如果传 `{}` 代表删除所有文档）
+**注意：** 参数传递方式跟 `find()` 一致，但是 `find()` 可以不传参数，`remove()` 必须传参数（如果传 `{}` 代表删除所有文档）
 
 - `db.<collection>.remove()`
 
@@ -362,7 +362,7 @@ db.users.update({username: 'cat'}, {$set: {hobby: {movies: ['hero', 'six']}}})
 
   如果是数组，则看数组是否有查询的字符串
 
-  如果是字符串，则看字符串是否和有查询的字符串一致
+  如果是字符串，则看字符串是否和查询的字符串一致
 
 ```sql
 db.users.find({'hobby.movies': 'tree'})
@@ -371,7 +371,7 @@ db.users.find({'hobby.movies': 'tree'})
 **修改数据：** 追加数据
 
 - `$push` 向数组中添加一个新元素
-- `$addToSet` 向数组中添加一新个元素，但是如果数组中已经存在了该元素，则不会添加（考虑重复）
+- `$addToSet` 向数组中添加一个新元素，但是如果数组中已经存在了该元素，则不会添加（考虑重复）
 - `$inc` 自增自减操作符
 
 ```sql
@@ -601,7 +601,7 @@ SchemaTypes 允许使用的有：
 
 把 Schema 转换为一个 Model，使用 `mongoose.model(modelName, schema)` 函数
 
-- modelName：Mongoose 会自动将其字符串变成负数
+- modelName：Mongoose 会自动将其字符串变成复数
 
 ```js
 // 创建Schema模式对象

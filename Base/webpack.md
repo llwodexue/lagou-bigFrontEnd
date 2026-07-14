@@ -68,7 +68,7 @@ webpack 是一种 **前端资源构建工具** ，一个静态模块打包器（
 
 path 模块的 resolve `__dirname` nodejs 的变量，代表当前文件的目录的绝对路径
 
-loader，rules 下的 use 数组中 loader 执行顺序：从右到左、从下到上依次执行
+loader，rules 下的 use 数组中 loader 执行顺序：从右到左、从下到上依次执行（即从后往前）
 
 ```bash
 npm i less-loader@6 style-loader css-loader@ -D
@@ -84,7 +84,7 @@ npm i webpack-dev-server -D
 
   优点：减少请求数量（减轻服务器压力）
 
-  缺点：图片体积会更大（文件请求速度更慢）
+  缺点：图片体积会更大（base64编码后文件更大，首次加载更慢）
 
 `html-loader` 处理html中的图片资源，这个 loader 对图片资源进行 commonJS 引入 
 
@@ -218,8 +218,8 @@ const commonCssLoader = [
   MiniCssExtractPlugin.loader,
   // 将css文件整合到js文件中
   'css-loader',
-  // 帮助postcss找到package.json中browserslist里面的配置，通过配置价值指定的css兼容性样式
-  {
+  // 帮助postcss找到package.json中browserslist里面的配置，通过配置来指定需要的css兼容性样式
+    {
     loader: 'postcss-loader',
     options: {
       ident: 'postcss',
@@ -335,7 +335,7 @@ module.exports = {
   test: /\.css$/,
   use: [
     MiniCssExtractPlugin.loader,
-    // 帮助postcss找到package.json中browserslist里面的配置，通过配置价值指定的css兼容性样式
+  // 帮助postcss找到package.json中browserslist里面的配置，通过配置来指定需要的css兼容性样式
     {
       loader: 'postcss-loader',
       options: {
@@ -587,7 +587,7 @@ npm i thread-loader -D
     {
       loader: 'thread-loader',
       options: {
-        worker: 2, // 2个进程
+        workers: 2, // 2个进程
       },
     },
     {
@@ -679,7 +679,7 @@ plugins: [
   new HtmlWebpackPlugin({
     template: './src/index.html',
   }),
-  // 告诉webpack哪些库不参与打包，同时使用时的名称也得变
+  // 告诉webpack哪些库不参与打包，同时使用时的变量名也得变
   new webpack.DllReferencePlugin({
     manifest: resolve(__dirname, 'dll/manifest.json'),
   }),
@@ -932,9 +932,9 @@ output: {
   chunkFilename: 'js/[name]_chunk.js',
   // 整个库向外暴露的变量名
   library: '[name]',
-  // libraryTarget: 'window', // 变量名添加到哪个browser
-  // libraryTarget: 'global', // 变量名添加到哪个node
-  // libraryTarget: 'commonjs',
+  // libraryTarget: 'window', // 变量名添加到window对象上（浏览器环境）
+  // libraryTarget: 'global', // 变量名添加到global对象上（Node.js环境）
+  // libraryTarget: 'commonjs', // CommonJS模块环境
 },
 ```
 

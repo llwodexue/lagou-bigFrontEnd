@@ -99,7 +99,7 @@ export default render
 
 一旦进入了递归渲染子元素，如果 dom 树很大，就会阻塞主线程。如果浏览器想做优先级更高的事情，就必须等待 render 渲染完成
 
-我们把每个渲染变成一个一个小任务，每完成一个小任务，浏览器可以打断我们，react 进程就会停一停让浏览器先渲染（uintOfWork）
+我们把每个渲染变成一个一个小任务，每完成一个小任务，浏览器可以打断我们，react 进程就会停一停让浏览器先渲染（unitOfWork）
 
 `window.requestIdleCallback` 浏览器空闲的时候回调就会被执行
 

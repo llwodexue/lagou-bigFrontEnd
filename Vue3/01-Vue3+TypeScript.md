@@ -13,7 +13,7 @@
 **源码通过 monorepo 的形式来管理源代码**
 
 - mono：单个的意思；repo： repository仓库的简写
-- 主要是将许多项目的代码存储在同一个 respository 中
+- 主要是将许多项目的代码存储在同一个 repository 中
 
 我们来看下面的图片，对比 vue2 和 vue3 源码的不同管理方式：
 

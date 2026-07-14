@@ -105,7 +105,7 @@ let fs = require('fs')
 失败
 	data undefined
 	error 错误对象 */
-fs.readFile('./datas.txt', funtion (error, data) {
+fs.readFile('./datas.txt', function (error, data) {
   // data -> <Buffer 68 65 6c 6c 6f 20 6e 6f 64 65 6a 73 0d 0a>
   if (error) {
     console.log('读取文件失败')
@@ -169,20 +169,20 @@ server.on('request', function (request, response) {
 
   //推荐使用
   response.end('hello')
-  let url = req.url
+  let url = request.url
   if (url === '/') {
-      res.end('index page')
+      response.end('index page')
   }else if (url === '/login') {
-      res.end('login page')
+      response.end('login page')
   }else if (url === '/products') {
       let products = [{
           name: '苹果 X',
           price: 8888
       }]
-      //JSON.parse 可以转换成对象
-      res.end(JSON.stringify(products))
+      //JSON.stringify 可以转换成字符串
+      response.end(JSON.stringify(products))
   }else {
-      res.end('404 Not Found')
+      response.end('404 Not Found')
   }
 })
 
@@ -214,7 +214,7 @@ server.listen(3000, function () {
 
 - 用户自定义模块
 
-  用户自己编写的文件模块，相对路径必须加 ./ （可以省略后缀名） `require('./b,js')`
+  用户自己编写的文件模块，相对路径必须加 ./ （可以省略后缀名） `require('./b.js')`
 
   ```js
   //a.js
@@ -223,7 +223,7 @@ server.listen(3000, function () {
   
   //b.js
   //挂载到这个 exports 对象中
-  export.add = function (x, y) {
+  exports.add = function (x, y) {
       return x + y
   }
   ```
@@ -301,7 +301,7 @@ exports = module.exports // 这里又重新建立两者的引用关系
 exports.foo = 'hello'
 // main.js
 let foo = require('./foo')
-console.log(foo) // { foo: 'bar' }
+console.log(foo) // { foo: 'hello' }
 ```
 
 ### require 方法加载规则
@@ -351,7 +351,7 @@ module.exports = function () {
   
     之后去 `package.json` 文件中找到对应的 `main` 属性，`main` 属性记录了入口文件（一般都是对应 `index.js` -> `entry point`）
   
-    以上都不满足则继续，则会依次进入上一级目录中的 `node_modules` 目中查找，直到当前磁盘根目录找不到，最后报错：`Error: Cannot find module 'xxx'`
+    以上都不满足则继续，则会依次进入上一级目录中的 `node_modules` 目录中查找，直到当前磁盘根目录找不到，最后报错：`Error: Cannot find module 'xxx'`
 
 ## Web 服务器开发 http
 
@@ -559,7 +559,7 @@ server.listen(port, () => console.log(`running at: http://localhost:${port}/`))
 
 ![](https://gitee.com/lilyn/pic/raw/master/js-img/Node%E6%8E%A7%E5%88%B6%E5%8F%B0%E6%B5%8F%E8%A7%88%E5%99%A8%E6%8E%A7%E5%88%B6%E5%8F%B0.png)
 
-Cosole REPL（read、eval、print、loop） 
+Console REPL（read、eval、print、loop） 
 
 - 这个环境的作用只是用来帮助我们做一些辅助测试，例如：可以在里面直接使用 Node 中的核心模块（不需要 require 加载）
 
@@ -755,9 +755,9 @@ Is this OK? (yes) yes
 
 - `package-lock.json` 保存 `node_modules` 中所有包的信息（版本、下载地址）
 
-  这样的话重新 `npm i` 的时候速度回提升很多
+  这样的话重新 `npm i` 的时候  速度会提升很多
 
-- 名中有一个 `lock` 锁，是用来锁定版本的，防止自动升级新版
+- 名字中有一个 `lock` 锁，是用来锁定版本的，防止自动升级新版
 
   如果项目中依赖了 `jquery@1.11.1` ，没有 `package-lock.json` 文件
 
@@ -906,7 +906,7 @@ render 的使用：
 
 - Express 为 Response 响应对象提供了一个方法：render
 
-  render 方法模式是不可使用，但是如果配置了模板引擎就可以使用了
+  render 方法默认是不可用，但是如果配置了模板引擎就可以使用了
 
 - `res.render('html模板名', { 模板数据 })`
 
@@ -1107,9 +1107,9 @@ const express = require('express')
 // 1.创建一个路由容器
 let router = express.Router()
 // 2.把路由都挂载到router路由容器中
-router.app.get('/', (req, res) => {})
+router.get('/', (req, res) => {})
 // 3.把router导出
-modules.exports = router
+module.exports = router
 ```
 
 **模块职责要清晰且单一，不要混用。划分模块的目的：增强代码的可维护性，提高开发效率**
@@ -1424,7 +1424,7 @@ const fs = require('fs')
 const express = require('express')
 
 let router = express.Router()
-let Student = require('/student')
+let Student = require('./student')
 
 router.get('/students', (req, res) => {
   Student.find()
@@ -1537,7 +1537,7 @@ connection.end();
 
 `path.extname(path)` 返回 `path` 的扩展名
 
-`path.isAbsolute(path)` 确定 `path` 是否为决定路径
+`path.isAbsolute(path)` 确定 `path` 是否为绝对路径
 
 ```bash
 > path.dirname('c:/a/b/index.js')
@@ -1575,7 +1575,7 @@ true
 在每个模块中，除了 `require`、`exports` 等模块相关 API 之外，还有两个特殊成员：
 
 - `__dirname` 获取当前文件所属目录的绝对路径
-- `__filename` 获取当前文件的绝对目录
+- `__filename` 获取当前文件的绝对路径
 - `__dirname` 和 `__filename` 不受执行 Node 命令的所属路径影响
 
 在文件操作中，使用相对路径是不可靠的，因为 Node 中文件操作的路径是相对于执行 Node 命令所处的路径，不是相对于文件的路径
@@ -1802,7 +1802,7 @@ router.post('/register', async (req, res) => {
     }
     // 邮箱和昵称不存在添加到数据库
     body.password = md5(md5(body.password))
-    await new User(body).save()
+    const user = await new User(body).save()
     // 注册成功，使用Session记录用户的登录状态
     req.session.user = user
     // json方法会自动帮你把对象转换为字符串发给浏览器
@@ -1840,15 +1840,15 @@ const Schema = mongoose.Schema
 const userSchema = new Schema({
   email: {
     type: String,
-    require: true,
+    required: true,
   },
   nickname: {
     type: String,
-    require: true,
+    required: true,
   },
   password: {
     type: String,
-    require: true,
+    required: true,
   },
   create_time: {
     type: Date,
@@ -2004,7 +2004,7 @@ app.use((err, req, res, next) => {
 
 ```js
 app.get('/a', (req, res, next) => {
-  fs.readFile('.a/bc', funtion() {
+  fs.readFile('./a/bc', function(err) {
     if (err) {
       // 当发生全局错误的时候，可以调用next传递错误对象
       next(err)
@@ -2026,9 +2026,9 @@ express.static(提供静态文件)
 - body-parser
 - compression
 - cookie-parser
-- mogran
+- morgan
 - response-time
-- server-static
+- serve-static
 - session
 
 ## 问题

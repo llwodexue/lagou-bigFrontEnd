@@ -42,7 +42,7 @@
 
 ![image-20250217143624523](https://gitee.com/lilyn/pic/raw/master/md-img/image-20250217143624523.png)
 
-或者去 [https://github.com/continuedev/continue/releases/tag/v0.8.68-vscode](https://github.com/continuedev/continue/releases/tag/v0.8.68-vscode) 这里下载对应的插件，目前最新版式 v0.8.68
+或者去 [https://github.com/continuedev/continue/releases/tag/v0.8.68-vscode](https://github.com/continuedev/continue/releases/tag/v0.8.68-vscode) 这里下载对应的插件，目前最新版本是 v0.8.68
 
 之后选择从 VSIX 安装...
 
@@ -57,7 +57,7 @@
 注意：大语言模型存放位置必须符合 LM Stdudio 存放模型目录的要求，这里需要创建两级目录
 
 - 第一级目录是发布者，比如是：`deepseek`
-- 第二季目录是模型名，比如是：`DeepSeek-R1-Distill-Llama-8B-Q4_K_M`
+- 第二级目录是模型名，比如是：`DeepSeek-R1-Distill-Llama-8B-Q4_K_M`
 
 目录结构如下：
 

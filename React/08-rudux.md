@@ -17,7 +17,7 @@
 
  **副作用（side effect）**其实本身是医学的一个概念，比如我们经常说吃什么药本来是为了治病，可能会产生一些其他的副作用
 
-在计算机科学中，也引用了副作用的概念，表示在执行一个函数时，除了返回函数值之外，还对调用函数产生了附加的影响，比如修改了全局变量，修改参数或者改变外部的存储； 
+在计算机科学中，也引用了副作用的概念，表示在执行一个函数时，除了返回函数值之外，还对调用者产生了附加的影响，比如修改了全局变量，修改参数或者改变外部的存储； 
 
 ![image-20221213213144785](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20221213213144785.png)
 
@@ -55,14 +55,14 @@
 **单一数据源**
 
 - 整个应用程序的 state 被存储在一颗 object tree 中，并且这个 object tree 只存储在一个 store 中
-- Redux 并没有强制让我们不能创建多个 Store，但是那样做并不利于数据的维
+- Redux 并没有强制让我们不能创建多个 Store，但是那样做并不利于数据的维护
 - 单一的数据源可以让整个应用程序的 state 变得方便维护、追踪、修改
 
 **State是只读的**
 
 - 唯一修改 State 的方法一定是触发 action，不要试图在其他地方通过任何的方式来修改 State
 - 这样就确保了 View 或网络请求都不能直接修改 state，它们只能通过 action 来描述自己想要如何修改 state
-- 这样可以保证所有的修改都被集中化处理，并且按照严格的顺序来执行，所以不需要担心 race condition（竟态）的问题
+- 这样可以保证所有的修改都被集中化处理，并且按照严格的顺序来执行，所以不需要担心 race condition（竞态）的问题
 
 **使用纯函数来执行修改**
 
@@ -182,7 +182,7 @@ sagaMiddleware.run(mySaga)
 export default store
 ```
 
-- takeEvery：可以传入多个监听的 actionType，每一个都可以被执行（对应有一个 takeLastest，会取消前面的）
+- takeEvery：可以传入多个监听的 actionType，每一个都可以被执行（对应有一个 takeLatest，会取消前面的）
 - put：在saga中派发 action 不再是通过 dispatch，而是通过 put
 - all：可以在 yield 的时候 put 多个 action
 
@@ -320,7 +320,7 @@ reducers：相当于之前的 reducer 函数
 
 # 实现原理
 
-## connet函数实现
+## connect函数实现
 
 connect 函数本身接受两个参数：
 

@@ -31,10 +31,10 @@
    - 如果新节点的 newValue 大于原节点的 oldValue，那么就向右插入
 3. 代码1位置，就是准备向左子树插入数据，但是它本身有分成两种情况
    - 情况一：左子树上原来没有内容，那么直接插入即可
-   - 情况二：左子树上已经有了内容，那么久一次向下继续查找新的走向，所以使用递归调用即可
+   - 情况二：左子树上已经有了内容，那么就依次向下继续查找新的走向，所以使用递归调用即可
 4. 代码2位置，和代码1位置几乎逻辑是相同的，只是去向右查找
-   - 情况一：左右树上原来没有内容，那么直接插入即可
-   - 情况二：右子树上已经有了内容，那么就一次向下继续查找新的走向，所以使用递归调用即可
+   - 情况一：右子树上原来没有内容，那么直接插入即可
+   - 情况二：右子树上已经有了内容，那么就依次向下继续查找新的走向，所以使用递归调用即可
 
 ```typescript
 class BSTree<T> {
@@ -299,7 +299,7 @@ class TreeNode<T> extends Node<T> {
     return false
   }
   search(value: T): boolean {
-    return this, this.searchNode(this.root, value)
+    return this.searchNode(this.root, value)
   }
   searchNode(node: TreeNode<T> | null, value: T): boolean {
     // 1.如果节点为null，那么就直接退出递归
@@ -435,7 +435,7 @@ class TreeNode<T> extends Node<T> {
 }
 ```
 
-### 情况三：两个节点
+### 情况三：两个子节点
 
 ![image-20230904100428216](https://gitee.com/lilyn/pic/raw/master/lagoulearn-img/image-20230904100428216.png)
 
@@ -779,9 +779,9 @@ class BSTree<T> {
 
 字符串比较是按照字典次序对单个字符或字符串进行比较大小的操作，一般都是以 ASCII 码值的大小作为字符比较的标准。对两个字符串进行比较时，要注意以下几点：
 
-1. 两个不同长度的字符串进行比较时，不是唱的字符串就一定大。比如：`abcd` 与 `acd` 比较，第一个字符相同，继续比较第二个字符，由于 `c > b` ，所以不再继续比较，结果就是 `acd` 大
+1. 两个不同长度的字符串进行比较时，不是长的字符串就一定大。比如：`abcd` 与 `acd` 比较，第一个字符相同，继续比较第二个字符，由于 `c > b` ，所以不再继续比较，结果就是 `acd` 大
 2. 当字符串有空格时，空格也参加比较。比如：`c at` 与 `cat` 比较，空格的 ASCII 码是 32，a 的 ASCII 码是 97，所以 `cat > c at`
-3. 大小写字母的 ASCII 码值是有区别的。比如：A 的 ASCII 码是 64，a 的 ASCII 码是 97，所以 `angle > Angle`
+3. 大小写字母的 ASCII 码值是有区别的。比如：A 的 ASCII 码是 65，a 的 ASCII 码是 97，所以 `angle > Angle`
 
 ```html
 <body>
